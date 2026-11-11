@@ -1,0 +1,17 @@
+@props(['title' => 'PuskesMap - Peta Puskesmas Kota Bogor', 'bodyClass' => ''])
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ $title }}</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=plus-jakarta-sans:400,500,600,700,800" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="antialiased {{ $bodyClass }}">
+    {{ $slot }}
+</body>
+</html>
+

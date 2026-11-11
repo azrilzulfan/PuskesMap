@@ -1,9 +1,112 @@
 @import 'tailwindcss';
 
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+
+  --color-primary: #007979;
+  --color-primary-dark: #0b5c5c;
+  --color-accent: #e37434;
+  --color-accent-strong: #c2561a;
+  --color-ink: #1d2b2b;
+
+  --color-surface-mint: #e8f4f2;
+  --color-surface-sky: #bfe6ef;
+  --color-input: #f7f7f7;
+  --color-muted: #616f6f;
+  --color-body: #2a3838;
+  --color-placeholder: #abaeb4;
+  --color-track: #ddddee;
+  --color-line: #37504f;
+
+  --color-map-land: #eaf1e4;
+  --color-map-park: #d3e7c4;
+  --color-map-water: #bfe3ea;
+  --color-map-radius: #d3e5d9;
+  --color-map-pin: #ea352b;
+
+  --color-card-mint: #cfedea;
+  --color-card-peach: #ffe2af;
+  --color-card-green: #d8ebc8;
+  --color-card-salmon: #fbd9c3;
+  --color-card-blue: #d6ecf7;
+
+  --color-crowd-low: #2e9e6b;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-xl: 40px;
+
+  --shadow-card: 0 2px 8px rgb(0 0 0 / 0.08);
+  --shadow-float: 0 4px 12px rgb(0 0 0 / 0.12);
+  --shadow-nav: 0 4px 16px rgb(0 0 0 / 0.06);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    color: var(--color-ink);
+    background-color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Leaflet Customizations untuk PuskesMap */
+.leaflet-popup-content-wrapper {
+  border-radius: 16px !important;
+  box-shadow: 0 12px 28px -4px rgba(0, 121, 121, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.08) !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(0, 121, 121, 0.15) !important;
+  font-family: var(--font-sans) !important;
+}
+
+.leaflet-popup-content {
+  margin: 0 !important;
+  line-height: inherit !important;
+}
+
+.leaflet-popup-tip {
+  background: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.custom-puskesmas-pin {
+  background: transparent !important;
+  border: none !important;
+}
+
+.pin-pulse {
+  animation: pin-pulse-anim 1.5s infinite;
+}
+
+@keyframes pin-pulse-anim {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(225, 29, 46, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 12px rgba(225, 29, 46, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(225, 29, 46, 0);
+  }
 }
