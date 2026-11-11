@@ -15,6 +15,13 @@ document.addEventListener('DOMContentLoaded', () => {
         navMenu.classList.toggle('hidden', isOpen);
     });
 
+    document.querySelectorAll('[data-mobile-nav-link]').forEach((link) => {
+        link.addEventListener('click', () => {
+            navToggle?.setAttribute('aria-expanded', 'false');
+            navMenu?.classList.add('hidden');
+        });
+    });
+
     document.querySelectorAll('[data-scroll-target]').forEach((button) => {
         button.addEventListener('click', () => {
             const target = document.querySelector(button.dataset.scrollTarget);
@@ -465,6 +472,9 @@ function initPuskesMapSDSS() {
     document.getElementById('btn-close-float-card')?.addEventListener('click', () => {
         floatCardEl?.classList.add('hidden');
     });
+    document.getElementById('btn-close-float-card-mobile')?.addEventListener('click', () => {
+        floatCardEl?.classList.add('hidden');
+    });
 
     // Render 25 Puskesmas Markers & Service Area Buffers (UC-11)
     puskesmasList.forEach((item) => {
@@ -543,11 +553,13 @@ function initPuskesMapSDSS() {
     const searchInput = document.getElementById('sidebar-search');
     const clearSearchBtn = document.getElementById('btn-clear-search');
     const districtSelect = document.getElementById('select-district');
+    const districtSelectMobile = document.getElementById('select-district-mobile');
     const radiusSelect = document.getElementById('select-radius');
     const filterChips = document.querySelectorAll('[data-filter-chip]');
     const mapHashtagChips = document.querySelectorAll('[data-map-chip]');
     const faskesCards = document.querySelectorAll('[data-faskes-card]');
     const counterEl = document.getElementById('puskesmas-counter');
+    const mobileDockCounterEl = document.getElementById('mobile-dock-counter');
     const emptyState = document.getElementById('sidebar-empty');
 
     let activeFilter = 'all';
@@ -626,6 +638,7 @@ function initPuskesMapSDSS() {
         });
 
         if (counterEl) counterEl.textContent = visibleCount;
+        if (mobileDockCounterEl) mobileDockCounterEl.textContent = visibleCount;
         if (emptyState) emptyState.classList.toggle('hidden', visibleCount > 0);
         if (clearSearchBtn) clearSearchBtn.classList.toggle('hidden', !query);
     };
@@ -642,7 +655,14 @@ function initPuskesMapSDSS() {
         searchInput?.focus();
     });
 
-    districtSelect?.addEventListener('change', applyFilters);
+    districtSelect?.addEventListener('change', () => {
+        if (districtSelectMobile) districtSelectMobile.value = districtSelect.value;
+        applyFilters();
+    });
+    districtSelectMobile?.addEventListener('change', () => {
+        if (districtSelect) districtSelect.value = districtSelectMobile.value;
+        applyFilters();
+    });
     radiusSelect?.addEventListener('change', () => {
         const radiusLabel = document.getElementById('radius-label-val');
         if (radiusLabel) {
@@ -965,7 +985,10 @@ function initPuskesMapSDSS() {
 
     pickPointBtn?.addEventListener('click', () => {
         togglePickPointMode(!isPickPointMode);
-        if (window.innerWidth < 1024 && isPickPointMode) toggleMobileSidebar(false);
+        if (window.innerWidth < 1024 && isPickPointMode) {
+            toggleMobileSidebar(false);
+            toggleLeftFilter(false);
+        }
     });
     gisPickPointBtn?.addEventListener('click', () => togglePickPointMode(!isPickPointMode));
     cancelPickBtn?.addEventListener('click', () => togglePickPointMode(false));
@@ -978,6 +1001,7 @@ function initPuskesMapSDSS() {
     });
 
     const locateUser = () => {
+        if (window.innerWidth < 1024) toggleLeftFilter(false);
         if (!navigator.geolocation) {
             setReferencePoint(BOGOR_CENTER, 'Pusat Kota Bogor', true);
             return;
@@ -1070,7 +1094,8 @@ function initPuskesMapSDSS() {
     const panelPublic = document.getElementById('panel-public');
     const panelDinkes = document.getElementById('panel-dinkes');
 
-    tabPublic?.addEventListener('click', () => {
+    const setPublicTabActive = () => {
+        if (!tabPublic || !tabDinkes) return;
         tabPublic.classList.add('bg-primary', 'text-white', 'shadow-xs');
         tabPublic.classList.remove('text-primary-dark');
         tabDinkes.classList.remove('bg-primary', 'text-white', 'shadow-xs');
@@ -1078,9 +1103,10 @@ function initPuskesMapSDSS() {
 
         panelPublic?.classList.remove('hidden');
         panelDinkes?.classList.add('hidden');
-    });
+    };
 
-    tabDinkes?.addEventListener('click', () => {
+    const setDinkesTabActive = () => {
+        if (!tabPublic || !tabDinkes) return;
         tabDinkes.classList.add('bg-primary', 'text-white', 'shadow-xs');
         tabDinkes.classList.remove('text-primary-dark');
         tabPublic.classList.remove('bg-primary', 'text-white', 'shadow-xs');
@@ -1088,6 +1114,16 @@ function initPuskesMapSDSS() {
 
         panelDinkes?.classList.remove('hidden');
         panelPublic?.classList.add('hidden');
+    };
+
+    tabPublic?.addEventListener('click', () => {
+        setPublicTabActive();
+        if (window.innerWidth < 1024) toggleMobileSidebar(false);
+    });
+
+    tabDinkes?.addEventListener('click', () => {
+        setDinkesTabActive();
+        if (window.innerWidth < 1024) toggleMobileSidebar(true);
     });
 
     // Subtab Switcher: Daftar Faskes vs MAUT (Bergaya Pill "[📍 Places] [🍕 Dishes]" di Referensi 1)
@@ -1142,7 +1178,9 @@ function initPuskesMapSDSS() {
 
             const radio = document.querySelector(`input[name="maut-scenario"][value="${val}"]`);
             if (radio) radio.checked = true;
+            setPublicTabActive();
             activateSubtab('maut');
+            if (window.innerWidth < 1024) toggleLeftFilter(false);
             runMautEngine();
         });
     });
@@ -1153,23 +1191,70 @@ function initPuskesMapSDSS() {
     let isMapExpanded = false;
     expandMapBtn?.addEventListener('click', () => {
         isMapExpanded = !isMapExpanded;
-        leftFilterPanel?.classList.toggle('lg:flex', !isMapExpanded);
+        leftFilterPanel?.classList.toggle('lg:hidden', isMapExpanded);
         sidebar?.classList.toggle('lg:hidden', isMapExpanded);
         setTimeout(() => map.invalidateSize(), 260);
     });
 
-    // Mobile Sidebar Drawer Toggle (Slide dari Kanan pada Mobile)
+    // Mobile Drawers (Kiri: Filter & Radius, Kanan: Daftar Faskes / MAUT / Dinkes) + Backdrop
     const sidebar = document.getElementById('map-sidebar');
     const toggleBtn = document.getElementById('btn-toggle-sidebar');
+    const mobileBackdrop = document.getElementById('mobile-drawer-backdrop');
+
+    const syncMobileBackdrop = () => {
+        if (!mobileBackdrop) return;
+        const isRightOpen = sidebar && !sidebar.classList.contains('translate-x-full');
+        const isLeftOpen = leftFilterPanel && !leftFilterPanel.classList.contains('-translate-x-full');
+        mobileBackdrop.classList.toggle('hidden', !(isRightOpen || isLeftOpen));
+    };
 
     const toggleMobileSidebar = (forceState = null) => {
         if (!sidebar) return;
         const isClosed = sidebar.classList.contains('translate-x-full');
         const shouldOpen = forceState !== null ? forceState : isClosed;
+        if (shouldOpen && leftFilterPanel) {
+            leftFilterPanel.classList.add('-translate-x-full');
+        }
         sidebar.classList.toggle('translate-x-full', !shouldOpen);
+        syncMobileBackdrop();
+    };
+
+    const toggleLeftFilter = (forceState = null) => {
+        if (!leftFilterPanel) return;
+        const isClosed = leftFilterPanel.classList.contains('-translate-x-full');
+        const shouldOpen = forceState !== null ? forceState : isClosed;
+        if (shouldOpen && sidebar) {
+            sidebar.classList.add('translate-x-full');
+        }
+        leftFilterPanel.classList.toggle('-translate-x-full', !shouldOpen);
+        syncMobileBackdrop();
     };
 
     toggleBtn?.addEventListener('click', () => toggleMobileSidebar());
+    document.getElementById('btn-close-sidebar-mobile')?.addEventListener('click', () => toggleMobileSidebar(false));
+    document.getElementById('btn-close-dinkes-mobile')?.addEventListener('click', () => toggleMobileSidebar(false));
+
+    document.getElementById('btn-open-left-filter')?.addEventListener('click', () => toggleLeftFilter(true));
+    document.getElementById('mobile-dock-filter')?.addEventListener('click', () => toggleLeftFilter(true));
+    document.getElementById('btn-close-left-filter')?.addEventListener('click', () => toggleLeftFilter(false));
+    document.getElementById('btn-apply-left-filter-mobile')?.addEventListener('click', () => toggleLeftFilter(false));
+
+    document.getElementById('mobile-dock-faskes')?.addEventListener('click', () => {
+        setPublicTabActive();
+        activateSubtab('faskes');
+        toggleMobileSidebar(true);
+    });
+
+    document.getElementById('mobile-dock-maut')?.addEventListener('click', () => {
+        setPublicTabActive();
+        activateSubtab('maut');
+        toggleMobileSidebar(true);
+    });
+
+    mobileBackdrop?.addEventListener('click', () => {
+        toggleMobileSidebar(false);
+        toggleLeftFilter(false);
+    });
 
     // Highlight kartu di sidebar
     function highlightSidebarCard(id) {

@@ -1,23 +1,23 @@
-<x-layout title="PuskesMap SDSS - Peta & Dasbor Spasial Puskesmas Kota Bogor" body-class="h-screen w-screen overflow-hidden bg-[#f4f7f6] flex flex-col text-ink font-sans">
-    {{-- ================= TOP HEADER BAR (Terinspirasi Referensi UI Modern & Bersih) ================= --}}
-    <header class="h-[68px] shrink-0 bg-white border-b border-gray-100 px-4 sm:px-6 flex items-center justify-between gap-4 z-30">
-        {{-- Kiri: Logo + Pencarian Utama Bergaya Modern (Seperti "Woodland Hills, LA" di Referensi 1) --}}
-        <div class="flex items-center gap-4 flex-1 max-w-2xl">
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 shrink-0 group" aria-label="PuskesMap Beranda">
-                <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-8 w-auto transition-transform group-hover:scale-105">
+<x-layout title="PuskesMap SDSS - Peta & Dasbor Spasial Puskesmas Kota Bogor" body-class="h-dvh w-screen overflow-hidden bg-[#f4f7f6] flex flex-col text-ink font-sans">
+    {{-- ================= TOP HEADER BAR (Responsif untuk HP & Desktop) ================= --}}
+    <header class="h-14 sm:h-[68px] shrink-0 bg-white border-b border-gray-100 px-3 sm:px-6 flex items-center justify-between gap-2 sm:gap-4 z-30">
+        {{-- Kiri: Logo + Pencarian Utama Bergaya Modern --}}
+        <div class="flex items-center gap-2.5 sm:gap-4 flex-1 max-w-2xl min-w-0">
+            <a href="{{ route('home') }}" class="flex items-center gap-2 shrink-0 group" aria-label="PuskesMap Beranda">
+                <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-7 sm:h-8 w-auto transition-transform group-hover:scale-105">
                 <span class="hidden sm:inline text-lg font-extrabold text-primary-dark tracking-tight">PuskesMap</span>
             </a>
 
             <div class="h-6 w-px bg-gray-200 hidden sm:block"></div>
 
             {{-- Search Input Utama Debounce 300ms --}}
-            <div class="relative flex-1 flex items-center">
+            <div class="relative flex-1 flex items-center min-w-0">
                 <svg class="absolute left-3 size-4 text-muted pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/>
                 </svg>
                 <input type="text" id="sidebar-search"
-                       placeholder="Kota Bogor · Cari puskesmas, kelurahan, atau jalan..."
-                       class="w-full h-10 rounded-xl bg-gray-50/80 hover:bg-gray-100/80 focus:bg-white pl-10 pr-9 text-sm font-bold text-ink placeholder:text-muted/60 placeholder:font-medium focus:ring-2 focus:ring-primary/25 focus:outline-none border border-transparent focus:border-primary/30 transition-all">
+                       placeholder="Cari puskesmas, kelurahan..."
+                       class="w-full h-9 sm:h-10 rounded-xl bg-gray-50/90 hover:bg-gray-100/80 focus:bg-white pl-9 sm:pl-10 pr-8 text-xs sm:text-sm font-bold text-ink placeholder:text-muted/60 placeholder:font-medium focus:ring-2 focus:ring-primary/25 focus:outline-none border border-transparent focus:border-primary/30 transition-all">
                 <button type="button" id="btn-clear-search" aria-label="Hapus pencarian"
                         class="hidden absolute right-2.5 size-5 rounded-full bg-gray-200 hover:bg-gray-300 text-muted hover:text-ink items-center justify-center text-xs cursor-pointer">
                     ✕
@@ -26,8 +26,8 @@
         </div>
 
         {{-- Kanan: Pill Konteks (Kecamatan & Mode Analitik) + Tombol Tutup ke Beranda --}}
-        <div class="flex items-center gap-2 sm:gap-3">
-            {{-- Pill Pemilih Kecamatan (Seperti Pill "Delivery" dengan Ikon Lingkaran Oranye Lembut di Referensi 1) --}}
+        <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            {{-- Pill Pemilih Kecamatan (Desktop/Tablet) --}}
             <div class="hidden md:flex items-center gap-2.5 pl-2 pr-3 py-1.5 rounded-full bg-gray-50/90 border border-gray-100">
                 <span class="flex size-7 items-center justify-center rounded-full bg-accent/15 text-accent">
                     <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
@@ -40,43 +40,93 @@
                 </select>
             </div>
 
-            {{-- Pill Pemilih Mode Publik vs Dinkes (Seperti Pill "Today · ASAP" dengan Ikon Mint di Referensi 1) --}}
-            <div class="flex items-center rounded-full bg-gray-100/90 p-1 border border-gray-200/60 text-xs font-extrabold">
+            {{-- Pill Pemilih Mode Publik vs Dinkes --}}
+            <div class="flex items-center rounded-full bg-gray-100/90 p-0.5 sm:p-1 border border-gray-200/60 text-[11px] sm:text-xs font-extrabold">
                 <button type="button" id="tab-nav-public"
-                        class="nav-mode-btn rounded-full px-3.5 py-1.5 bg-primary text-white shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer">
-                    <span class="size-2 rounded-full bg-white"></span>
-                    <span>Eksplorasi &amp; MAUT</span>
+                        class="nav-mode-btn rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 bg-primary text-white shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer">
+                    <span class="size-1.5 sm:size-2 rounded-full bg-white"></span>
+                    <span class="hidden sm:inline">Eksplorasi &amp; MAUT</span>
+                    <span class="sm:hidden">Peta</span>
                 </button>
                 <button type="button" id="tab-nav-dinkes"
-                        class="nav-mode-btn rounded-full px-3.5 py-1.5 text-ink hover:text-primary transition-all flex items-center gap-1.5 cursor-pointer">
+                        class="nav-mode-btn rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-ink hover:text-primary transition-all flex items-center gap-1 cursor-pointer">
                     <svg class="size-3.5 text-primary" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                     <span class="hidden sm:inline">Analitik Dinkes</span>
+                    <span class="sm:hidden">Dinkes</span>
                 </button>
             </div>
 
-            {{-- Toggle Sidebar Mobile --}}
-            <button type="button" id="btn-toggle-sidebar" aria-label="Buka Filter & Daftar"
-                    class="lg:hidden flex size-9 items-center justify-center rounded-xl bg-surface-mint text-primary-dark hover:bg-primary hover:text-white transition-colors cursor-pointer">
+            {{-- Toggle Sidebar Daftar di Mobile --}}
+            <button type="button" id="btn-toggle-sidebar" aria-label="Buka Daftar Puskesmas"
+                    class="lg:hidden flex size-8 sm:size-9 items-center justify-center rounded-xl bg-surface-mint text-primary-dark hover:bg-primary hover:text-white transition-colors cursor-pointer">
                 <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h10"/></svg>
             </button>
 
             <div class="h-6 w-px bg-gray-200 hidden sm:block"></div>
 
-            {{-- Tombol Tutup / Kembali ke Beranda ('✕' di Kanan Atas seperti Referensi 1) --}}
+            {{-- Tombol Tutup / Kembali ke Beranda ('✕') --}}
             <a href="{{ route('home') }}" title="Kembali ke Beranda" aria-label="Kembali ke Beranda"
-               class="flex size-9 items-center justify-center rounded-xl bg-gray-50 hover:bg-gray-100 text-ink transition-colors">
+               class="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-gray-50 hover:bg-gray-100 text-ink transition-colors">
                 <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </a>
         </div>
     </header>
 
+    {{-- ================= BAR FILTER CEPAT KHUSUS HP & TABLET (Agar Mudah Diakses Tanpa Menutupi Peta) ================= --}}
+    <div class="lg:hidden shrink-0 bg-white border-b border-gray-100 px-3 py-2 flex items-center gap-2 overflow-x-auto no-scrollbar z-20">
+        {{-- Tombol Buka Drawer Filter & Radius di HP --}}
+        <button type="button" id="btn-open-left-filter"
+                class="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-ink text-white px-3 py-1.5 text-[11px] font-extrabold shadow-2xs cursor-pointer">
+            <svg class="size-3.5 text-accent" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg>
+            <span>Filter &amp; Radius</span>
+        </button>
+
+        {{-- Pemilih Kecamatan di HP --}}
+        <div class="md:hidden shrink-0 flex items-center rounded-full bg-surface-mint/70 border border-primary/20 px-2.5 py-1">
+            <select id="select-district-mobile" aria-label="Pilih Kecamatan"
+                    class="bg-transparent text-[11px] font-extrabold text-primary-dark focus:outline-none">
+                @foreach ($districts as $d)
+                    <option value="{{ $d }}">{{ $d === 'Semua' ? 'Semua Kec.' : 'Kec. ' . $d }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        {{-- Chip Filter Layanan Cepat di HP --}}
+        <button type="button" data-map-chip="all" aria-pressed="true"
+                class="map-hashtag-chip shrink-0 rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-gray-100 transition-colors aria-pressed:bg-primary aria-pressed:text-white cursor-pointer">
+            #Semua
+        </button>
+        <button type="button" data-map-chip="igd" aria-pressed="false"
+                class="map-hashtag-chip shrink-0 rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-gray-100 transition-colors aria-pressed:bg-primary aria-pressed:text-white cursor-pointer">
+            #IGD24Jam
+        </button>
+        <button type="button" data-map-chip="inap" aria-pressed="false"
+                class="map-hashtag-chip shrink-0 rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-gray-100 transition-colors aria-pressed:bg-primary aria-pressed:text-white cursor-pointer">
+            #RawatInap
+        </button>
+        <button type="button" data-map-chip="nakes" aria-pressed="false"
+                class="map-hashtag-chip shrink-0 rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-gray-100 transition-colors aria-pressed:bg-primary aria-pressed:text-white cursor-pointer">
+            #Nakes100%
+        </button>
+    </div>
+
     {{-- ================= MAIN 3-COLUMN WORKSPACE (Referensi 1 & 2) ================= --}}
     <main class="flex-1 relative flex overflow-hidden bg-white">
+        {{-- Backdrop Gelap Saat Drawer HP Dibuka --}}
+        <div id="mobile-drawer-backdrop" class="fixed inset-0 bg-black/40 backdrop-blur-[1px] z-30 hidden lg:hidden"></div>
 
-        {{-- ================= KOLOM 1 (KIRI): PANEL FILTER & KONTROL SPASIAL ================= --}}
+        {{-- ================= KOLOM 1 (KIRI): PANEL FILTER & KONTROL SPASIAL (Drawer di HP, Kolom Tetap di Desktop) ================= --}}
         <aside id="left-filter-panel"
-               class="hidden lg:flex w-[275px] xl:w-[295px] shrink-0 h-full flex-col justify-between border-r border-gray-100 bg-white px-6 py-5 overflow-y-auto no-scrollbar select-none z-20">
+               class="fixed lg:relative inset-y-0 left-0 -translate-x-full lg:translate-x-0 flex w-[85vw] max-w-[310px] lg:w-[275px] xl:w-[295px] shrink-0 h-full flex-col justify-between border-r border-gray-100 bg-white px-5 sm:px-6 py-5 overflow-y-auto no-scrollbar select-none z-40 lg:z-20 shadow-2xl lg:shadow-none transition-transform duration-300 ease-in-out">
             <div class="space-y-6">
+                {{-- Header Drawer Khusus HP --}}
+                <div class="flex lg:hidden items-center justify-between pb-3 border-b border-gray-100">
+                    <span class="text-sm font-extrabold text-ink">Filter &amp; Parameter Spasial</span>
+                    <button type="button" id="btn-close-left-filter" aria-label="Tutup Filter"
+                            class="flex size-7 items-center justify-center rounded-full bg-gray-100 text-ink text-xs font-bold">
+                        ✕
+                    </button>
+                </div>
                 {{-- 1. Map View Indicator (Persis Seperti "Map View" dengan Toggle Switch Oranye di Referensi 1) --}}
                 <div class="flex items-center justify-between">
                     <div>
@@ -236,36 +286,27 @@
                     </button>
                 </div>
             </div>
+
+            {{-- Tombol Terapkan Filter (Khusus Mobile Drawer) --}}
+            <button type="button" id="btn-apply-left-filter-mobile"
+                    class="lg:hidden mt-4 w-full h-11 rounded-xl bg-primary text-white text-xs font-extrabold shadow-xs hover:bg-primary-dark transition-colors flex items-center justify-center gap-2 shrink-0 cursor-pointer">
+                <span>Terapkan &amp; Lihat Peta</span>
+                <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+            </button>
         </aside>
 
         {{-- ================= KOLOM 2 (TENGAH): KANVAS PETA JALAN BERBINGKAI ROUNDED (Referensi 1 & 2) ================= --}}
-        <section class="flex-1 h-full relative p-2.5 sm:p-4 bg-white flex flex-col overflow-hidden">
-            <div class="relative flex-1 w-full h-full rounded-[24px] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgba(15,23,42,0.05)] bg-[#eef3f1]">
+        <section class="flex-1 h-full relative p-1.5 sm:p-4 bg-white flex flex-col overflow-hidden">
+            <div class="relative flex-1 w-full h-full rounded-2xl sm:rounded-[24px] overflow-hidden border border-gray-100 shadow-[0_8px_30px_rgba(15,23,42,0.05)] bg-[#eef3f1]">
                 {{-- 1. Leaflet Interactive Street Map Container --}}
                 <div id="leaflet-map" class="absolute inset-0 w-full h-full z-10"></div>
 
                 {{-- Banner Instruksi Mode Pilih Titik di Peta (US-05 / FR-05) --}}
-                <div id="pick-point-banner" class="hidden absolute top-16 left-1/2 -translate-x-1/2 z-30">
-                    <div class="rounded-full bg-accent text-white px-5 py-2 text-xs font-extrabold shadow-float flex items-center gap-2 animate-bounce">
-                        <span>📍 Klik di mana saja pada peta untuk menetapkan titik lokasi referensi Anda</span>
-                        <button type="button" id="btn-cancel-pick" class="ml-1 rounded-full bg-white/20 hover:bg-white/30 px-2.5 py-0.5 text-[10px] cursor-pointer">Batal</button>
+                <div id="pick-point-banner" class="hidden absolute top-4 sm:top-16 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-30">
+                    <div class="rounded-2xl sm:rounded-full bg-accent text-white px-4 sm:px-5 py-2 text-[11px] sm:text-xs font-extrabold shadow-float flex items-center justify-between sm:justify-center gap-2 animate-bounce">
+                        <span>📍 Ketuk peta untuk menetapkan titik lokasimu</span>
+                        <button type="button" id="btn-cancel-pick" class="ml-1 rounded-full bg-white/20 hover:bg-white/30 px-2.5 py-0.5 text-[10px] shrink-0 cursor-pointer">Batal</button>
                     </div>
-                </div>
-
-                {{-- Floating Hashtag Filter Chips di Atas Peta (Untuk Layar Tablet/Mobile) --}}
-                <div class="absolute top-4 left-4 z-20 flex lg:hidden items-center gap-1.5 bg-white/95 backdrop-blur-md px-2.5 py-1.5 rounded-full shadow-float border border-gray-100">
-                    <button type="button" data-map-chip="all" aria-pressed="true"
-                            class="map-hashtag-chip rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-white transition-colors aria-pressed:bg-ink aria-pressed:text-white cursor-pointer">
-                        #Semua
-                    </button>
-                    <button type="button" data-map-chip="igd" aria-pressed="false"
-                            class="map-hashtag-chip rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-white transition-colors aria-pressed:bg-ink aria-pressed:text-white cursor-pointer">
-                        #IGD24Jam
-                    </button>
-                    <button type="button" data-map-chip="inap" aria-pressed="false"
-                            class="map-hashtag-chip rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-white transition-colors aria-pressed:bg-ink aria-pressed:text-white cursor-pointer">
-                        #RawatInap
-                    </button>
                 </div>
 
                 {{-- Tombol Expand Peta di Kanan Atas Peta (Persis Seperti Tombol Panah Diagonal di Referensi 1) --}}
@@ -274,11 +315,11 @@
                     <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l6.75 6.75m0 0h-6m6 0v-6M20.25 10.5L13.5 3.75m0 0h6m-6 0v6"/></svg>
                 </button>
 
-                {{-- Floating Puskesmas Info Card Overlay (Bergaya Kartu "Sapoon Café" di Referensi 1) --}}
+                {{-- Floating Puskesmas Info Card Overlay (Compact Bottom Card di HP, Kartu "Sapoon Café" di Desktop) --}}
                 <aside id="map-floating-card" aria-label="Ringkasan Puskesmas Terpilih"
-                       class="absolute right-4 top-16 sm:top-16 z-20 w-[255px] sm:w-[270px] rounded-2xl bg-white p-3.5 shadow-[0_20px_50px_rgba(15,23,42,0.16)] border border-gray-100 transition-all duration-200">
-                    {{-- Header Visual Mini seperti Foto Interior di Referensi 1 --}}
-                    <div class="relative h-24 w-full rounded-xl bg-gradient-to-br from-surface-mint via-card-mint to-surface-sky overflow-hidden p-2.5 flex flex-col justify-between">
+                       class="absolute inset-x-2.5 bottom-16 sm:inset-x-auto sm:bottom-auto sm:right-4 sm:top-16 z-20 sm:w-[270px] rounded-2xl bg-white/95 backdrop-blur-md p-3 sm:p-3.5 shadow-[0_20px_50px_rgba(15,23,42,0.18)] border border-gray-100 transition-all duration-200">
+                    {{-- Header Visual Mini (Tampil di Tablet/Desktop agar di HP tidak menutupi peta) --}}
+                    <div class="hidden sm:flex relative h-24 w-full rounded-xl bg-gradient-to-br from-surface-mint via-card-mint to-surface-sky overflow-hidden p-2.5 flex-col justify-between mb-3">
                         <div class="flex items-center justify-between z-10">
                             <span id="float-card-badge" class="inline-block rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-extrabold text-primary-dark shadow-2xs">
                                 Sorotan Puskesmas
@@ -302,22 +343,30 @@
                         </div>
                     </div>
 
-                    {{-- Judul & Bintang Skor (Seperti "Sapoon Café  ★ 5.0" di Referensi 1) --}}
-                    <div class="mt-3 flex items-start justify-between gap-2">
-                        <h3 id="float-card-name" class="text-sm font-extrabold text-ink leading-snug line-clamp-1">Puskesmas Tanah Sareal</h3>
-                        <span class="inline-flex items-center gap-1 text-xs font-extrabold text-ink shrink-0">
-                            <span class="text-primary">★</span>
-                            <span id="float-card-nakes">100%</span>
-                        </span>
+                    {{-- Judul, Skor Bintang & Tombol Tutup Mobile --}}
+                    <div class="flex items-start justify-between gap-2">
+                        <div class="min-w-0">
+                            <h3 id="float-card-name" class="text-sm font-extrabold text-ink leading-snug truncate">Puskesmas Tanah Sareal</h3>
+                            <p id="float-card-sub" class="text-[11px] font-medium text-muted mt-0.5 truncate">Kec. Tanah Sareal · 1,1 km</p>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <span class="inline-flex items-center gap-1 rounded-full bg-surface-mint px-2 py-0.5 text-[11px] font-extrabold text-primary-dark">
+                                <span class="text-primary">★</span>
+                                <span id="float-card-nakes">100%</span>
+                            </span>
+                            <button type="button" id="btn-close-float-card-mobile" aria-label="Tutup kartu"
+                                    class="sm:hidden flex size-6 items-center justify-center rounded-full bg-gray-100 text-ink text-xs font-bold">
+                                ✕
+                            </button>
+                        </div>
                     </div>
-                    <p id="float-card-sub" class="text-[11px] font-medium text-muted mt-0.5 truncate">Kec. Tanah Sareal · 1,1 km</p>
 
                     <div id="float-card-tags" class="mt-2 flex flex-wrap gap-1">
                         <x-tag>Buka 08.00 – 16.00</x-tag>
                         <x-tag>IGD 24 jam</x-tag>
                     </div>
 
-                    <div class="mt-3 grid grid-cols-2 gap-1.5">
+                    <div class="mt-2.5 sm:mt-3 grid grid-cols-2 gap-1.5">
                         <button type="button" id="float-card-detail-btn"
                                 class="h-8 rounded-xl bg-gray-100 hover:bg-ink hover:text-white text-ink text-[11px] font-extrabold transition-colors flex items-center justify-center cursor-pointer">
                             Lihat detail
@@ -329,41 +378,59 @@
                     </div>
                 </aside>
 
-                {{-- Kontrol Zoom & Lokasi di Kiri Bawah Peta (Persis Seperti Tombol [+][-] & [◎] Putih di Referensi 1) --}}
-                <div class="absolute left-4 bottom-4 z-20 flex flex-col gap-2">
-                    <div class="flex flex-col rounded-2xl bg-white shadow-float border border-gray-100 overflow-hidden">
+                {{-- Kontrol Zoom & Lokasi (Kiri Atas di HP agar tidak bentrok dengan Bottom Card, Kiri Bawah di Desktop) --}}
+                <div class="absolute left-3 top-3 sm:top-auto sm:left-4 sm:bottom-4 z-20 flex flex-col gap-1.5 sm:gap-2">
+                    <div class="flex flex-col rounded-2xl bg-white/95 backdrop-blur-md shadow-float border border-gray-100 overflow-hidden">
                         <button type="button" id="gis-zoom-in" aria-label="Perbesar peta" title="Perbesar (+)"
-                                class="flex size-10 items-center justify-center text-ink hover:bg-gray-50 text-base font-extrabold border-b border-gray-100 cursor-pointer">
+                                class="flex size-9 sm:size-10 items-center justify-center text-ink hover:bg-gray-50 text-base font-extrabold border-b border-gray-100 cursor-pointer">
                             +
                         </button>
                         <button type="button" id="gis-zoom-out" aria-label="Perkecil peta" title="Perkecil (−)"
-                                class="flex size-10 items-center justify-center text-ink hover:bg-gray-50 text-base font-extrabold cursor-pointer">
+                                class="flex size-9 sm:size-10 items-center justify-center text-ink hover:bg-gray-50 text-base font-extrabold cursor-pointer">
                             &minus;
                         </button>
                     </div>
 
                     <button type="button" id="gis-locate-me" aria-label="Lokasi saya" title="Gunakan Lokasi GPS Saya"
-                            class="flex size-10 items-center justify-center rounded-2xl bg-white text-ink shadow-float border border-gray-100 hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                            class="flex size-9 sm:size-10 items-center justify-center rounded-2xl bg-white/95 backdrop-blur-md text-ink shadow-float border border-gray-100 hover:bg-primary hover:text-white transition-colors cursor-pointer">
                         <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
                     </button>
 
                     <button type="button" id="gis-pick-point" aria-label="Pilih titik di peta" title="Klik Titik Referensi di Peta"
-                            class="flex size-10 items-center justify-center rounded-2xl bg-white text-ink shadow-float border border-gray-100 hover:bg-accent hover:text-white transition-colors cursor-pointer">
+                            class="flex size-9 sm:size-10 items-center justify-center rounded-2xl bg-white/95 backdrop-blur-md text-ink shadow-float border border-gray-100 hover:bg-accent hover:text-white transition-colors cursor-pointer">
                         <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
                     </button>
 
                     <button type="button" id="gis-reset-view" aria-label="Reset tampilan peta" title="Reset ke Pusat Kota Bogor"
-                            class="flex size-10 items-center justify-center rounded-2xl bg-white text-ink shadow-float border border-gray-100 hover:bg-primary-dark hover:text-white transition-colors cursor-pointer">
+                            class="flex size-9 sm:size-10 items-center justify-center rounded-2xl bg-white/95 backdrop-blur-md text-ink shadow-float border border-gray-100 hover:bg-primary-dark hover:text-white transition-colors cursor-pointer">
                         <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3"/></svg>
                     </button>
                 </div>
 
-                {{-- Pill Tengah Bawah (Persis Seperti "[✓] Search as I move the map" di Referensi 1) --}}
+                {{-- Pill Tengah Bawah (Desktop/Tablet) --}}
                 <div class="hidden sm:flex absolute bottom-4 left-1/2 -translate-x-1/2 z-20 items-center gap-2.5 rounded-2xl bg-white px-4 py-2.5 shadow-float border border-gray-100 text-xs font-extrabold text-ink">
                     <span class="flex size-5 items-center justify-center rounded-md bg-accent text-white shadow-2xs">
                         <svg class="size-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                     </span>
                     <span>Titik Referensi: <strong id="ref-coord-badge" class="text-primary">Pusat Kota Bogor</strong></span>
+                </div>
+
+                {{-- FLOATING BOTTOM ACTION BAR KHUSUS HP (Thumb-Friendly Mobile UX!) --}}
+                <div class="flex lg:hidden absolute inset-x-2.5 bottom-2.5 z-20 items-center justify-between gap-1.5 rounded-2xl bg-ink/95 backdrop-blur-md p-1.5 text-white shadow-2xl border border-white/10">
+                    <button type="button" id="mobile-dock-faskes"
+                            class="flex-1 h-9 rounded-xl bg-white/12 hover:bg-white/20 text-[11px] font-extrabold flex items-center justify-center gap-1.5 cursor-pointer">
+                        <span class="size-2 rounded-full bg-emerald-400"></span>
+                        <span>Daftar (25)</span>
+                    </button>
+                    <button type="button" id="mobile-dock-maut"
+                            class="flex-1 h-9 rounded-xl bg-accent hover:bg-accent-strong text-white text-[11px] font-extrabold flex items-center justify-center gap-1 shadow-xs cursor-pointer">
+                        <span>★</span>
+                        <span>SPK MAUT</span>
+                    </button>
+                    <button type="button" id="mobile-dock-filter"
+                            class="px-3 h-9 rounded-xl bg-white/12 hover:bg-white/20 text-[11px] font-extrabold flex items-center justify-center gap-1 cursor-pointer">
+                        <span>Filter</span>
+                    </button>
                 </div>
             </div>
         </section>
@@ -578,15 +645,21 @@
 
             {{-- SUB-PANEL 2: DASBOR ANALITIK SPASIAL DINAS KESEHATAN (SDSS) --}}
             <div id="panel-dinkes" class="flex-1 flex flex-col h-full overflow-hidden hidden bg-[#f8faf9]">
-                <div class="p-5 bg-white border-b border-gray-100 shrink-0 space-y-3">
-                    <div class="flex items-center justify-between">
+                <div class="p-4 sm:p-5 bg-white border-b border-gray-100 shrink-0 space-y-3">
+                    <div class="flex items-center justify-between gap-2">
                         <div>
                             <h3 class="text-sm font-extrabold text-ink">Instrumen SDSS Dinas Kesehatan</h3>
                             <p class="text-[11px] text-muted">Permenkes No. 43/2019 &amp; Beban Wilayah</p>
                         </div>
-                        <span class="rounded-full bg-surface-mint text-primary-dark px-2.5 py-0.5 text-[10px] font-extrabold">
-                            Kota Bogor
-                        </span>
+                        <div class="flex items-center gap-1.5">
+                            <span class="rounded-full bg-surface-mint text-primary-dark px-2.5 py-0.5 text-[10px] font-extrabold">
+                                Kota Bogor
+                            </span>
+                            <button type="button" id="btn-close-dinkes-mobile" aria-label="Tutup Panel Dinkes"
+                                    class="lg:hidden inline-flex size-8 items-center justify-center rounded-full bg-gray-100 text-ink hover:bg-gray-200 transition-colors cursor-pointer">
+                                <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
                     </div>
 
                     {{-- Kartu Indikator Ringkas --}}
