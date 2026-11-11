@@ -1,7 +1,7 @@
 @php
     $navLinks = [
         ['label' => 'Tentang', 'href' => '#wilayah'],
-        ['label' => 'Fitur', 'href' => '#rekomendasi'],
+        ['label' => 'Fitur', 'href' => '#peta'],
         ['label' => 'Puskesmas', 'href' => '#cari'],
     ];
 
@@ -59,10 +59,39 @@
 
     $hashtags = ['#Semua', '#IGD24Jam', '#RawatInap', '#BukaSekarang'];
     $footerLinks = [
-        ['label' => 'Tentang PuskesMap', 'href' => '#wilayah'],
-        ['label' => 'Peta Interaktif SDSS', 'href' => route('peta')],
-        ['label' => 'Rekomendasi MAUT', 'href' => '#rekomendasi'],
+        ['label' => 'Beranda', 'href' => '#beranda'],
+        ['label' => 'Wilayah Cakupan', 'href' => '#wilayah'],
+        ['label' => 'Daftar 25 Puskesmas', 'href' => '#cari'],
+        ['label' => 'Pratinjau Peta', 'href' => '#peta'],
+        ['label' => 'WebGIS & SDSS MAUT', 'href' => route('peta')],
         ['label' => 'Standar Permenkes 43/2019', 'href' => route('peta')],
+    ];
+
+    $footerTabs = [
+        [
+            'id' => 'dinkes',
+            'subtitle' => 'Instansi Utama',
+            'title' => 'Dinkes Kota Bogor',
+            'address' => 'Jl. Kesehatan No. 3, Kel. Tanah Sareal, Kec. Tanah Sareal, 16161 Kota Bogor, Jawa Barat.',
+            'phone' => '(0251) 8331753',
+            'hours' => '07.30 – 16.00 WIB (Senin – Jumat) · Layanan Administrasi & Pengendalian Mutu Faskes',
+        ],
+        [
+            'id' => 'utara-tengah',
+            'subtitle' => 'Wilayah Layanan I',
+            'title' => 'Utara, Tengah & Tanah Sareal',
+            'address' => 'Mencakup 13 UPTD Puskesmas Induk di Kec. Tanah Sareal (5), Bogor Tengah (5), dan Bogor Utara (3).',
+            'phone' => '112 / (0251) 8344000',
+            'hours' => '07.30 – 14.30 WIB (Rawat Jalan) / 24 Jam Nonstop (Puskesmas Induk dengan IGD & PONED)',
+        ],
+        [
+            'id' => 'barat-selatan',
+            'subtitle' => 'Wilayah Layanan II',
+            'title' => 'Barat, Timur & Selatan',
+            'address' => 'Mencakup 12 UPTD Puskesmas Induk di Kec. Bogor Barat (5), Bogor Selatan (5), dan Bogor Timur (2).',
+            'phone' => '112 / (0251) 8321196',
+            'hours' => '07.30 – 14.30 WIB (Rawat Jalan) / 24 Jam Nonstop (Puskesmas Induk dengan IGD & Rawat Inap)',
+        ],
     ];
 @endphp
 
@@ -74,10 +103,10 @@
             <svg class="size-5 mb-0.5 transition-transform group-hover:-translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
             <span class="text-[10px] font-extrabold tracking-tight leading-none">Peta GIS</span>
         </a>
-        <a href="#rekomendasi"
+        <a href="#peta"
            class="group flex size-[68px] flex-col items-center justify-center rounded-full bg-white text-primary-dark border border-primary/20 shadow-[0_12px_28px_rgba(11,92,92,0.14)] transition-all hover:scale-105 hover:bg-surface-mint">
-            <svg class="size-5 mb-0.5 text-accent transition-transform group-hover:-translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/></svg>
-            <span class="text-[10px] font-extrabold tracking-tight leading-none">SPK MAUT</span>
+            <svg class="size-5 mb-0.5 text-accent transition-transform group-hover:-translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+            <span class="text-[10px] font-extrabold tracking-tight leading-none">Sekilas</span>
         </a>
     </aside>
 
@@ -88,24 +117,26 @@
             <img src="{{ asset('images/main-hero.svg') }}" alt="Ilustrasi Kota Bogor"
                  class="absolute left-[-11.54%] top-0 h-[115%] w-[123.08%] max-w-none object-cover object-top">
 
-            {{-- Floating Decorative Badges di Sekitar Judul Hero --}}
-            <div class="absolute inset-x-0 top-[36%] z-10 flex flex-col items-center px-4 text-center">
-                <div class="relative inline-flex items-center gap-3">
+            {{-- Floating Decorative Badges & Judul Hero di Area Langit/Awan --}}
+            <div class="absolute inset-x-0 top-[18%] sm:top-[19%] lg:top-[20%] z-10 flex flex-col items-center px-4 text-center">
+                <div class="relative inline-flex items-center gap-4 sm:gap-5">
                     {{-- Badge Dekoratif Kiri --}}
-                    <span class="hidden sm:flex absolute -left-14 -top-4 size-10 items-center justify-center rounded-2xl bg-primary/85 text-white shadow-md -rotate-12 backdrop-blur-xs" aria-hidden="true">
-                        <svg class="size-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
+                    <span class="hidden sm:flex absolute -left-16 -top-5 size-12 items-center justify-center rounded-2xl bg-primary/90 text-white shadow-lg -rotate-12 backdrop-blur-xs" aria-hidden="true">
+                        <svg class="size-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
                     </span>
 
-                    <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-14 w-auto sm:h-[74px] drop-shadow-sm">
-                    <h1 class="text-4xl font-extrabold leading-tight text-primary-dark sm:text-5xl lg:text-6xl drop-shadow-xs">PuskesMap</h1>
+                    <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-16 w-auto sm:h-[86px] lg:h-[96px] drop-shadow-md">
+                    <h1 class="text-5xl font-extrabold tracking-tight leading-none text-primary-dark sm:text-6xl lg:text-[74px] drop-shadow-xs">
+                        PuskesMap
+                    </h1>
 
                     {{-- Badge Dekoratif Kanan --}}
-                    <span class="hidden sm:flex absolute -right-14 -bottom-2 size-10 items-center justify-center rounded-2xl bg-accent/90 text-white shadow-md rotate-12 backdrop-blur-xs" aria-hidden="true">
-                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                    <span class="hidden sm:flex absolute -right-16 -bottom-3 size-12 items-center justify-center rounded-2xl bg-accent/95 text-white shadow-lg rotate-12 backdrop-blur-xs" aria-hidden="true">
+                        <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
                     </span>
                 </div>
 
-                <p class="mt-3 rounded-full bg-white/75 px-5 py-1.5 text-sm font-bold text-primary-dark shadow-xs backdrop-blur-md sm:text-base border border-white">
+                <p class="mt-4 rounded-full bg-white/85 px-7 py-2 text-base font-extrabold text-primary-dark shadow-sm backdrop-blur-md sm:text-lg lg:text-xl border border-white">
                     Peta puskesmas Kota Bogor, di satu tempat
                 </p>
             </div>
@@ -153,12 +184,17 @@
             </nav>
         </div>
 
-        {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA SESUAI REFERENSI TERRITOIRE) ================= --}}
+        {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA DENGAN PALET PUSKESMAP) ================= --}}
         <div id="wilayah" class="relative z-20 mx-auto max-w-[1140px] px-6 pt-4 pb-10 lg:pt-8 lg:pb-14">
+            {{-- Garis Lengkung Halus di Latar Belakang (Sesuai Referensi Peta) --}}
+            <svg class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 w-full h-48 text-[#e5f2f0] -z-10 hidden lg:block" viewBox="0 0 1200 200" fill="none" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M0 160 Q600 -30 1200 140" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+            </svg>
+
             <div class="grid items-center gap-8 lg:grid-cols-[1.05fr_1fr] lg:gap-0">
-                {{-- Kartu Biru Muda "Wilayah" di Kiri (Tertimpa Peta di Sisi Kanan) --}}
-                <div class="relative z-10 rounded-[20px] bg-[#8fd0ec] p-8 sm:p-11 lg:py-14 lg:pl-12 lg:pr-44 lg:-mr-36 shadow-[0_14px_35px_rgba(136,205,232,0.28)]">
-                    <h2 class="text-4xl sm:text-[44px] font-extrabold tracking-tight text-[#112433] leading-none">
+                {{-- Kartu "Wilayah" di Kiri (Tertimpa Peta di Sisi Kanan) --}}
+                <div class="relative z-10 rounded-[22px] bg-surface-sky p-8 sm:p-11 lg:py-14 lg:pl-12 lg:pr-44 lg:-mr-36 shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
+                    <h2 class="text-4xl sm:text-[44px] font-extrabold tracking-tight text-primary-dark leading-none">
                         Wilayah
                     </h2>
 
@@ -167,7 +203,7 @@
                         <path d="M2 8 C22 1, 42 13, 64 5 C78 0, 88 8, 98 4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
                     </svg>
 
-                    <p class="mt-5 text-sm sm:text-[15px] leading-relaxed text-[#163042] font-medium">
+                    <p class="mt-5 text-sm sm:text-[15px] leading-relaxed text-body font-medium">
                         PuskesMap memetakan 25 puskesmas induk di enam kecamatan Kota Bogor: Tanah Sareal, Bogor Utara,
                         Bogor Barat, Bogor Tengah, Bogor Timur, dan Bogor Selatan, dilengkapi informasi kesiapan IGD 24 jam,
                         fasilitas rawat inap, kelengkapan 9 profesi tenaga kesehatan, serta jam operasional harian.
@@ -175,18 +211,18 @@
 
                     <div class="mt-8">
                         <a href="{{ route('peta') }}"
-                           class="inline-flex h-11 items-center justify-center rounded-full bg-white px-8 text-xs font-extrabold uppercase tracking-wider text-[#112433] shadow-sm transition-all hover:bg-surface-mint hover:scale-105">
+                           class="inline-flex h-11 items-center justify-center rounded-full bg-white px-8 text-xs font-extrabold uppercase tracking-wider text-primary-dark shadow-sm transition-all hover:bg-primary hover:text-white hover:scale-105">
                             Jelajahi Wilayah
                         </a>
                     </div>
                 </div>
 
-                {{-- Peta Kota Bogor (.webp) Menimpa Kartu Biru di Kiri & Lengkungan Hero di Atas --}}
+                {{-- Peta Vektor Kota Bogor (Palet Mint-Teal-Sage) Menimpa Kartu di Kiri & Lengkungan Hero di Atas --}}
                 <div class="relative z-20 lg:-mt-32 lg:-ml-8 flex flex-col items-center">
-                    <x-bogor-map class="mx-auto w-full max-w-[500px] drop-shadow-[0_18px_28px_rgba(11,92,92,0.18)]" />
+                    <x-bogor-map class="mx-auto w-full max-w-[510px]" />
 
-                    {{-- Ornamen Daun Hijau di Bawah Peta (Sesuai Referensi Territoire) --}}
-                    <svg class="-mt-2 h-12 w-16 text-[#8cc63f]" viewBox="0 0 64 48" fill="currentColor" aria-hidden="true">
+                    {{-- Ornamen Daun Hijau-Teal di Bawah Peta --}}
+                    <svg class="-mt-2 h-12 w-16 text-[#68c196]" viewBox="0 0 64 48" fill="currentColor" aria-hidden="true">
                         <path d="M28 42 C18 32, 16 16, 28 6 C36 16, 36 32, 28 42 Z" opacity="0.85"/>
                         <path d="M32 42 C42 30, 54 26, 60 34 C50 42, 40 44, 32 42 Z" opacity="0.95"/>
                         <path d="M24 44 C14 38, 6 40, 4 46 C12 48, 20 46, 24 44 Z" opacity="0.75"/>
@@ -365,14 +401,17 @@
         </div>
     </section>
 
-    {{-- ================= SEKILAS DI PETA & REKOMENDASI MAUT ================= --}}
-    <section id="peta" class="bg-gradient-to-b from-surface-mint via-[#e2f2f5] to-white pt-10 pb-16 sm:pb-24">
+    {{-- ================= SEKILAS DI PETA (REAL INTERACTIVE STREET MAP) ================= --}}
+    <section id="peta" class="bg-gradient-to-b from-surface-mint via-[#eef7f6] to-white pt-10 pb-20 sm:pb-24">
         <div class="mx-auto max-w-[1180px] px-6">
             <div class="text-center">
                 <span class="inline-block rounded-full bg-white px-4 py-1 text-xs font-extrabold text-primary shadow-2xs border border-primary/15">
                      PRATINJAU SPASIAL KOTA BOGOR
                 </span>
                 <h2 class="mt-2 text-3xl font-extrabold leading-tight text-primary-dark sm:text-4xl">Sekilas di Peta</h2>
+                <p class="mt-1.5 text-xs sm:text-sm font-medium text-muted">
+                    Peta jalan interaktif real-time 25 Puskesmas Induk di 6 Kecamatan Kota Bogor
+                </p>
                 <div class="mt-5 flex flex-wrap justify-center gap-2">
                     @foreach ($hashtags as $tag)
                         <button type="button" data-chip aria-pressed="{{ $loop->first ? 'true' : 'false' }}"
@@ -383,12 +422,13 @@
                 </div>
             </div>
 
-            {{-- Container Pratinjau Peta Vektor --}}
-            <div class="relative mt-8 h-[640px] rounded-2xl border-[3px] border-primary bg-[#e4f2f7] shadow-[0_20px_50px_rgba(0,121,121,0.12)] sm:h-[540px] overflow-hidden">
-                <x-bogor-map :labels="false" class="absolute left-1/2 top-3 h-[calc(100%-1.5rem)] -translate-x-1/2" />
+            {{-- Container Peta Jalan Interaktif (Leaflet Real Street Map seperti Google Maps) --}}
+            <div class="relative mt-8 h-[620px] rounded-3xl border-2 border-primary/20 bg-[#f3f6f4] shadow-[0_24px_60px_rgba(0,121,121,0.14)] sm:h-[560px] overflow-hidden">
+                {{-- Kanvas Peta Jalan Asli (Leaflet) --}}
+                <div id="landing-leaflet-map" class="absolute inset-0 h-full w-full z-10" aria-label="Peta Jalan Interaktif Puskesmas Kota Bogor"></div>
 
                 {{-- Kartu Kontrol Radius Kiri Atas --}}
-                <div class="absolute left-5 top-5 w-[275px] max-w-[calc(100%-2.5rem)] rounded-xl bg-white/95 backdrop-blur-md p-4 shadow-float border border-primary/15">
+                <div class="absolute left-5 top-5 z-20 w-[275px] max-w-[calc(100%-2.5rem)] rounded-2xl bg-white/95 backdrop-blur-md p-4 shadow-float border border-gray-100">
                     <div class="flex items-center justify-between">
                         <p class="text-sm font-extrabold text-ink">Radius pencarian: 3 km</p>
                         <span class="size-2.5 rounded-full bg-emerald-500 animate-ping"></span>
@@ -396,17 +436,32 @@
                     <p class="mt-1 text-[11px] text-muted">Hanya puskesmas dalam radius geodetik ini yang dipertimbangkan.</p>
                     <div class="mt-3.5 space-y-2">
                         <x-button :href="route('peta')" variant="primary" class="w-full font-bold">Cari rekomendasi MAUT</x-button>
-                        <x-button :href="route('peta')" variant="outline" class="w-full font-bold">Gunakan lokasi saya</x-button>
+                        <button type="button" id="landing-btn-locate"
+                                class="inline-flex h-10 w-full items-center justify-center rounded-full border border-primary bg-white px-5 text-xs font-bold text-primary transition-colors hover:bg-surface-mint cursor-pointer">
+                            Gunakan lokasi saya
+                        </button>
                     </div>
                 </div>
 
+                {{-- Tombol Fullscreen / Buka Dashboard di Kanan Atas Peta (Sesuai Referensi) --}}
+                <a href="{{ route('peta') }}" title="Buka Dashboard Peta Penuh"
+                   class="absolute right-5 top-5 z-20 flex size-10 items-center justify-center rounded-xl bg-white text-ink shadow-float border border-gray-100 hover:bg-primary hover:text-white transition-colors">
+                    <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/></svg>
+                </a>
+
                 {{-- Kartu Info Puskesmas Kanan --}}
-                <div id="map-info-card" class="absolute bottom-4 left-4 w-[270px] max-w-[calc(100%-2rem)] rounded-xl bg-white/95 backdrop-blur-md p-4 shadow-float border border-primary/15 transition-all duration-200 sm:bottom-auto sm:left-auto sm:right-20 sm:top-1/2 sm:-translate-y-1/2">
-                    <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[10px] font-extrabold text-primary-dark mb-1">
-                        Sorotan Peta
-                    </span>
+                <div id="map-info-card" class="absolute bottom-4 left-4 z-20 w-[275px] max-w-[calc(100%-2rem)] rounded-2xl bg-white/95 backdrop-blur-md p-4 shadow-float border border-gray-100 transition-all duration-200 sm:bottom-auto sm:left-auto sm:right-6 sm:top-1/2 sm:-translate-y-1/2">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[10px] font-extrabold text-primary-dark">
+                            Sorotan Peta
+                        </span>
+                        <span id="info-card-score" class="inline-flex items-center gap-1 text-xs font-extrabold text-primary">
+                            <svg class="size-3.5 text-primary fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                            <span>Nakes 100%</span>
+                        </span>
+                    </div>
                     <h3 id="info-card-name" class="text-[15px] font-extrabold text-ink">Puskesmas Tanah Sareal</h3>
-                    <p id="info-card-distance" class="text-xs text-muted">Jarak 1,1 km dari pusat referensi</p>
+                    <p id="info-card-distance" class="text-xs text-muted">Kec. Tanah Sareal · Jarak 1,1 km</p>
                     <div id="info-card-tags" class="mt-2.5 flex flex-wrap gap-1.5">
                         <x-tag>1,1 km</x-tag><x-tag>Buka</x-tag><x-tag>IGD 24 jam</x-tag><x-tag>Rawat inap</x-tag>
                     </div>
@@ -415,130 +470,146 @@
                     </div>
                     <div class="mt-3.5 space-y-2">
                         <x-button :href="route('peta')" variant="primary" class="w-full font-bold">Buka di Peta GIS</x-button>
-                        <x-button href="https://kotabogor.go.id" target="_blank" variant="outline" class="w-full font-bold">Portal resmi</x-button>
+                        <x-button href="https://dinkes.kotabogor.go.id" target="_blank" variant="outline" class="w-full font-bold">Portal resmi</x-button>
                     </div>
                 </div>
 
-                {{-- Kontrol Zoom Bulat Kanan Bawah --}}
-                <div class="absolute bottom-5 right-5 flex flex-col gap-2.5">
-                    <a href="{{ route('peta') }}" aria-label="Buka Peta Penuh" title="Buka Peta Interaktif Penuh" class="flex size-10 cursor-pointer items-center justify-center rounded-full bg-primary text-white shadow-float hover:bg-primary-dark transition-colors">
+                {{-- Kontrol Zoom & Reset di Kiri Bawah Peta (Sesuai Referensi Dashboard) --}}
+                <div class="hidden sm:flex absolute bottom-5 left-5 z-20 flex-col gap-2">
+                    <div class="flex flex-col rounded-xl bg-white shadow-float border border-gray-100 overflow-hidden">
+                        <button type="button" id="landing-zoom-in" aria-label="Perbesar Peta" class="flex size-9 items-center justify-center text-ink hover:bg-surface-mint hover:text-primary font-bold text-base border-b border-gray-100 cursor-pointer">+</button>
+                        <button type="button" id="landing-zoom-out" aria-label="Perkecil Peta" class="flex size-9 items-center justify-center text-ink hover:bg-surface-mint hover:text-primary font-bold text-base cursor-pointer">&minus;</button>
+                    </div>
+                    <button type="button" id="landing-zoom-reset" aria-label="Pusatkan Peta" title="Pusatkan ke Kota Bogor" class="flex size-9 cursor-pointer items-center justify-center rounded-xl bg-white text-ink shadow-float border border-gray-100 hover:bg-primary hover:text-white transition-colors">
                         <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
-                    </a>
-                </div>
-            </div>
-
-            {{-- Tombol CTA di Bawah Pratinjau Peta --}}
-            <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4">
-                <a href="{{ route('peta') }}" class="sm:w-[280px] text-center rounded-full bg-primary text-white py-3.5 font-extrabold text-sm hover:bg-primary-dark transition-all shadow-md">
-                    Buka Dasbor Peta Interaktif &rarr;
-                </a>
-                <a href="#rekomendasi" class="sm:w-[280px] text-center rounded-full bg-white border-2 border-primary text-primary py-3.5 font-extrabold text-sm hover:bg-surface-mint transition-all shadow-xs">
-                    Lihat Rekomendasi Terbaik
-                </a>
-            </div>
-        </div>
-
-        {{-- ================= REKOMENDASI UNTUKMU (MAUT PREVIEW) ================= --}}
-        <div id="rekomendasi" class="mt-16 flex flex-col items-stretch gap-6 lg:flex-row lg:items-center">
-            <div class="mx-6 rounded-2xl bg-white p-8 shadow-float border border-primary/15 lg:mx-0 lg:w-[400px] lg:shrink-0 lg:rounded-l-none lg:rounded-r-3xl">
-                <span class="inline-block rounded-full bg-accent/15 px-3 py-1 text-xs font-extrabold text-accent-strong">
-                    METODE SPK MAUT
-                </span>
-                <h2 class="mt-2 text-[28px] font-extrabold leading-tight text-primary-dark">Rekomendasi untukmu</h2>
-                <p class="mt-2 text-sm text-muted leading-relaxed">
-                    Dihitung otomatis dari normalisasi jarak geodetik, kesiapan IGD 24 jam, kelengkapan 9 profesi nakes, dan tingkat keramaian.
-                </p>
-                <div class="mt-6 flex items-center gap-4">
-                    <button type="button" data-scroll-target="#rec-track" data-scroll-dir="-1" aria-label="Rekomendasi sebelumnya"
-                            class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-colors">
-                        <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6"/></svg>
-                    </button>
-                    <span class="text-sm font-extrabold text-ink" id="rec-counter" aria-live="polite">1 / {{ count($puskesmas) }}</span>
-                    <button type="button" data-scroll-target="#rec-track" data-scroll-dir="1" aria-label="Rekomendasi berikutnya"
-                            class="flex size-11 cursor-pointer items-center justify-center rounded-full border-2 border-primary text-primary hover:bg-primary hover:text-white transition-colors">
-                        <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
                     </button>
                 </div>
-            </div>
 
-            <div id="rec-track" class="no-scrollbar flex min-w-0 flex-1 snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth px-6 py-4 lg:px-0">
-                @foreach ($puskesmas as $item)
-                    <article data-rec-card class="w-[265px] shrink-0 snap-start rounded-2xl bg-white p-3.5 shadow-card border border-gray-100 hover:shadow-float transition-all">
-                        <div class="relative h-[145px] rounded-xl {{ $cardColors[$loop->index % count($cardColors)] }} p-3 flex flex-col justify-between overflow-hidden">
-                            <div class="flex items-center justify-between">
-                                <span class="flex size-8 items-center justify-center rounded-full bg-accent text-xs font-extrabold text-white shadow-xs">
-                                    #{{ $loop->iteration }}
-                                </span>
-                                <span class="rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-extrabold text-primary-dark">
-                                    Kec. {{ $item['district'] }}
-                                </span>
-                            </div>
-
-                            <div class="my-auto flex items-center justify-center">
-                                <div class="flex size-12 items-center justify-center rounded-full bg-white/80 text-primary shadow-2xs">
-                                    <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-                                </div>
-                            </div>
-
-                            <div class="text-right">
-                                <span class="rounded-full bg-primary-dark/85 px-2 py-0.5 text-[10px] font-bold text-white">
-                                    Nakes {{ $item['nakes'] }}
-                                </span>
-                            </div>
-                        </div>
-
-                        <h3 class="mt-3 truncate px-1 text-sm font-extrabold text-ink">{{ $item['name'] }}</h3>
-                        <div class="mt-1.5 flex flex-wrap gap-1 px-1">
-                            <x-tag>{{ $item['distance'] }}</x-tag>
-                            <x-tag>Buka</x-tag>
-                            @if ($item['igd'])
-                                <x-tag class="bg-accent/15 text-accent-strong">IGD 24 jam</x-tag>
-                            @endif
-                        </div>
-                        <x-crowd-bar :level="$item['crowd']" class="mt-2.5 px-1" />
-                    </article>
-                @endforeach
+                {{-- Pill Badge Bawah Tengah ("Klik pin puskesmas di peta") --}}
+                <div class="hidden md:flex absolute bottom-5 left-1/2 -translate-x-1/2 z-20 items-center gap-2.5 rounded-full bg-white/95 backdrop-blur-md px-4 py-2 shadow-float border border-gray-100 text-xs font-bold text-ink">
+                    <span class="flex size-5 items-center justify-center rounded-md bg-accent text-white">
+                        <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                    </span>
+                    <span>Peta jalan interaktif · Klik pin untuk sorotan detail</span>
+                </div>
             </div>
         </div>
     </section>
 
-    {{-- ================= FOOTER BERSIH ALA PORTAL ESTETIK ================= --}}
-    <footer class="border-t border-gray-200 bg-white">
-        {{-- Baris Partner / Instansi Terkait --}}
-        <div class="border-b border-gray-100 bg-gray-50/60 py-3.5">
-            <div class="mx-auto flex max-w-[1180px] flex-wrap items-center justify-between gap-4 px-6 text-xs font-semibold text-muted">
-                <div class="flex flex-wrap items-center gap-6">
-                    <span class="font-extrabold text-primary-dark">Pemerintah Kota Bogor</span>
-                    <span>Dinas Kesehatan Kota Bogor</span>
-                    <span>25 UPTD Puskesmas Induk</span>
-                    <span>Standar Permenkes No. 43 Tahun 2019</span>
-                </div>
-                <a href="{{ route('peta') }}" class="text-primary font-bold hover:underline">Buka Portal WebGIS &rarr;</a>
-            </div>
-        </div>
+    {{-- ================= FOOTER INTERAKTIF (SESUAI REFERENSI CHAUMES-EN-RETZ DENGAN PALET PUSKESMAP) ================= --}}
+    <footer class="bg-[#084747] text-white pt-16 pb-10 border-t border-white/10">
+        <div class="mx-auto max-w-[1180px] px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-[270px_1fr_52px] gap-10 lg:gap-9 items-center">
+                {{-- Kolom Kiri: Brand Terpusat, Tombol Pill Oranye, dan Identitas Instansi (Persis Referensi Chaumes-en-Retz) --}}
+                <div class="flex flex-col items-center text-center">
+                    <span class="text-[10px] font-bold uppercase tracking-[0.38em] text-white/75">
+                        KOTA BOGOR
+                    </span>
+                    <a href="#beranda" class="mt-1 flex flex-col items-center group">
+                        <span class="block text-4xl sm:text-[42px] font-extrabold tracking-tight text-white leading-none">
+                            PuskesMap
+                        </span>
+                        <span class="block font-serif italic text-xl sm:text-2xl font-bold text-surface-sky -mt-1">
+                            WebGIS &amp; SDSS
+                        </span>
+                    </a>
 
-        <div class="mx-auto max-w-[1180px] px-6 py-9">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div class="flex items-center gap-3">
-                    <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-10 w-auto">
-                    <div>
-                        <span class="text-xl font-extrabold text-primary-dark block leading-none">PuskesMap</span>
-                        <span class="text-xs text-muted mt-1 block">Sistem Pendukung Keputusan Spasial Puskesmas Kota Bogor</span>
+                    {{-- Tombol Pill Oranye ("NOUS CONTACTER" -> "BUKA PETA GIS") --}}
+                    <a href="{{ route('peta') }}"
+                       class="mt-6 inline-flex items-center justify-center gap-2.5 rounded-full bg-accent hover:bg-accent-strong px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-lg transition-all hover:scale-105">
+                        <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                        <span>HUBUNGI &amp; PETA GIS</span>
+                    </a>
+
+                    {{-- Emblem Instansi di Bawah Tombol Oranye (Seperti "PORNIC agglo PAYS DE RETZ") --}}
+                    <div class="mt-7 flex items-center justify-center gap-2.5 opacity-85">
+                        <div class="text-right leading-tight">
+                            <span class="block text-xs font-extrabold tracking-wider text-white">DINKES</span>
+                            <span class="block text-[9px] font-bold uppercase tracking-widest text-surface-sky">KOTA BOGOR</span>
+                        </div>
+                        <div class="flex size-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-surface-sky">
+                            <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-5 w-auto brightness-125">
+                        </div>
                     </div>
                 </div>
 
-                <div class="flex flex-wrap items-center gap-x-7 gap-y-2">
-                    @foreach ($footerLinks as $link)
-                        <a href="{{ $link['href'] }}" class="text-xs sm:text-sm font-bold text-ink hover:text-primary transition-colors">
-                            {{ $link['label'] }}
-                        </a>
-                    @endforeach
+                {{-- Kolom Tengah: Kotak Berbingkai dengan 3 Tab di Kiri & Detail di Kanan --}}
+                <div class="rounded-2xl border border-white/20 bg-[#063b3b]/50 grid grid-cols-1 md:grid-cols-[270px_1fr] shadow-[0_20px_50px_rgba(0,0,0,0.18)]">
+                    {{-- Sub-Kolom Kiri: 3 Tab Lokasi/Wilayah --}}
+                    <div class="relative z-20 flex flex-col divide-y divide-white/15 md:border-r md:border-white/15" role="tablist" aria-label="Pilih Wilayah Layanan">
+                        @foreach ($footerTabs as $index => $tab)
+                            <button type="button"
+                                    role="tab"
+                                    data-footer-tab
+                                    data-tab-title="{{ $tab['title'] }}"
+                                    data-tab-address="{{ $tab['address'] }}"
+                                    data-tab-phone="{{ $tab['phone'] }}"
+                                    data-tab-hours="{{ $tab['hours'] }}"
+                                    aria-selected="{{ $index === 0 ? 'true' : 'false' }}"
+                                    class="group relative flex flex-col items-start justify-center px-6 py-5 text-left transition-colors cursor-pointer hover:bg-white/10 aria-selected:bg-[#166363] first:rounded-t-2xl md:first:rounded-tr-none md:last:rounded-bl-2xl focus:outline-none">
+                                <span class="text-xs font-medium text-white/70">{{ $tab['subtitle'] }}</span>
+                                <span class="mt-0.5 text-[15px] font-extrabold text-white leading-snug">{{ $tab['title'] }}</span>
+
+                                {{-- Indikator Lingkaran Oranye '>' tepat di Garis Pembatas pada Tab Aktif --}}
+                                <span class="hidden md:flex absolute -right-4 top-1/2 -translate-y-1/2 z-30 size-8 items-center justify-center rounded-full bg-accent text-white shadow-lg transition-all opacity-0 scale-75 group-aria-selected:opacity-100 group-aria-selected:scale-100">
+                                    <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
+                                </span>
+                            </button>
+                        @endforeach
+                    </div>
+
+                    {{-- Sub-Kolom Kanan: Konten Dinamis Berdasarkan Tab yang Dipilih --}}
+                    <div class="relative z-10 p-6 sm:p-8 lg:px-10 flex flex-col justify-center">
+                        <p id="footer-tab-address" class="text-sm sm:text-[15px] font-medium text-white/95 leading-relaxed max-w-lg">
+                            {{ $footerTabs[0]['address'] }}
+                        </p>
+
+                        {{-- Badge Pill Telepon Transparan --}}
+                        <div class="mt-4">
+                            <a href="tel:02518331753" class="inline-flex items-center gap-2.5 rounded-full bg-[#166363] hover:bg-[#1c7575] border border-white/15 px-4 py-2 text-xs sm:text-sm font-bold text-white transition-colors">
+                                <svg class="size-4 text-surface-sky shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+                                <span id="footer-tab-phone">{{ $footerTabs[0]['phone'] }}</span>
+                            </a>
+                        </div>
+
+                        <div class="mt-6">
+                            <h3 class="text-sm font-extrabold text-white">Jam Operasional Layanan</h3>
+                            <p id="footer-tab-hours" class="mt-1 text-xs sm:text-sm text-white/80 font-medium leading-relaxed">
+                                {{ $footerTabs[0]['hours'] }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Kolom Kanan: Deretan Vertikal 4 Tombol Bulat (1 Oranye Lonceng + 3 Putih Sosial Media seperti Referensi) --}}
+                <div class="flex flex-row lg:flex-col items-center justify-center gap-3.5">
+                    <a href="{{ route('peta') }}" aria-label="Notifikasi & Siaga IGD 24 Jam" title="Siaga IGD 24 Jam"
+                       class="flex size-10 items-center justify-center rounded-full bg-accent hover:bg-accent-strong text-white shadow-md transition-transform hover:scale-110">
+                        <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+                    </a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook Dinkes Kota Bogor" title="Facebook"
+                       class="flex size-10 items-center justify-center rounded-full bg-white hover:bg-surface-mint text-[#084747] shadow-sm transition-transform hover:scale-110">
+                        <svg class="size-4 fill-current" viewBox="0 0 24 24"><path d="M13.5 9H16V6h-2.5C11.57 6 10 7.57 10 9.5V12H8v3h2v6h3v-6h2.5l.5-3H13V9.5c0-.28.22-.5.5-.5z"/></svg>
+                    </a>
+                    <a href="https://instagram.com/dinkeskotabogor" target="_blank" rel="noopener" aria-label="Instagram Dinkes Kota Bogor" title="Instagram"
+                       class="flex size-10 items-center justify-center rounded-full bg-white hover:bg-surface-mint text-[#084747] shadow-sm transition-transform hover:scale-110">
+                        <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+                    </a>
+                    <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube Dinkes Kota Bogor" title="YouTube"
+                       class="flex size-10 items-center justify-center rounded-full bg-white hover:bg-surface-mint text-[#084747] shadow-sm transition-transform hover:scale-110">
+                        <svg class="size-4 fill-current" viewBox="0 0 24 24"><path d="M21.58 7.19a2.75 2.75 0 0 0-1.94-1.94C17.93 4.8 12 4.8 12 4.8s-5.93 0-7.64.45a2.75 2.75 0 0 0-1.94 1.94C2 8.9 2 12 2 12s0 3.1.42 4.81a2.75 2.75 0 0 0 1.94 1.94c1.71.45 7.64.45 7.64.45s5.93 0 7.64-.45a2.75 2.75 0 0 0 1.94-1.94C22 15.1 22 12 22 12s0-3.1-.42-4.81zM10 15V9l5.2 3-5.2 3z"/></svg>
+                    </a>
                 </div>
             </div>
 
-            <div class="mt-6 pt-5 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-muted">
-                <p>Cakupan Spasial: 25 Puskesmas Induk · 6 Kecamatan · Kota Bogor, Jawa Barat.</p>
-                <p class="font-extrabold uppercase text-primary">Copyright &copy; {{ date('Y') }} PuskesMap Kota Bogor. All rights reserved.</p>
+            {{-- Baris Navigasi Bawah (Horizontal Sebaris seperti Referensi) --}}
+            <div class="mt-14 pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-x-6 gap-y-3 text-xs font-medium text-white/65">
+                @foreach ($footerLinks as $link)
+                    <a href="{{ $link['href'] }}" class="hover:text-white transition-colors">
+                        {{ $link['label'] }}
+                    </a>
+                @endforeach
+                <span class="text-white/50">&copy; {{ date('Y') }} PuskesMap Kota Bogor</span>
             </div>
         </div>
     </footer>
