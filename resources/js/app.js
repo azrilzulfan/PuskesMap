@@ -108,10 +108,18 @@ document.addEventListener('DOMContentLoaded', () => {
             shape.classList.add('is-active');
             popup.classList.remove('hidden');
 
+            if (window.innerWidth < 640) {
+                popup.style.left = '50%';
+                popup.style.top = '50%';
+                popup.style.transform = 'translate(-50%, -50%)';
+                return;
+            }
+
             const posX = parseFloat(popup.dataset.x) || 50;
             const posY = parseFloat(popup.dataset.y) || 50;
             popup.style.left = `${posX}%`;
             popup.style.top = `${posY}%`;
+            popup.style.transform = 'translate(-50%, 16px)';
 
             const rect = popup.getBoundingClientRect();
             const parentRect = map.getBoundingClientRect();
@@ -423,9 +431,13 @@ function initPuskesMapSDSS() {
 
     // Update Floating Puskesmas Info Card di Atas Peta (Design System 3.13)
     const floatCardEl = document.getElementById('map-floating-card');
-    const updateFloatingCard = (item, badgeText = 'Sorotan Puskesmas') => {
+    const updateFloatingCard = (item, badgeText = 'Sorotan Puskesmas', showOnMobile = true) => {
         if (!floatCardEl || !item) return;
-        floatCardEl.classList.remove('hidden');
+        if (showOnMobile) {
+            floatCardEl.classList.remove('hidden');
+        } else {
+            floatCardEl.classList.add('hidden', 'sm:block');
+        }
 
         const distKm = getDistanceKm(currentUserCoords[0], currentUserCoords[1], item.lat, item.lng);
         const distFormatted = `${distKm.toFixed(1).replace('.', ',')} km`;
@@ -470,9 +482,11 @@ function initPuskesMapSDSS() {
     };
 
     document.getElementById('btn-close-float-card')?.addEventListener('click', () => {
+        floatCardEl?.classList.remove('sm:block');
         floatCardEl?.classList.add('hidden');
     });
     document.getElementById('btn-close-float-card-mobile')?.addEventListener('click', () => {
+        floatCardEl?.classList.remove('sm:block');
         floatCardEl?.classList.add('hidden');
     });
 
@@ -521,8 +535,11 @@ function initPuskesMapSDSS() {
         marker.bindPopup(popupContent, { maxWidth: 300, closeButton: true });
         marker.on('click', () => {
             highlightSidebarCard(item.id);
-            updateFloatingCard(item, 'Puskesmas Terpilih');
+            updateFloatingCard(item, 'Puskesmas Terpilih', true);
             drawGeodesicLineTo(item);
+            if (window.innerWidth < 640) {
+                setTimeout(() => marker.closePopup(), 10);
+            }
         });
         markers[item.id] = marker;
 
@@ -717,7 +734,7 @@ function initPuskesMapSDSS() {
     // ==========================================
     // MESIN REKOMENDASI MULTIKRITERIA MAUT (FR-07 & FR-08)
     // ==========================================
-    const runMautEngine = () => {
+    const runMautEngine = (closeMobileDrawer = true) => {
         const scenarioRadio = document.querySelector('input[name="maut-scenario"]:checked');
         const scenario = scenarioRadio ? scenarioRadio.value : 'darurat';
 
@@ -826,12 +843,12 @@ function initPuskesMapSDSS() {
         }
 
         // UC-08: Otomatis Sorot Lokasi Puskesmas Peringkat 1 di Peta
-        if (top3.length > 0) {
+        if (top3.length > 0 && closeMobileDrawer) {
             window.spotlightPuskesmas(top3[0].id);
         }
     };
 
-    document.getElementById('btn-run-maut')?.addEventListener('click', runMautEngine);
+    document.getElementById('btn-run-maut')?.addEventListener('click', () => runMautEngine(true));
 
     // ==========================================
     // UC-08: PENYOROTAN LOKASI REKOMENDASI DI PETA
@@ -845,10 +862,12 @@ function initPuskesMapSDSS() {
 
         // Beri pin-pulse spotlight pada marker terpilih
         markers[id].setIcon(createPinIcon('#E37434', true));
-        updateFloatingCard(item, '🥇 Rekomendasi Terbaik MAUT');
+        updateFloatingCard(item, '🥇 Rekomendasi Terbaik MAUT', true);
         drawGeodesicLineTo(item);
         map.flyTo([item.lat, item.lng], 15, { duration: 1.2 });
-        setTimeout(() => markers[id].openPopup(), 1200);
+        if (window.innerWidth >= 640) {
+            setTimeout(() => markers[id].openPopup(), 1200);
+        }
 
         if (window.innerWidth < 1024) toggleMobileSidebar(false);
     };
@@ -1033,10 +1052,10 @@ function initPuskesMapSDSS() {
         map.flyTo(BOGOR_CENTER, DEFAULT_ZOOM, { duration: 1 });
     });
 
-    // Inisialisasi Titik Referensi Default & Floating Card Awal
+    // Inisialisasi Titik Referensi Default & Floating Card Awal (Tidak Menutupi Peta Awal di HP)
     setReferencePoint(BOGOR_CENTER, 'Pusat Kota Bogor', false);
     if (puskesmasList.length > 0) {
-        updateFloatingCard(puskesmasList[0], 'Sorotan Puskesmas');
+        updateFloatingCard(puskesmasList[0], 'Sorotan Puskesmas', false);
     }
 
     // ==========================================
@@ -1154,7 +1173,7 @@ function initPuskesMapSDSS() {
         subtabContentMaut?.classList.toggle('hidden', isFaskes);
 
         if (!isFaskes && !document.getElementById('maut-cards-container')?.children.length) {
-            runMautEngine();
+            runMautEngine(false);
         }
     };
 
@@ -1277,10 +1296,12 @@ function initPuskesMapSDSS() {
         const focus = () => {
             const item = puskesmasList.find(p => String(p.id) === String(id));
             map.flyTo([lat, lng], 16, { duration: 1.2 });
-            if (markers[id]) setTimeout(() => markers[id].openPopup(), 1200);
+            if (markers[id] && window.innerWidth >= 640) {
+                setTimeout(() => markers[id].openPopup(), 1200);
+            }
             highlightSidebarCard(id);
             if (item) {
-                updateFloatingCard(item, 'Puskesmas Terpilih');
+                updateFloatingCard(item, 'Puskesmas Terpilih', true);
                 drawGeodesicLineTo(item);
             }
             if (window.innerWidth < 1024) toggleMobileSidebar(false);

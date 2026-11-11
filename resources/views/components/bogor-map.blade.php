@@ -108,7 +108,7 @@
 @endphp
 
 <div data-bogor-map {{ $attributes->merge(['class' => 'relative aspect-[3/4] select-none']) }}>
-    <svg viewBox="0 0 768 1024" class="map-svg h-full w-full overflow-visible transition-transform duration-300 ease-out origin-center" role="group" aria-label="Peta wilayah Kota Bogor">
+    <svg viewBox="25 10 740 1005" class="map-svg h-full w-full overflow-hidden sm:overflow-visible transition-transform duration-300 ease-out origin-center" role="group" aria-label="Peta wilayah Kota Bogor">
         <defs>
             <filter id="map-soft-shadow" x="-8%" y="-8%" width="116%" height="116%">
                 <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#007979" flood-opacity="0.16"/>
@@ -255,13 +255,13 @@
 
                 {{-- Bogor Utara --}}
                 <circle cx="570" cy="340" r="3.5" fill="#0b5c5c"/>
-                <line x1="570" y1="340" x2="625" y2="340" stroke="#0b5c5c" stroke-width="1.5"/>
-                <text x="632" y="345" font-size="16" font-weight="800" fill="#0b5c5c">Bogor Utara ▸</text>
+                <line x1="570" y1="340" x2="615" y2="340" stroke="#0b5c5c" stroke-width="1.5"/>
+                <text x="622" y="345" font-size="15" font-weight="800" fill="#0b5c5c">Bogor Utara ▸</text>
 
                 {{-- Bogor Barat --}}
                 <circle cx="255" cy="400" r="3.5" fill="#0b5c5c"/>
-                <line x1="185" y1="400" x2="255" y2="400" stroke="#0b5c5c" stroke-width="1.5"/>
-                <text x="178" y="405" font-size="16" font-weight="800" fill="#0b5c5c" text-anchor="end">◂ Bogor Barat</text>
+                <line x1="190" y1="400" x2="255" y2="400" stroke="#0b5c5c" stroke-width="1.5"/>
+                <text x="184" y="405" font-size="15" font-weight="800" fill="#0b5c5c" text-anchor="end">◂ Bogor Barat</text>
 
                 {{-- Bogor Tengah (Pin Sorotan Utama + Pill Badge Biru/Teal ala Referensi) --}}
                 <g transform="translate(435, 515)" filter="url(#pin-badge-shadow)">
@@ -275,8 +275,8 @@
 
                 {{-- Bogor Timur (Callout Line ke Kanan ala Referensi) --}}
                 <circle cx="565" cy="615" r="3.5" fill="#0b5c5c"/>
-                <polyline points="565,615 655,615" fill="none" stroke="#0b5c5c" stroke-width="1.5"/>
-                <text x="662" y="620" font-size="16" font-weight="800" fill="#0b5c5c">Bogor Timur ▸</text>
+                <polyline points="565,615 628,615" fill="none" stroke="#0b5c5c" stroke-width="1.5"/>
+                <text x="634" y="620" font-size="15" font-weight="800" fill="#0b5c5c">Bogor Timur ▸</text>
 
                 {{-- Bogor Selatan --}}
                 <circle cx="455" cy="775" r="3.5" fill="#0b5c5c"/>
@@ -293,7 +293,7 @@
              data-y="{{ round($district['cy'] / 1024 * 100, 2) }}"
              role="dialog"
              aria-label="Puskesmas di {{ $district['name'] }}"
-             class="absolute z-40 hidden w-[280px] rounded-2xl bg-white/95 backdrop-blur-md p-4 text-left shadow-2xl border border-primary/20 transition-all duration-200">
+             class="absolute z-40 hidden w-[calc(100%-1.5rem)] max-w-[280px] sm:w-[280px] rounded-2xl bg-white/95 backdrop-blur-md p-4 text-left shadow-2xl border border-primary/20 transition-all duration-200">
             {{-- Header popup --}}
             <div class="flex items-center justify-between pb-2.5 border-b border-gray-100">
                 <div class="flex items-center gap-2">
