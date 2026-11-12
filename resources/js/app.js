@@ -102,10 +102,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const open = (shape) => {
             closeAll();
-            const popup = map.querySelector(`[data-district-popup="${shape.dataset.districtShape}"]`);
+            const districtId = shape.dataset.districtShape;
+            const popup = map.querySelector(`[data-district-popup="${districtId}"]`);
             if (!popup) return;
 
-            shape.classList.add('is-active');
+            map.querySelectorAll(`[data-district-shape="${districtId}"]`).forEach((el) => {
+                el.classList.add('is-active');
+            });
             popup.classList.remove('hidden');
 
             if (window.innerWidth < 640) {
@@ -119,16 +122,16 @@ document.addEventListener('DOMContentLoaded', () => {
             const posY = parseFloat(popup.dataset.y) || 50;
             popup.style.left = `${posX}%`;
             popup.style.top = `${posY}%`;
-            popup.style.transform = 'translate(-50%, 16px)';
+            popup.style.transform = 'translate(-50%, 36px)';
 
             const rect = popup.getBoundingClientRect();
             const parentRect = map.getBoundingClientRect();
             let shiftX = 0;
-            let shiftY = 16;
+            let shiftY = 36;
 
-            if (rect.right > parentRect.right) shiftX = parentRect.right - rect.right - 8;
-            if (rect.left < parentRect.left) shiftX = parentRect.left - rect.left + 8;
-            if (rect.bottom > parentRect.bottom) shiftY = -rect.height - 16;
+            if (rect.right > parentRect.right) shiftX = parentRect.right - rect.right - 10;
+            if (rect.left < parentRect.left) shiftX = parentRect.left - rect.left + 10;
+            if (rect.bottom > parentRect.bottom) shiftY = -rect.height - 48;
 
             popup.style.transform = `translate(calc(-50% + ${shiftX}px), ${shiftY}px)`;
         };

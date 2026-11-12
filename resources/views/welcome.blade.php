@@ -96,19 +96,6 @@
 @endphp
 
 <x-layout>
-    {{-- ================= FLOATING QUICK-ACTION SIDE DOCK (Terinspirasi Referensi UI) ================= --}}
-    <aside aria-label="Pintasan Cepat" class="fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3">
-        <a href="{{ route('peta') }}"
-           class="group flex size-[68px] flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_12px_28px_rgba(0,121,121,0.32)] transition-all hover:scale-105 hover:bg-primary-dark">
-            <svg class="size-5 mb-0.5 transition-transform group-hover:-translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-            <span class="text-[10px] font-extrabold tracking-tight leading-none">Peta GIS</span>
-        </a>
-        <a href="#peta"
-           class="group flex size-[68px] flex-col items-center justify-center rounded-full bg-white text-primary-dark border border-primary/20 shadow-[0_12px_28px_rgba(11,92,92,0.14)] transition-all hover:scale-105 hover:bg-surface-mint">
-            <svg class="size-5 mb-0.5 text-accent transition-transform group-hover:-translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-            <span class="text-[10px] font-extrabold tracking-tight leading-none">Sekilas</span>
-        </a>
-    </aside>
 
     {{-- ================= HERO SECTION ================= --}}
     <header id="beranda" class="relative bg-white">
@@ -185,53 +172,52 @@
         </div>
 
         {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA DENGAN PALET PUSKESMAP) ================= --}}
-        <div id="wilayah" class="relative z-20 mx-auto max-w-[1140px] px-4 sm:px-6 pt-3 pb-8 lg:pt-8 lg:pb-14">
-            {{-- Garis Lengkung Halus di Latar Belakang (Sesuai Referensi Peta) --}}
-            <svg class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 w-full h-48 text-[#e5f2f0] -z-10 hidden lg:block" viewBox="0 0 1200 200" fill="none" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M0 160 Q600 -30 1200 140" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-            </svg>
+        <div id="wilayah" class="relative z-20 mx-auto max-w-[1140px] px-4 sm:px-6 pt-2 pb-10 lg:pt-4 lg:pb-16">
+            <div class="relative mx-auto max-w-[960px] lg:max-w-[1020px]">
+                <div class="relative grid items-center lg:grid-cols-12">
+                    {{-- Kotak Biru yang Memanjang ke Kanan di Belakang Peta (Kolom 1 sampai 10) --}}
+                    <div class="relative z-10 col-span-12 lg:col-start-1 lg:col-end-10 lg:row-start-1 lg:self-center rounded-[28px] sm:rounded-[36px] bg-surface-sky p-6 pb-12 sm:p-8 sm:pb-14 lg:py-10 lg:pl-8 lg:pr-24 shadow-[0_20px_50px_rgba(0,121,121,0.10)] border border-white/70">
+                        <div class="max-w-[300px] sm:max-w-[330px] xl:max-w-[350px]">
+                            <h2 class="text-3xl sm:text-[38px] font-extrabold tracking-tight text-primary-dark leading-none">
+                                Wilayah
+                            </h2>
 
-            <div class="grid items-center gap-0 lg:grid-cols-[1.05fr_1fr]">
-                {{-- Kartu "Wilayah" di Kiri (Tertimpa Peta di Bawah pada HP & di Kanan pada Desktop) --}}
-                <div class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-11 sm:pb-14 lg:py-14 lg:pl-12 lg:pr-44 lg:-mr-36 shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
-                    <h2 class="text-3xl sm:text-[44px] font-extrabold tracking-tight text-primary-dark leading-none">
-                        Wilayah
-                    </h2>
+                            {{-- Garis Gelombang Putih (Wavy Underline ala Referensi Territoire) --}}
+                            <svg class="mt-2.5 sm:mt-3 h-3 w-20 sm:w-24 text-white" viewBox="0 0 100 12" fill="none" aria-hidden="true">
+                                <path d="M2 8 C22 1, 42 13, 64 5 C78 0, 88 8, 98 4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                            </svg>
 
-                    {{-- Garis Gelombang Putih (Wavy Underline ala Referensi Territoire) --}}
-                    <svg class="mt-2.5 sm:mt-3 h-3 w-20 sm:w-24 text-white" viewBox="0 0 100 12" fill="none" aria-hidden="true">
-                        <path d="M2 8 C22 1, 42 13, 64 5 C78 0, 88 8, 98 4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                    </svg>
+                            <p class="mt-3.5 sm:mt-4 text-xs sm:text-[14px] leading-relaxed text-body font-medium">
+                                PuskesMap memetakan 25 puskesmas induk di enam kecamatan Kota Bogor: Tanah Sareal, Bogor Utara,
+                                Bogor Barat, Bogor Tengah, Bogor Timur, dan Bogor Selatan, dilengkapi informasi kesiapan IGD 24 jam,
+                                fasilitas rawat inap, kelengkapan 9 profesi tenaga kesehatan, serta jam operasional harian.
+                            </p>
 
-                    <p class="mt-4 sm:mt-5 text-xs sm:text-[15px] leading-relaxed text-body font-medium">
-                        PuskesMap memetakan 25 puskesmas induk di enam kecamatan Kota Bogor: Tanah Sareal, Bogor Utara,
-                        Bogor Barat, Bogor Tengah, Bogor Timur, dan Bogor Selatan, dilengkapi informasi kesiapan IGD 24 jam,
-                        fasilitas rawat inap, kelengkapan 9 profesi tenaga kesehatan, serta jam operasional harian.
-                    </p>
-
-                    <div class="mt-6 sm:mt-8">
-                        <a href="{{ route('peta') }}"
-                           class="inline-flex h-10 sm:h-11 items-center justify-center rounded-full bg-white px-6 sm:px-8 text-xs font-extrabold uppercase tracking-wider text-primary-dark shadow-sm transition-all hover:bg-primary hover:text-white hover:scale-105">
-                            Jelajahi Wilayah
-                        </a>
+                            <div class="mt-5 sm:mt-6">
+                                <a href="{{ route('peta') }}"
+                                   class="inline-flex h-9 sm:h-10 items-center justify-center rounded-full bg-white px-5 sm:px-7 text-xs font-extrabold uppercase tracking-wider text-primary-dark shadow-sm transition-all hover:bg-primary hover:text-white hover:scale-105">
+                                    Jelajahi Wilayah
+                                </a>
+                            </div>
+                        </div>
                     </div>
-                </div>
 
-                {{-- Peta Vektor Kota Bogor (Palet Mint-Teal-Sage) Menimpa Kartu --}}
-                <div class="relative z-20 -mt-7 sm:-mt-10 lg:-mt-32 lg:-ml-8 flex flex-col items-center px-1 sm:px-0">
-                    <x-bogor-map class="mx-auto w-full max-w-[460px] sm:max-w-[510px]" />
+                    {{-- Peta Vektor Kota Bogor Naik ke Atas & di Tengah (Menimpa Kotak Biru dengan z-20) --}}
+                    <div class="relative z-20 col-span-12 -mt-10 sm:-mt-14 lg:-mt-24 xl:-mt-32 lg:col-start-5 lg:col-end-13 lg:row-start-1 flex flex-col items-center">
+                        <x-bogor-map class="mx-auto w-full max-w-[450px] sm:max-w-[490px]" />
 
-                    <span class="mt-1 lg:hidden inline-flex items-center gap-1.5 rounded-full bg-surface-mint px-3.5 py-1 text-[11px] font-bold text-primary-dark">
-                        <span>👆</span>
-                        <span>Ketuk kecamatan di peta untuk info faskes</span>
-                    </span>
+                        <span class="mt-1 lg:hidden inline-flex items-center gap-1.5 rounded-full bg-surface-mint px-3.5 py-1 text-[11px] font-bold text-primary-dark">
+                            <span>👆</span>
+                            <span>Ketuk kecamatan di peta untuk info faskes</span>
+                        </span>
 
-                    {{-- Ornamen Daun Hijau-Teal di Bawah Peta --}}
-                    <svg class="-mt-1 sm:-mt-2 h-10 w-14 sm:h-12 sm:w-16 text-[#68c196]" viewBox="0 0 64 48" fill="currentColor" aria-hidden="true">
-                        <path d="M28 42 C18 32, 16 16, 28 6 C36 16, 36 32, 28 42 Z" opacity="0.85"/>
-                        <path d="M32 42 C42 30, 54 26, 60 34 C50 42, 40 44, 32 42 Z" opacity="0.95"/>
-                        <path d="M24 44 C14 38, 6 40, 4 46 C12 48, 20 46, 24 44 Z" opacity="0.75"/>
-                    </svg>
+                        {{-- Ornamen Daun Hijau-Teal di Bawah Peta --}}
+                        <svg class="-mt-1 sm:-mt-2 h-10 w-14 sm:h-12 sm:w-16 text-[#68c196]" viewBox="0 0 64 48" fill="currentColor" aria-hidden="true">
+                            <path d="M28 42 C18 32, 16 16, 28 6 C36 16, 36 32, 28 42 Z" opacity="0.85"/>
+                            <path d="M32 42 C42 30, 54 26, 60 34 C50 42, 40 44, 32 42 Z" opacity="0.95"/>
+                            <path d="M24 44 C14 38, 6 40, 4 46 C12 48, 20 46, 24 44 Z" opacity="0.75"/>
+                        </svg>
+                    </div>
                 </div>
             </div>
         </div>
@@ -381,36 +367,7 @@
                 </div>
             </div>
 
-            {{-- Horizontal White Pill Strip (Responsif Grid 2 Kolom di HP) --}}
-            <div class="relative mt-8 sm:mt-12">
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-4 rounded-3xl lg:rounded-full bg-white p-4 sm:px-6 sm:py-4 text-ink shadow-[0_14px_34px_rgba(7,52,52,0.2)]">
-                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-center sm:text-left">
-                        <span class="rounded-full bg-primary px-3.5 py-1 text-xs font-extrabold text-white">Sebaran Wilayah</span>
-                        <span class="text-xs font-bold text-muted">Kesiapan 25 Puskesmas di 6 Kecamatan:</span>
-                    </div>
 
-                    <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-3 w-full lg:w-auto text-xs">
-                        @foreach (array_slice($districts, 1) as $distItem)
-                            <button type="button"
-                                     onclick="document.querySelector('[data-district=&quot;{{ $distItem['name'] }}&quot;]')?.click()"
-                                    class="group relative flex items-center justify-center sm:justify-start gap-1.5 rounded-full bg-surface-mint/70 hover:bg-primary hover:text-white px-3 py-2 sm:py-1 font-bold text-primary-dark transition-colors cursor-pointer">
-                                <span class="size-1.5 rounded-full bg-accent shrink-0"></span>
-                                <span class="truncate">{{ $distItem['name'] }}</span>
-                                <span class="text-[10px] opacity-75 shrink-0">({{ $distItem['count'] }})</span>
-                            </button>
-                        @endforeach
-                    </div>
-
-                    <a href="{{ route('peta') }}"
-                       class="inline-flex w-full sm:w-auto items-center justify-center gap-1 rounded-full bg-accent px-5 py-2.5 sm:py-1.5 text-xs font-extrabold text-white hover:bg-accent-strong transition-colors shrink-0">
-                        <span>Eksplorasi Peta</span>
-                        <span>+</span>
-                    </a>
-                </div>
-                <p class="mt-3 text-center text-xs font-medium text-white/80">
-                    * Ketuk salah satu kecamatan di atas untuk memfilter kartu puskesmas atau langsung buka halaman Peta WebGIS.
-                </p>
-            </div>
         </div>
 
         {{-- Bottom Organic Wave Divider Menuju Sekilas di Peta --}}
