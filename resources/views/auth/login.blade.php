@@ -16,7 +16,7 @@
                 <div class="text-center">
                     <a href="{{ route('home') }}" class="inline-block focus:outline-none" aria-label="Kembali ke Beranda PuskesMap">
                         <img
-                            src="{{ asset('images/Logo.png') }}"
+                            src="{{ asset('images/logo-sm.png') }}"
                             alt="Logo PuskesMap"
                             class="mx-auto mb-3 h-14 w-auto object-contain sm:mb-4 sm:h-16"
                         >

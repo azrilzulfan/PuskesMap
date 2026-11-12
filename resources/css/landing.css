@@ -1,0 +1,370 @@
+/* Gaya Khusus Halaman Landing Page (welcome.blade.php) */
+.nav-pill {
+  max-width: 1040px;
+  overflow: hidden;
+  transition:
+    max-width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    box-shadow 0.4s ease,
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-brand {
+  transition: gap 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.nav-brand-text {
+  max-width: 140px;
+  overflow: hidden;
+  transition:
+    max-width 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.22s ease,
+    transform 0.35s ease;
+}
+
+.nav-actions {
+  max-width: 640px;
+  transition:
+    max-width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease,
+    transform 0.35s ease;
+}
+
+.nav-link.is-active {
+  color: var(--color-primary-dark);
+}
+
+.nav-link.is-active .nav-link-bar {
+  transform: scaleX(1);
+}
+
+#main-navbar.is-scrolled .nav-pill {
+  max-width: 50px;
+  height: 50px;
+  padding-inline: 11px;
+  background-color: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-color: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 12px 32px rgba(0, 121, 121, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+}
+
+@media (min-width: 640px) {
+  #main-navbar.is-scrolled .nav-pill {
+    max-width: 60px;
+    height: 60px;
+    padding-inline: 12px;
+  }
+}
+
+#main-navbar.is-scrolled .nav-pill:hover {
+  background-color: rgba(255, 255, 255, 0.86);
+  transform: scale(1.06);
+  box-shadow: 0 16px 38px rgba(0, 121, 121, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+#main-navbar.is-scrolled .nav-brand {
+  gap: 0;
+}
+
+#main-navbar.is-scrolled .nav-brand-text {
+  max-width: 0;
+  opacity: 0;
+  transform: translateX(-8px);
+}
+
+#main-navbar.is-scrolled .nav-actions {
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(12px) scale(0.92);
+}
+
+#main-navbar.is-scrolled #nav-menu {
+  display: none;
+}
+
+/* ===== Mobile Curved Notch Bottom Navbar (< 768px) ===== */
+.mobile-dock-shadow {
+  filter:
+    drop-shadow(0 -3px 16px rgba(0, 121, 121, 0.12))
+    drop-shadow(0 8px 22px rgba(8, 71, 71, 0.15));
+}
+
+.mobile-dock-notch-track,
+.mobile-dock-orb {
+  will-change: transform;
+}
+
+.mobile-dock-bar.is-ready .mobile-dock-notch-track,
+.mobile-dock-bar.is-ready .mobile-dock-orb {
+  transition: transform 0.46s cubic-bezier(0.32, 1.24, 0.62, 1);
+}
+
+.mobile-dock-notch-track {
+  transform: translate3d(calc(var(--dock-x, 42px) - 50%), 0, 0);
+}
+
+.mobile-dock-orb {
+  transform: translate3d(var(--dock-x, 42px), 0, 0);
+}
+
+.mobile-dock-link {
+  color: #7b8f8f;
+  font-weight: 600;
+  transition: color 0.22s ease;
+}
+
+.mobile-dock-link .mobile-dock-icon {
+  transition:
+    color 0.2s ease,
+    transform 0.44s cubic-bezier(0.32, 1.24, 0.62, 1);
+}
+
+.mobile-dock-link.is-active {
+  color: var(--color-primary-dark);
+  font-weight: 800;
+}
+
+.mobile-dock-link.is-active .mobile-dock-icon {
+  color: #ffffff;
+  transform: translate3d(0, -22.5px, 0) scale(1.1);
+}
+
+/* ===== Animasi Scroll Landing Page ===== */
+html {
+  scroll-padding-top: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: 5rem;
+  }
+}
+
+.js [data-reveal]:not(.is-revealed) {
+  opacity: 0;
+}
+
+[data-reveal].is-revealed {
+  animation: reveal-up 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal='left'].is-revealed {
+  animation-name: reveal-left;
+}
+
+[data-reveal='right'].is-revealed {
+  animation-name: reveal-right;
+}
+
+[data-reveal='zoom'].is-revealed {
+  animation-name: reveal-zoom;
+}
+
+[data-reveal='pop'].is-revealed {
+  animation-name: reveal-pop;
+  animation-duration: 1s;
+}
+
+[data-reveal='fade'].is-revealed {
+  animation-name: reveal-fade;
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 36px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-left {
+  from {
+    opacity: 0;
+    transform: translate3d(-56px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-right {
+  from {
+    opacity: 0;
+    transform: translate3d(56px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-zoom {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translate3d(0, 28px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.82) translate3d(0, 24px, 0);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.04) translate3d(0, -4px, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reveal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.float-soft {
+  animation: float-soft 4.5s ease-in-out infinite;
+}
+
+.float-soft-alt {
+  animation: float-soft 5.2s ease-in-out -2s infinite;
+}
+
+@keyframes float-soft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -9px, 0);
+  }
+}
+
+.scroll-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 60;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  pointer-events: none;
+}
+
+/* ===== Interactive Marquee Card Puskesmas (Ke Kiri, Bisa Digeser, Hover Oren) ===== */
+.marquee-wrap {
+  touch-action: pan-y;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.marquee-card {
+  transition:
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.marquee-card:hover,
+.marquee-card:focus-within {
+  background-color: #e37434;
+  color: #ffffff;
+  box-shadow: 0 22px 48px rgba(227, 116, 52, 0.42);
+  transform: translateY(-6px);
+}
+
+.marquee-card:hover .text-muted,
+.marquee-card:focus-within .text-muted {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ===== Subtle Micro-Animations untuk Section Sekilas di Peta ===== */
+.landing-pin-beacon {
+  animation: landing-pin-beacon 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.landing-pin-enter {
+  animation: landing-pin-enter 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.landing-card-swap {
+  animation: landing-card-swap 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes landing-pin-beacon {
+  0% {
+    transform: scale(0.72);
+    opacity: 0.75;
+  }
+  75%,
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@keyframes landing-pin-enter {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes landing-card-swap {
+  from {
+    opacity: 0.35;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal].is-revealed,
+  .float-soft,
+  .float-soft-alt {
+    animation: none;
+  }
+
+  .mobile-dock-bar.is-ready .mobile-dock-notch-track,
+  .mobile-dock-bar.is-ready .mobile-dock-orb,
+  .mobile-dock-link .mobile-dock-icon {
+    transition: none;
+  }
+}
