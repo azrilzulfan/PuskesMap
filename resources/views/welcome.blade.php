@@ -466,7 +466,7 @@
                 </div>
 
                 {{-- Kanvas Peta Jalan Asli (Leaflet) — 100% Terbuka Tanpa Tertutup Kartu di HP --}}
-                <div class="relative h-[340px] sm:static sm:h-full w-full">
+                <div class="relative h-[360px] sm:h-[560px] w-full">
                     <div id="landing-leaflet-map" class="absolute inset-0 h-full w-full z-10" aria-label="Peta Jalan Interaktif Puskesmas Kota Bogor"></div>
 
                     {{-- Kontrol Zoom & Reset di Kiri Bawah Peta (Tampil di HP & Desktop) --}}

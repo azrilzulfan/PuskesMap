@@ -68,6 +68,18 @@
 }
 
 /* Leaflet Customizations untuk PuskesMap */
+#leaflet-map,
+#landing-leaflet-map,
+.leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 320px;
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+}
+
 .leaflet-popup-content-wrapper {
   border-radius: 16px !important;
   box-shadow: 0 12px 28px -4px rgba(0, 121, 121, 0.15), 0 4px 12px -2px rgba(0, 0, 0, 0.08) !important;
