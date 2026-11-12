@@ -6,8 +6,9 @@ test('map page returns successful response for public users', function () {
     $response->assertOk();
     $response->assertSee('Peta Interaktif Puskesmas');
     $response->assertSee('Daftar Faskes');
-    $response->assertSee('SPK MAUT');
-    $response->assertSee('SPK Metode MAUT');
+    $response->assertSee('Rekomendasi');
+    $response->assertSee('Rekomendasi Puskesmas');
+    $response->assertSee('Urutan terbaik dari lokasi Anda saat ini');
     $response->assertSee('modal-faskes-detail');
     $response->assertSee('modal-nakes-grid');
 

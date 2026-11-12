@@ -327,20 +327,29 @@ function initPuskesMapApp() {
         if (!container || !ctx) return;
 
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const palette = [
-            [142, 243, 230], // mint aqua
-            [92, 193, 209],  // bright aqua
-            [255, 255, 255], // crisp white
-            [255, 178, 107], // warm gold-orange
-            [227, 116, 52],  // PuskesMap accent orange (#e37434)
-        ];
+        const isLightTheme = canvas.dataset.particleTheme === 'light';
+        const palette = isLightTheme
+            ? [
+                [0, 121, 121],   // primary teal (#007979)
+                [46, 158, 107],  // sage green (#2e9e6b)
+                [11, 92, 92],    // deep teal (#0b5c5c)
+                [227, 116, 52],  // accent orange (#e37434)
+                [194, 86, 26],   // strong orange (#c2561a)
+            ]
+            : [
+                [142, 243, 230], // mint aqua
+                [92, 193, 209],  // bright aqua
+                [255, 255, 255], // crisp white
+                [255, 178, 107], // warm gold-orange
+                [227, 116, 52],  // PuskesMap accent orange (#e37434)
+            ];
 
         let width = 0;
         let height = 0;
         let dpr = 1;
         let particles = [];
         let isPointerActive = false;
-        let halo = 0;
+        let isInViewport = true;
         let targetX = 0;
         let targetY = 0;
         let cursorX = 0;
@@ -372,23 +381,31 @@ function initPuskesMapApp() {
             height = nextH;
             dpr = nextDpr;
 
+            if (cursorX === 0 && cursorY === 0) {
+                cursorX = width * 0.5;
+                cursorY = height * 0.5;
+                targetX = cursorX;
+                targetY = cursorY;
+            }
+
             canvas.width = Math.round(width * dpr);
             canvas.height = Math.round(height * dpr);
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-            const spacing = width < 640 ? 24 : 26;
+            // Jarak antar titik lebih renggang / longgar menyerupai konstelasi Google Antigravity
+            const spacing = width < 640 ? 34 : 42;
             const cols = Math.ceil(width / spacing) + 1;
             const rows = Math.ceil(height / spacing) + 1;
             const nextParticles = [];
 
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
-                    // Hash deterministik agar posisi titik terasa organik & konsisten saat resize
                     const seed = Math.sin((c + 1) * 12.9898 + (r + 1) * 78.233) * 43758.5453;
                     const randA = seed - Math.floor(seed);
                     const randB = (seed * 1.37) - Math.floor(seed * 1.37);
-                    const hx = (c + 0.15 + randA * 0.7) * spacing;
-                    const hy = (r + 0.15 + randB * 0.7) * spacing;
+                    const randC = (seed * 2.13) - Math.floor(seed * 2.13);
+                    const hx = (c + 0.1 + randA * 0.8) * spacing;
+                    const hy = (r + 0.1 + randB * 0.8) * spacing;
 
                     nextParticles.push({
                         hx,
@@ -397,31 +414,39 @@ function initPuskesMapApp() {
                         y: hy,
                         vx: 0,
                         vy: 0,
-                        size: 1.5 + randA * 1.4,
+                        size: 1.3 + randC * 1.3,
                         phase: randB * Math.PI * 2,
+                        speed: 0.65 + randC * 0.7,
                     });
                 }
             }
 
             particles = nextParticles;
+            startLoop();
         };
 
         const startLoop = () => {
-            if (rafId !== null) return;
+            if (rafId !== null || !isInViewport) return;
             rafId = window.requestAnimationFrame(renderFrame);
         };
 
         const renderFrame = (now) => {
             rafId = null;
 
-            halo += ((isPointerActive ? 1 : 0) - halo) * (isPointerActive ? 0.14 : 0.08);
-            cursorX += (targetX - cursorX) * 0.22;
-            cursorY += (targetY - cursorY) * 0.22;
+            const tSec = now * 0.001;
+            if (!isPointerActive) {
+                // Gerakan acak lembut otomatis sebelum / sesudah kursor masuk
+                targetX = width * (0.5 + 0.27 * Math.sin(tSec * 0.36) + 0.08 * Math.cos(tSec * 0.93));
+                targetY = height * (0.5 + 0.22 * Math.cos(tSec * 0.44) + 0.07 * Math.sin(tSec * 0.81));
+            }
+
+            cursorX += (targetX - cursorX) * (isPointerActive ? 0.14 : 0.05);
+            cursorY += (targetY - cursorY) * (isPointerActive ? 0.14 : 0.05);
 
             ctx.clearRect(0, 0, width, height);
 
-            const radius = Math.min(340, Math.max(200, width * 0.27));
-            let anyMoving = false;
+            const outerRadius = Math.min(540, Math.max(260, width * 0.44));
+            const innerClear = Math.min(130, outerRadius * 0.25);
 
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
@@ -429,70 +454,65 @@ function initPuskesMapApp() {
                 const dyHome = cursorY - p.hy;
                 const hDist = Math.hypot(dxHome, dyHome);
 
-                const inField = hDist < radius;
-                const t = inField ? (1 - hDist / radius) : 0;
-                const strength = t > 0 ? Math.pow(t, 1.25) * halo : 0;
+                const inOuter = hDist < outerRadius;
+                const outerT = inOuter ? (1 - hDist / outerRadius) : 0;
+                const innerT = hDist < innerClear ? (hDist / innerClear) : 1;
+                const ringStrength = outerT > 0 ? Math.pow(outerT, 0.95) * Math.pow(innerT, 0.75) : 0;
 
-                if (strength > 0.005 && !reduceMotion) {
+                // Drift acak halus untuk semua partikel agar selalu hidup
+                const driftX = reduceMotion ? 0 : Math.sin(tSec * 0.9 * p.speed + p.phase) * 5.5;
+                const driftY = reduceMotion ? 0 : Math.cos(tSec * 0.75 * p.speed + p.phase * 1.4) * 5.5;
+
+                if (!reduceMotion && ringStrength > 0.01) {
                     const dist = Math.max(hDist, 1);
                     const nx = dxHome / dist;
                     const ny = dyHome / dist;
                     const txUnit = -ny;
                     const tyUnit = nx;
 
-                    const wave = Math.sin(now * 0.0024 + p.phase) * 3.2 * strength;
-                    const pull = strength * 28 + wave;
-                    const swirl = strength * 10;
+                    const pull = ringStrength * 20;
+                    const swirl = ringStrength * 8;
+                    const goalX = p.hx + driftX + nx * pull + txUnit * swirl;
+                    const goalY = p.hy + driftY + ny * pull + tyUnit * swirl;
 
-                    const goalX = p.hx + nx * pull + txUnit * swirl;
-                    const goalY = p.hy + ny * pull + tyUnit * swirl;
-
-                    p.vx = (p.vx + (goalX - p.x) * 0.16) * 0.76;
-                    p.vy = (p.vy + (goalY - p.y) * 0.16) * 0.76;
+                    p.vx = (p.vx + (goalX - p.x) * 0.12) * 0.78;
+                    p.vy = (p.vy + (goalY - p.y) * 0.12) * 0.78;
                     p.x += p.vx;
                     p.y += p.vy;
-                    anyMoving = true;
-                } else if (Math.abs(p.x - p.hx) > 0.05 || Math.abs(p.y - p.hy) > 0.05 || Math.abs(p.vx) > 0.05 || Math.abs(p.vy) > 0.05) {
-                    p.vx = (p.vx + (p.hx - p.x) * 0.14) * 0.76;
-                    p.vy = (p.vy + (p.hy - p.y) * 0.14) * 0.76;
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    anyMoving = true;
                 } else {
-                    p.x = p.hx;
-                    p.y = p.hy;
-                    p.vx = 0;
-                    p.vy = 0;
+                    const goalX = p.hx + driftX;
+                    const goalY = p.hy + driftY;
+                    p.vx = (p.vx + (goalX - p.x) * 0.08) * 0.80;
+                    p.vy = (p.vy + (goalY - p.y) * 0.08) * 0.80;
+                    p.x += p.vx;
+                    p.y += p.vy;
                 }
 
-                if (strength > 0.015) {
-                    const dx = cursorX - p.x;
-                    const dy = cursorY - p.y;
-                    const dist = Math.hypot(dx, dy) || 1;
-                    const centerFade = Math.min(1, dist / 26);
-                    const alpha = Math.min(0.92, strength * 0.95 * centerFade);
+                const dx = cursorX - p.x;
+                const dy = cursorY - p.y;
+                const angle = Math.atan2(dy, dx);
+                const arcNorm = (angle + Math.PI) / (Math.PI * 2) + now * 0.00003;
+                const rgb = sampleColor(arcNorm);
 
-                    if (alpha > 0.015) {
-                        const angle = Math.atan2(dy, dx);
-                        const arcNorm = (angle + Math.PI) / (Math.PI * 2) + now * 0.000035;
-                        const rgb = sampleColor(arcNorm);
-                        const dashLen = reduceMotion ? 0.5 : strength * 7.5;
-                        const halfLen = dashLen * 0.5;
-                        const cos = Math.cos(angle);
-                        const sin = Math.sin(angle);
+                // Partikel di dalam cincin tampil lebih tegas & memanjang; di luar cincin tetap muncul sebagai titik acak samar
+                const alpha = ringStrength > 0.02
+                    ? Math.min(0.88, 0.14 + ringStrength * 0.78)
+                    : 0.15;
+                const dashLen = reduceMotion ? 0.4 : (ringStrength > 0.02 ? 1.2 + ringStrength * 5.2 : 0.4);
+                const halfLen = dashLen * 0.5;
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
 
-                        ctx.strokeStyle = `rgba(${rgb}, ${alpha.toFixed(3)})`;
-                        ctx.lineWidth = p.size + strength * 1.1;
-                        ctx.lineCap = 'round';
-                        ctx.beginPath();
-                        ctx.moveTo(p.x - cos * halfLen, p.y - sin * halfLen);
-                        ctx.lineTo(p.x + cos * (halfLen + 0.4), p.y + sin * (halfLen + 0.4));
-                        ctx.stroke();
-                    }
-                }
+                ctx.strokeStyle = `rgba(${rgb}, ${alpha.toFixed(3)})`;
+                ctx.lineWidth = p.size + ringStrength * 0.9;
+                ctx.lineCap = 'round';
+                ctx.beginPath();
+                ctx.moveTo(p.x - cos * halfLen, p.y - sin * halfLen);
+                ctx.lineTo(p.x + cos * (halfLen + 0.35), p.y + sin * (halfLen + 0.35));
+                ctx.stroke();
             }
 
-            if (isPointerActive || halo > 0.005 || anyMoving) {
+            if (!reduceMotion && isInViewport) {
                 startLoop();
             }
         };
@@ -502,14 +522,8 @@ function initPuskesMapApp() {
                 return;
             }
             const rect = container.getBoundingClientRect();
-            const nextX = event.clientX - rect.left;
-            const nextY = event.clientY - rect.top;
-            if (!isPointerActive) {
-                cursorX = nextX;
-                cursorY = nextY;
-            }
-            targetX = nextX;
-            targetY = nextY;
+            targetX = event.clientX - rect.left;
+            targetY = event.clientY - rect.top;
             isPointerActive = true;
             startLoop();
         };
@@ -520,6 +534,17 @@ function initPuskesMapApp() {
             isPointerActive = false;
             startLoop();
         }, { passive: true });
+
+        if (window.IntersectionObserver) {
+            new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    isInViewport = entry.isIntersecting;
+                    if (isInViewport) {
+                        startLoop();
+                    }
+                });
+            }, { threshold: 0.01 }).observe(container);
+        }
 
         if (window.ResizeObserver) {
             new ResizeObserver(buildField).observe(container);
@@ -1038,11 +1063,6 @@ function initPuskesMapSDSS() {
                     <span class="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700">9 Nakes: ${item.nakes_score}%</span>
                 </div>
 
-                <div class="mt-3 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px]">
-                    <span class="text-muted">Estimasi Keramaian:</span>
-                    <span class="font-bold ${item.crowd === 'Ramai' ? 'text-accent' : (item.crowd === 'Sepi' ? 'text-crowd-low' : 'text-primary')}">${item.crowd}</span>
-                </div>
-
                 <div class="mt-3.5 grid grid-cols-2 gap-1.5">
                     <button type="button" onclick="window.openDetailModal(${item.id})"
                        class="flex items-center justify-center gap-1 h-8 rounded-full border border-primary text-primary hover:bg-surface-mint text-[11px] font-bold transition-colors cursor-pointer">
@@ -1367,7 +1387,7 @@ function initPuskesMapSDSS() {
 
         // Beri pin-pulse spotlight pada marker terpilih
         markers[id].setIcon(createPinIcon('#E37434', true));
-        updateFloatingCard(item, 'Rekomendasi Terbaik MAUT', true);
+        updateFloatingCard(item, 'Rekomendasi Terbaik', true);
         drawGeodesicLineTo(item);
         map.flyTo([item.lat, item.lng], 15, { duration: 1.2 });
         if (window.innerWidth >= 640) {

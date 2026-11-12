@@ -376,16 +376,6 @@ html {
   color: rgba(255, 255, 255, 0.9);
 }
 
-.marquee-card:hover .bg-track,
-.marquee-card:focus-within .bg-track {
-  background-color: rgba(255, 255, 255, 0.28);
-}
-
-.marquee-card:hover .bg-track > div,
-.marquee-card:focus-within .bg-track > div {
-  background-color: #ffffff;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

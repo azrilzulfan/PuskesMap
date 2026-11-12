@@ -313,12 +313,9 @@
              aria-label="Puskesmas di {{ $district['name'] }}"
              class="absolute z-40 hidden w-max max-w-[240px] rounded-2xl bg-white/95 backdrop-blur-md px-4 py-3 text-left shadow-2xl border border-primary/20 transition-all duration-200">
             <div class="flex items-center justify-between gap-4">
-                <div class="flex items-center gap-2.5">
-                    <span class="size-3.5 shrink-0 rounded-full shadow-xs" style="background-color: {{ $district['pill'] }}"></span>
-                    <div>
-                        <h3 class="text-sm font-bold text-ink leading-tight">Kec. {{ $district['name'] }}</h3>
-                        <span class="text-xs text-muted">{{ count($district['puskesmas']) }} Puskesmas terdata</span>
-                    </div>
+                <div>
+                    <h3 class="text-sm font-bold text-ink leading-tight">Kec. {{ $district['name'] }}</h3>
+                    <span class="text-xs text-muted">{{ count($district['puskesmas']) }} Puskesmas terdata</span>
                 </div>
                 <button type="button" data-popup-close aria-label="Tutup" class="size-6 shrink-0 flex items-center justify-center rounded-full text-muted hover:bg-surface-mint transition-colors cursor-pointer">
                     <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></svg>
