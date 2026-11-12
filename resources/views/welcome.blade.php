@@ -383,37 +383,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- Horizontal White Pill Strip (Responsif Grid 2 Kolom di HP) --}}
-            <div data-reveal="up" class="relative mt-8 sm:mt-12">
-                <div class="flex flex-col lg:flex-row items-center justify-between gap-4 rounded-3xl lg:rounded-full bg-white p-4 sm:px-6 sm:py-4 text-ink shadow-[0_14px_34px_rgba(7,52,52,0.2)]">
-                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-center sm:text-left">
-                        <span class="rounded-full bg-primary px-3.5 py-1 text-xs font-extrabold text-white">Sebaran Wilayah</span>
-                        <span class="text-xs font-bold text-muted">Kesiapan 25 Puskesmas di 6 Kecamatan:</span>
-                    </div>
-
-                    <div class="grid grid-cols-2 sm:flex sm:flex-wrap items-center justify-center gap-2 sm:gap-3 w-full lg:w-auto text-xs">
-                        @foreach (array_slice($districts, 1) as $distItem)
-                            <button type="button"
-                                     onclick="document.querySelector('[data-district=&quot;{{ $distItem['name'] }}&quot;]')?.click()"
-                                    class="group relative flex items-center justify-center sm:justify-start gap-1.5 rounded-full bg-surface-mint/70 hover:bg-primary hover:text-white px-3 py-2 sm:py-1 font-bold text-primary-dark transition-colors cursor-pointer">
-                                <span class="size-1.5 rounded-full bg-accent shrink-0"></span>
-                                <span class="truncate">{{ $distItem['name'] }}</span>
-                                <span class="text-[10px] opacity-75 shrink-0">({{ $distItem['count'] }})</span>
-                            </button>
-                        @endforeach
-                    </div>
-
-                    <a href="{{ route('peta') }}"
-                       class="inline-flex w-full sm:w-auto items-center justify-center gap-1 rounded-full bg-accent px-5 py-2.5 sm:py-1.5 text-xs font-extrabold text-white hover:bg-accent-strong transition-colors shrink-0">
-                        <span>Eksplorasi Peta</span>
-                        <span>+</span>
-                    </a>
-                </div>
-                <p class="mt-3 text-center text-xs font-medium text-white/80">
-                    * Ketuk salah satu kecamatan di atas untuk memfilter kartu puskesmas atau langsung buka halaman Peta WebGIS.
-                </p>
-            </div>
         </div>
 
         {{-- Bottom Organic Wave Divider Menuju Sekilas di Peta --}}
