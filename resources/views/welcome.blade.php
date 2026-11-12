@@ -196,7 +196,7 @@
 
             <div class="grid items-center gap-0 lg:grid-cols-[1.05fr_1fr]">
                 {{-- Kartu "Wilayah" di Kiri (Tertimpa Peta di Bawah pada HP & di Kanan pada Desktop) --}}
-                <div data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-11 sm:pb-14 lg:py-14 lg:pl-12 lg:pr-44 lg:-mr-36 shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
+                <div data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-11 sm:pb-14 lg:py-14 lg:pl-12 lg:pr-56 lg:-mr-48 shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
                     <h2 class="text-3xl sm:text-[44px] font-extrabold tracking-tight text-primary-dark leading-none">
                         Wilayah
                     </h2>
