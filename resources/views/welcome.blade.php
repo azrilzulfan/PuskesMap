@@ -8,31 +8,37 @@
     $featureBubblesLeft = [
         [
             'label' => 'IGD 24 Jam',
-            'icon' => '🚑',
-            'bg' => 'from-[#32d96a] to-[#12b84a]',
-            'shadow' => 'shadow-[0_14px_28px_-6px_rgba(18,184,74,0.45)]',
-            'align' => 'md:self-end md:mr-4 lg:mr-8',
+            'icon' => 'shield-plus',
+            'bg' => 'from-[#45b884] to-[#2e9e6b]',
+            'text' => 'text-white',
+            'iconWrap' => 'bg-white/22 text-white',
+            'shadow' => 'shadow-[0_18px_36px_-8px_rgba(46,158,107,0.40)]',
+            'pos' => 'lg:absolute lg:left-[3%] xl:left-[5%] lg:top-[10%]',
             'tilt' => '-rotate-6',
             'float' => 'float-soft',
             'delay' => 80,
         ],
         [
-            'label' => 'Rekomendasi MAUT',
-            'icon' => '🎯',
-            'bg' => 'from-[#ff8b3d] to-[#e35d17]',
-            'shadow' => 'shadow-[0_16px_30px_-6px_rgba(227,93,23,0.46)]',
-            'align' => 'md:self-start md:ml-0 lg:ml-2',
-            'tilt' => '-rotate-3',
+            'label' => 'Radius 1–5 km',
+            'icon' => 'radar-pin',
+            'bg' => 'from-[#0e9191] to-[#007979]',
+            'text' => 'text-white',
+            'iconWrap' => 'bg-white/22 text-white',
+            'shadow' => 'shadow-[0_18px_36px_-8px_rgba(0,121,121,0.40)]',
+            'pos' => 'lg:absolute lg:left-[21%] xl:left-[23%] lg:top-[0%]',
+            'tilt' => 'rotate-3',
             'float' => 'float-soft-alt',
             'delay' => 160,
         ],
         [
-            'label' => 'Radius 1–5 km',
-            'icon' => '📍',
-            'bg' => 'from-[#18adad] to-[#007979]',
-            'shadow' => 'shadow-[0_14px_28px_-6px_rgba(0,121,121,0.42)]',
-            'align' => 'md:self-end md:mr-2 lg:mr-6',
-            'tilt' => 'rotate-3',
+            'label' => 'Rekomendasi MAUT',
+            'icon' => 'sparkles-target',
+            'bg' => 'from-[#ee884a] to-[#e37434]',
+            'text' => 'text-white',
+            'iconWrap' => 'bg-white/22 text-white',
+            'shadow' => 'shadow-[0_20px_38px_-8px_rgba(227,116,52,0.44)]',
+            'pos' => 'lg:absolute lg:left-[1%] xl:left-[2%] lg:bottom-[14%]',
+            'tilt' => '-rotate-3',
             'float' => 'float-soft',
             'delay' => 240,
         ],
@@ -41,30 +47,36 @@
     $featureBubblesRight = [
         [
             'label' => '9 Profesi Nakes',
-            'icon' => '👩‍⚕️',
-            'bg' => 'from-[#ffda3d] to-[#f4aa00]',
-            'shadow' => 'shadow-[0_14px_28px_-6px_rgba(244,170,0,0.45)]',
-            'align' => 'md:self-start md:ml-4 lg:ml-8',
+            'icon' => 'medical-team',
+            'bg' => 'from-[#ffe8be] to-[#ffd691]',
+            'text' => 'text-accent-strong',
+            'iconWrap' => 'bg-white/65 text-accent-strong',
+            'shadow' => 'shadow-[0_18px_34px_-8px_rgba(227,116,52,0.32)]',
+            'pos' => 'lg:absolute lg:right-[3%] xl:right-[5%] lg:top-[9%]',
             'tilt' => 'rotate-6',
             'float' => 'float-soft-alt',
             'delay' => 120,
         ],
         [
             'label' => 'Peta WebGIS',
-            'icon' => '🗺️',
-            'bg' => 'from-[#288eff] to-[#005ae8]',
-            'shadow' => 'shadow-[0_16px_30px_-6px_rgba(0,90,232,0.44)]',
-            'align' => 'md:self-end md:mr-0 lg:mr-2',
+            'icon' => 'map-gis',
+            'bg' => 'from-[#cdecf4] to-[#bfe6ef]',
+            'text' => 'text-primary-dark',
+            'iconWrap' => 'bg-white/70 text-primary-dark',
+            'shadow' => 'shadow-[0_18px_34px_-8px_rgba(0,121,121,0.28)]',
+            'pos' => 'lg:absolute lg:right-[1%] xl:right-[2%] lg:bottom-[14%]',
             'tilt' => '-rotate-3',
             'float' => 'float-soft',
             'delay' => 200,
         ],
         [
             'label' => 'Info Rawat Inap',
-            'icon' => '🛏️',
-            'bg' => 'from-[#ff6b7b] to-[#e23d52]',
-            'shadow' => 'shadow-[0_14px_28px_-6px_rgba(226,61,82,0.42)]',
-            'align' => 'md:self-start md:ml-2 lg:ml-6',
+            'icon' => 'clinic-bed',
+            'bg' => 'from-[#0e7070] to-[#0b5c5c]',
+            'text' => 'text-white',
+            'iconWrap' => 'bg-white/20 text-white',
+            'shadow' => 'shadow-[0_18px_36px_-8px_rgba(11,92,92,0.40)]',
+            'pos' => 'lg:absolute lg:right-[20%] xl:right-[22%] lg:bottom-[0%]',
             'tilt' => '-rotate-4',
             'float' => 'float-soft-alt',
             'delay' => 280,
@@ -350,12 +362,12 @@
         </div>
 
         {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA DENGAN PALET PUSKESMAP) ================= --}}
-        <div id="wilayah" class="relative z-20 mx-auto max-w-[1140px] px-4 sm:px-6 pt-3 pb-8 lg:pt-8 lg:pb-14">
+        <div id="wilayah" class="relative z-20 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8 pt-4 pb-6 lg:pt-8 lg:pb-8">
             <div class="grid items-center gap-0 lg:grid-cols-[1.05fr_1fr]">
                 {{-- Kartu "Wilayah" di Kiri (Diperpanjang ke Kanan Sampai ke Belakang Peta) --}}
-                <div data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-11 sm:pb-14 lg:py-20 lg:pl-12 lg:pr-[430px] lg:-mr-[410px] shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
+                <div data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-10 sm:pb-14 lg:py-16 lg:pl-12 lg:pr-[430px] lg:-mr-[410px] shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
                     <div class="lg:max-w-[460px]">
-                        <h2 class="text-3xl sm:text-[44px] font-extrabold tracking-tight text-primary-dark leading-none">
+                        <h2 class="text-[32px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-tight leading-[1.14] text-primary-dark">
                             Wilayah
                         </h2>
 
@@ -364,7 +376,7 @@
                             <path d="M2 8 C22 1, 42 13, 64 5 C78 0, 88 8, 98 4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
                         </svg>
 
-                        <p class="mt-4 sm:mt-5 text-xs sm:text-[15px] leading-relaxed text-body font-medium">
+                        <p class="mt-3 sm:mt-4 text-base sm:text-[17px] leading-relaxed text-body font-medium">
                             PuskesMap memetakan 25 puskesmas induk di enam kecamatan Kota Bogor: Tanah Sareal, Bogor Utara,
                             Bogor Barat, Bogor Tengah, Bogor Timur, dan Bogor Selatan, dilengkapi informasi kesiapan IGD 24 jam,
                             fasilitas rawat inap, kelengkapan 9 profesi tenaga kesehatan, serta jam operasional harian.
@@ -392,49 +404,78 @@
         </div>
     </header>
 
-    {{-- ================= SECTION FITUR PUSKESMAP (POLOS PUTIH + BUBBLE FLOATING KIRI & KANAN) ================= --}}
-    <section id="fitur" class="relative bg-white py-10 sm:py-16 lg:py-20 overflow-hidden">
-        <div class="mx-auto max-w-[1140px] px-4 sm:px-6">
-            <div class="grid grid-cols-1 items-center gap-7 md:grid-cols-[1fr_minmax(300px,430px)_1fr] lg:grid-cols-[1fr_470px_1fr] md:gap-4 lg:gap-6">
-                {{-- Judul Utama di Tengah --}}
-                <div data-reveal="up" class="order-1 md:order-2 text-center px-2">
-                    <span class="inline-block text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.2em] text-muted/80">
-                        FITUR UNGGULAN
-                    </span>
-                    <h2 class="mt-2 text-2xl sm:text-4xl lg:text-[42px] font-extrabold tracking-tight leading-[1.16] text-ink">
+    {{-- ================= SECTION FITUR PUSKESMAP (FULL 1 LAYAR PUTIH + BUBBLE ELEMEN SVG BESAR) ================= --}}
+    <section id="fitur" class="relative bg-white min-h-[82svh] lg:min-h-[88svh] flex items-center justify-center pt-4 pb-12 sm:pt-6 sm:pb-16 lg:pt-8 lg:pb-16 overflow-hidden">
+        <div class="relative mx-auto w-full max-w-[1180px] min-h-[500px] lg:min-h-[580px] px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-8 sm:gap-10 lg:gap-0">
+            {{-- Judul Utama 2 Baris Konsisten dengan Header Section Lain --}}
+            <div data-reveal="up" class="order-2 relative z-10 text-center max-w-3xl px-2">
+                <h2 class="text-3xl sm:text-4xl lg:text-[44px] font-extrabold tracking-tight leading-[1.15] text-ink">
+                    <span class="block sm:whitespace-nowrap">
                         Fitur apa saja yang ada di
-                        <span class="block text-accent">PUSKESMAP?</span>
-                    </h2>
-                </div>
-
-                {{-- Bubble Fitur Sisi Kiri --}}
-                <div class="order-2 md:order-1 flex flex-wrap justify-center gap-3 md:flex-col md:gap-7 lg:gap-9">
-                    @foreach ($featureBubblesLeft as $bubble)
-                        <div data-reveal="pop" data-reveal-delay="{{ $bubble['delay'] }}" class="{{ $bubble['align'] }}">
-                            <div class="{{ $bubble['float'] }}">
-                                <div class="inline-flex items-center gap-2 sm:gap-2.5 rounded-full bg-gradient-to-b {{ $bubble['bg'] }} {{ $bubble['shadow'] }} {{ $bubble['tilt'] }} px-4 py-2 sm:px-6 sm:py-3 text-white ring-1 ring-white/40 transition-transform duration-300 ease-out hover:scale-105 hover:rotate-0 cursor-default select-none">
-                                    <span class="text-base sm:text-xl leading-none" aria-hidden="true">{{ $bubble['icon'] }}</span>
-                                    <span class="whitespace-nowrap text-xs sm:text-base lg:text-[17px] font-extrabold tracking-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.16)]">{{ $bubble['label'] }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-
-                {{-- Bubble Fitur Sisi Kanan --}}
-                <div class="order-3 md:order-3 flex flex-wrap justify-center gap-3 md:flex-col md:gap-7 lg:gap-9">
-                    @foreach ($featureBubblesRight as $bubble)
-                        <div data-reveal="pop" data-reveal-delay="{{ $bubble['delay'] }}" class="{{ $bubble['align'] }}">
-                            <div class="{{ $bubble['float'] }}">
-                                <div class="inline-flex items-center gap-2 sm:gap-2.5 rounded-full bg-gradient-to-b {{ $bubble['bg'] }} {{ $bubble['shadow'] }} {{ $bubble['tilt'] }} px-4 py-2 sm:px-6 sm:py-3 text-white ring-1 ring-white/40 transition-transform duration-300 ease-out hover:scale-105 hover:rotate-0 cursor-default select-none">
-                                    <span class="text-base sm:text-xl leading-none" aria-hidden="true">{{ $bubble['icon'] }}</span>
-                                    <span class="whitespace-nowrap text-xs sm:text-base lg:text-[17px] font-extrabold tracking-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.16)]">{{ $bubble['label'] }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+                    </span>
+                    <span class="mt-1 block text-accent">
+                        PUSKESMAP?
+                    </span>
+                </h2>
             </div>
+
+            {{-- Bubble Fitur Sisi Kiri & Kanan (Tanpa Emoji, Menggunakan Elemen Ikon SVG) --}}
+            @foreach (['order-1' => $featureBubblesLeft, 'order-3' => $featureBubblesRight] as $orderClass => $bubbles)
+                <div class="{{ $orderClass }} flex flex-wrap justify-center gap-3.5 sm:gap-5 lg:contents">
+                    @foreach ($bubbles as $bubble)
+                        <div data-reveal="pop" data-reveal-delay="{{ $bubble['delay'] }}" class="{{ $bubble['pos'] }}">
+                            <div class="{{ $bubble['float'] }}">
+                                <div class="inline-flex items-center gap-2.5 sm:gap-3.5 rounded-full bg-gradient-to-b {{ $bubble['bg'] }} {{ $bubble['shadow'] }} {{ $bubble['tilt'] }} {{ $bubble['text'] }} px-5 py-2.5 sm:px-7 sm:py-3.5 lg:px-8 lg:py-4 ring-1 ring-white/50 transition-transform duration-300 ease-out hover:scale-105 hover:rotate-0 cursor-default select-none">
+                                    <span class="flex size-8 sm:size-10 lg:size-11 shrink-0 items-center justify-center rounded-full {{ $bubble['iconWrap'] }}" aria-hidden="true">
+                                        @switch($bubble['icon'])
+                                            @case('shield-plus')
+                                                <svg class="size-4 sm:size-5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3l7 3v5.5c0 4.5-3 8.4-7 9.5-4-1.1-7-5-7-9.5V6l7-3z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.5v7M8.5 12h7" />
+                                                </svg>
+                                                @break
+                                            @case('radar-pin')
+                                                <svg class="size-4 sm:size-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 21s-6-5.6-6-10.5a6 6 0 1112 0C18 15.4 12 21 12 21z" />
+                                                    <circle cx="12" cy="10.5" r="2.2" fill="currentColor" stroke="none" />
+                                                </svg>
+                                                @break
+                                            @case('sparkles-target')
+                                                <svg class="size-4 sm:size-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                    <circle cx="12" cy="12" r="8" />
+                                                    <circle cx="12" cy="12" r="4" />
+                                                    <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
+                                                </svg>
+                                                @break
+                                            @case('medical-team')
+                                                <svg class="size-4 sm:size-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                    <circle cx="9" cy="8.5" r="3" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.5 19a5.5 5.5 0 0111 0" />
+                                                    <circle cx="16.5" cy="9.5" r="2.3" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 14.5a4 4 0 014 4" />
+                                                </svg>
+                                                @break
+                                            @case('map-gis')
+                                                <svg class="size-4 sm:size-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5L3.5 7v12.5L9 17l6 2.5 5.5-2.5V4.5L15 7 9 4.5z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 4.5V17M15 7v12.5" />
+                                                </svg>
+                                                @break
+                                            @case('clinic-bed')
+                                                <svg class="size-4 sm:size-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 18V7m0 7h18v4M3 11h6a2 2 0 012 2v1h8a2 2 0 012 2" />
+                                                    <circle cx="7" cy="9.5" r="1.5" fill="currentColor" stroke="none" />
+                                                </svg>
+                                                @break
+                                        @endswitch
+                                    </span>
+                                    <span class="whitespace-nowrap text-sm sm:text-lg lg:text-xl font-extrabold tracking-tight">{{ $bubble['label'] }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @endforeach
         </div>
     </section>
 
@@ -454,17 +495,17 @@
                 class="pointer-events-none absolute inset-0 z-0 h-full w-full"></canvas>
 
         {{-- Heading Section di Dalam Area Hijau/Teal agar Terlihat 1 Section --}}
-        <div class="relative z-10 mx-auto max-w-[1140px] px-6 pt-5 sm:pt-7 pb-6 sm:pb-8 text-center">
-            <h2 data-reveal="up" data-reveal-delay="80" class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
-                Jangan Bingung Cari Faskes! <span class="text-accent drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">PUSKESMAP</span>
+        <div class="relative z-10 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-8 sm:pb-10 text-center">
+            <h2 data-reveal="up" data-reveal-delay="80" class="text-3xl sm:text-4xl lg:text-[44px] font-extrabold tracking-tight leading-[1.15] text-white">
+                Jangan Bingung Cari Faskes! <span class="text-card-peach drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">PUSKESMAP</span>
             </h2>
-            <p data-reveal="up" data-reveal-delay="180" class="mx-auto mt-2 max-w-2xl text-xs sm:text-sm font-medium text-white/90">
+            <p data-reveal="up" data-reveal-delay="180" class="mx-auto mt-3 max-w-2xl text-sm sm:text-[15px] leading-relaxed font-medium text-white/90">
                 Informasi kesiapan IGD 24 jam, tenaga kesehatan, dan operasional puskesmas induk Kota Bogor
             </p>
         </div>
 
         {{-- Full-Width Edge-to-Edge Marquee Berjalan Perlahan ke Kiri & Bisa Digeser Tangan --}}
-        <div data-marquee class="marquee-wrap relative z-10 w-full overflow-hidden pt-2 sm:pt-3 pb-14 sm:pb-20 cursor-grab active:cursor-grabbing select-none">
+        <div data-marquee class="marquee-wrap relative z-10 w-full overflow-hidden pt-2 sm:pt-3 pb-12 sm:pb-16 cursor-grab active:cursor-grabbing select-none">
             <div data-marquee-track class="marquee-track">
                 @for ($copy = 0; $copy < 2; $copy++)
                     <div class="marquee-group flex shrink-0 items-stretch gap-5 sm:gap-6 pr-5 sm:pr-6" @if ($copy === 1) aria-hidden="true" @endif>
@@ -549,17 +590,17 @@
     </section>
 
     {{-- ================= SEKILAS DI PETA (REAL INTERACTIVE STREET MAP — RESPONSIF UNTUK HP) ================= --}}
-    <section id="peta" class="bg-gradient-to-b from-surface-mint via-[#eef7f6] to-white pt-8 sm:pt-10 pb-14 sm:pb-24">
-        <div class="mx-auto max-w-[1180px] px-4 sm:px-6">
+    <section id="peta" class="bg-gradient-to-b from-surface-mint via-[#eef7f6] to-white py-12 sm:py-16 lg:py-20">
+        <div class="mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
             <div class="text-center">
                 <span data-reveal="pop" class="inline-block rounded-full bg-white px-4 py-1 text-xs font-extrabold text-primary shadow-2xs border border-primary/15">
                      PRATINJAU SPASIAL KOTA BOGOR
                 </span>
-                <h2 data-reveal="up" data-reveal-delay="100" class="mt-2 text-2xl sm:text-4xl font-extrabold leading-tight text-primary-dark">Sekilas di Peta</h2>
-                <p data-reveal="up" data-reveal-delay="180" class="mt-1.5 text-xs sm:text-sm font-medium text-muted">
+                <h2 data-reveal="up" data-reveal-delay="100" class="mt-3 text-3xl sm:text-4xl lg:text-[44px] font-extrabold tracking-tight leading-[1.15] text-primary-dark">Sekilas di Peta</h2>
+                <p data-reveal="up" data-reveal-delay="180" class="mx-auto mt-3 max-w-2xl text-sm sm:text-[15px] leading-relaxed font-medium text-muted">
                     Peta jalan interaktif real-time 25 Puskesmas Induk di 6 Kecamatan Kota Bogor
                 </p>
-                <div data-reveal-stagger="60" class="mt-4 sm:mt-5 flex flex-wrap justify-center gap-2">
+                <div data-reveal-stagger="60" class="mt-5 sm:mt-6 flex flex-wrap justify-center gap-2">
                     @foreach ($hashtags as $tag)
                         <button type="button" data-chip aria-pressed="{{ $loop->first ? 'true' : 'false' }}"
                                 class="h-8 cursor-pointer rounded-full border border-primary/20 bg-white px-3.5 sm:px-4 text-xs font-bold text-ink shadow-2xs transition-colors aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-white">
@@ -570,7 +611,7 @@
             </div>
 
             {{-- Container Peta Jalan Interaktif (Stacked Bersih di HP agar Peta 100% Terbuka, Floating Overlay di Desktop!) --}}
-            <div data-reveal="zoom" class="relative mt-6 sm:mt-8 flex flex-col sm:block sm:h-[560px] rounded-3xl border-2 border-primary/20 bg-white sm:bg-[#f3f6f4] shadow-[0_24px_60px_rgba(0,121,121,0.14)] overflow-hidden">
+            <div data-reveal="zoom" class="relative mt-8 sm:mt-10 flex flex-col sm:block sm:h-[560px] rounded-3xl border-2 border-primary/20 bg-white sm:bg-[#f3f6f4] shadow-[0_24px_60px_rgba(0,121,121,0.14)] overflow-hidden">
                 {{-- Kartu Kontrol Radius: Header Ringkas di HP, Floating Card Kiri Atas di Desktop --}}
                 <div class="relative sm:absolute sm:left-5 sm:top-5 z-20 w-full sm:w-[275px] sm:rounded-2xl bg-white sm:bg-white/95 sm:backdrop-blur-md p-3.5 sm:p-4 sm:shadow-float border-b sm:border border-gray-100">
                     <div class="flex items-center justify-between gap-2">
@@ -651,8 +692,8 @@
     </section>
 
     {{-- ================= FOOTER INTERAKTIF (SESUAI REFERENSI CHAUMES-EN-RETZ DENGAN PALET PUSKESMAP) ================= --}}
-    <footer class="bg-[#084747] text-white pt-16 pb-10 border-t border-white/10">
-        <div class="mx-auto max-w-[1180px] px-6">
+    <footer class="bg-[#084747] text-white pt-12 sm:pt-16 pb-10 border-t border-white/10">
+        <div class="mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
             <div data-reveal-stagger="140" class="grid grid-cols-1 lg:grid-cols-[270px_1fr_52px] gap-10 lg:gap-9 items-center">
                 {{-- Kolom Kiri: Brand Terpusat, Tombol Pill Oranye, dan Identitas Instansi (Persis Referensi Chaumes-en-Retz) --}}
                 <div class="flex flex-col items-center text-center">
@@ -728,7 +769,7 @@
 
                         <div class="mt-6">
                             <h3 class="text-sm font-extrabold text-white">Jam Operasional Layanan</h3>
-                            <p id="footer-tab-hours" class="mt-1 text-xs sm:text-sm text-white/80 font-medium leading-relaxed">
+                            <p id="footer-tab-hours" class="mt-1.5 text-sm sm:text-[15px] text-white/80 font-medium leading-relaxed">
                                 {{ $footerTabs[0]['hours'] }}
                             </p>
                         </div>
