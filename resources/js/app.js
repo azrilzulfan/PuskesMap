@@ -8,6 +8,7 @@ function initPuskesMapApp() {
     // 1. GLOBAL & LANDING PAGE INTERACTION
     // ==========================================
 
+    const navbar = document.getElementById('main-navbar');
     const navToggle = document.getElementById('nav-toggle');
     const navMenu = document.getElementById('nav-menu');
     navToggle?.addEventListener('click', () => {
@@ -21,6 +22,512 @@ function initPuskesMapApp() {
             navToggle?.setAttribute('aria-expanded', 'false');
             navMenu?.classList.add('hidden');
         });
+    });
+
+    if (navbar) {
+        const navBrand = navbar.querySelector('.nav-brand');
+        const navActions = navbar.querySelector('.nav-actions');
+        const navLinksList = document.getElementById('nav-links-list');
+        const hoverPill = document.getElementById('nav-hover-pill');
+        const navLinks = Array.from(navbar.querySelectorAll('[data-nav-link]'));
+        let hoveredLink = null;
+        let activeLink = null;
+        let manualExpanded = false;
+        let expandedAtScrollY = 0;
+        let navTicking = false;
+
+        const moveHoverPill = (target) => {
+            if (!hoverPill || !navLinksList) return;
+            if (!target) {
+                hoverPill.style.opacity = '0';
+                return;
+            }
+            hoverPill.style.width = `${target.offsetWidth}px`;
+            hoverPill.style.transform = `translate3d(${target.offsetLeft}px, -50%, 0)`;
+            hoverPill.style.opacity = '1';
+        };
+
+        const syncScrollSpy = () => {
+            const scrollRef = window.scrollY + 180;
+            let matched = null;
+            let matchedTop = -Infinity;
+
+            navLinks.forEach((link) => {
+                const href = link.getAttribute('href');
+                if (!href || !href.startsWith('#')) return;
+                const section = document.querySelector(href);
+                if (!section) return;
+                const top = section.getBoundingClientRect().top + window.scrollY;
+                if (scrollRef >= top && top > matchedTop) {
+                    matchedTop = top;
+                    matched = link;
+                }
+            });
+
+            activeLink = matched;
+            navLinks.forEach((link) => link.classList.toggle('is-active', link === activeLink));
+            if (!hoveredLink) {
+                moveHoverPill(activeLink);
+            }
+        };
+
+        const updateNavbarState = () => {
+            navTicking = false;
+            const scrollY = window.scrollY;
+
+            if (scrollY <= 80) {
+                manualExpanded = false;
+            } else if (manualExpanded && Math.abs(scrollY - expandedAtScrollY) > 60) {
+                manualExpanded = false;
+            }
+
+            const scrolled = scrollY > 80 && !manualExpanded;
+            navbar.classList.toggle('is-scrolled', scrolled);
+
+            if (scrolled && navToggle?.getAttribute('aria-expanded') === 'true') {
+                navToggle.setAttribute('aria-expanded', 'false');
+                navMenu?.classList.add('hidden');
+            }
+            syncScrollSpy();
+        };
+
+        navBrand?.addEventListener('click', (event) => {
+            if (navbar.classList.contains('is-scrolled')) {
+                event.preventDefault();
+                manualExpanded = true;
+                expandedAtScrollY = window.scrollY;
+                navbar.classList.remove('is-scrolled');
+                window.requestAnimationFrame(() => moveHoverPill(hoveredLink || activeLink));
+            } else {
+                manualExpanded = false;
+            }
+        });
+
+        navActions?.addEventListener('transitionend', (event) => {
+            if (event.propertyName === 'max-width' && !navbar.classList.contains('is-scrolled')) {
+                moveHoverPill(hoveredLink || activeLink);
+            }
+        });
+
+        document.addEventListener('click', (event) => {
+            if (manualExpanded && !navbar.contains(event.target)) {
+                manualExpanded = false;
+                updateNavbarState();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && manualExpanded) {
+                manualExpanded = false;
+                updateNavbarState();
+            }
+        });
+
+        navLinks.forEach((link) => {
+            link.addEventListener('mouseenter', () => {
+                hoveredLink = link;
+                moveHoverPill(link);
+            });
+            link.addEventListener('focus', () => {
+                hoveredLink = link;
+                moveHoverPill(link);
+            });
+            link.addEventListener('click', () => {
+                manualExpanded = false;
+                activeLink = link;
+                navLinks.forEach((l) => l.classList.toggle('is-active', l === link));
+                moveHoverPill(link);
+            });
+        });
+
+        navLinksList?.addEventListener('mouseleave', () => {
+            hoveredLink = null;
+            moveHoverPill(activeLink);
+        });
+
+        window.addEventListener('scroll', () => {
+            if (!navTicking) {
+                navTicking = true;
+                window.requestAnimationFrame(updateNavbarState);
+            }
+        }, { passive: true });
+
+        window.addEventListener('resize', () => moveHoverPill(hoveredLink || activeLink), { passive: true });
+        updateNavbarState();
+    }
+
+    document.querySelectorAll('[data-marquee]').forEach((marquee) => {
+        const track = marquee.querySelector('[data-marquee-track]');
+        const firstGroup = track?.querySelector('.marquee-group');
+        if (!track || !firstGroup) return;
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const autoSpeed = reduceMotion ? 0 : 42; // px per detik ke kiri
+        let groupWidth = firstGroup.offsetWidth || 1;
+        let offset = 0;
+        let isHovered = false;
+        let isFocused = false;
+        let isDragging = false;
+        let hasCaptured = false;
+        let didDrag = false;
+        let activePointerId = null;
+        let startX = 0;
+        let startOffset = 0;
+        let lastX = 0;
+        let lastMoveTime = 0;
+        let velocity = 0;
+        let lastFrameTime = performance.now();
+
+        const normalizeOffset = () => {
+            if (groupWidth <= 0) return;
+            while (offset <= -groupWidth) offset += groupWidth;
+            while (offset > 0) offset -= groupWidth;
+        };
+
+        const render = () => {
+            normalizeOffset();
+            track.style.transform = `translate3d(${offset.toFixed(2)}px, 0, 0)`;
+        };
+
+        const syncWidth = () => {
+            groupWidth = firstGroup.offsetWidth || 1;
+            render();
+        };
+
+        if (window.ResizeObserver) {
+            new ResizeObserver(syncWidth).observe(firstGroup);
+        } else {
+            window.addEventListener('resize', syncWidth, { passive: true });
+        }
+
+        marquee.addEventListener('pointerenter', (event) => {
+            if (event.pointerType === 'mouse') {
+                isHovered = true;
+            }
+        });
+
+        marquee.addEventListener('pointerleave', (event) => {
+            if (event.pointerType === 'mouse') {
+                isHovered = false;
+            }
+        });
+
+        marquee.addEventListener('focusin', () => {
+            isFocused = true;
+        });
+
+        marquee.addEventListener('focusout', (event) => {
+            if (!marquee.contains(event.relatedTarget)) {
+                isFocused = false;
+            }
+        });
+
+        marquee.addEventListener('pointerdown', (event) => {
+            if (event.pointerType === 'mouse' && event.button !== 0) return;
+            isDragging = true;
+            hasCaptured = false;
+            didDrag = false;
+            activePointerId = event.pointerId;
+            startX = event.clientX;
+            lastX = event.clientX;
+            startOffset = offset;
+            velocity = 0;
+            lastMoveTime = performance.now();
+        });
+
+        marquee.addEventListener('pointermove', (event) => {
+            if (!isDragging || event.pointerId !== activePointerId) return;
+            const dx = event.clientX - startX;
+
+            if (!hasCaptured && Math.abs(dx) > 6) {
+                hasCaptured = true;
+                didDrag = true;
+                try {
+                    marquee.setPointerCapture(event.pointerId);
+                } catch {
+                    // Abaikan jika browser menolak pointer capture
+                }
+            }
+
+            if (hasCaptured) {
+                const now = performance.now();
+                const dt = Math.max(now - lastMoveTime, 1);
+                velocity = ((event.clientX - lastX) / dt) * 1000;
+                lastX = event.clientX;
+                lastMoveTime = now;
+                offset = startOffset + dx;
+                render();
+            }
+        });
+
+        const endDrag = (event) => {
+            if (!isDragging || event.pointerId !== activePointerId) return;
+            isDragging = false;
+            if (hasCaptured) {
+                try {
+                    marquee.releasePointerCapture(event.pointerId);
+                } catch {
+                    // Abaikan jika sudah dilepas
+                }
+            }
+            activePointerId = null;
+            if (performance.now() - lastMoveTime > 90) {
+                velocity = 0;
+            }
+        };
+
+        marquee.addEventListener('pointerup', endDrag);
+        marquee.addEventListener('pointercancel', endDrag);
+        marquee.addEventListener('dragstart', (event) => event.preventDefault());
+
+        marquee.addEventListener('click', (event) => {
+            if (didDrag) {
+                event.preventDefault();
+                event.stopPropagation();
+                didDrag = false;
+            }
+        }, true);
+
+        marquee.addEventListener('wheel', (event) => {
+            if (Math.abs(event.deltaX) > Math.abs(event.deltaY) && Math.abs(event.deltaX) > 0) {
+                event.preventDefault();
+                offset -= event.deltaX;
+                velocity = 0;
+                render();
+            }
+        }, { passive: false });
+
+        const tick = (now) => {
+            const dt = Math.min((now - lastFrameTime) / 1000, 0.05);
+            lastFrameTime = now;
+
+            if (!isDragging) {
+                if (Math.abs(velocity) > 8) {
+                    offset += velocity * dt;
+                    velocity *= Math.pow(0.06, dt);
+                    render();
+                } else {
+                    velocity = 0;
+                    if (!isHovered && !isFocused && autoSpeed > 0) {
+                        offset -= autoSpeed * dt;
+                        render();
+                    }
+                }
+            }
+
+            window.requestAnimationFrame(tick);
+        };
+
+        window.requestAnimationFrame(tick);
+    });
+
+    document.querySelectorAll('[data-cursor-particles]').forEach((canvas) => {
+        const container = canvas.closest('section') || canvas.parentElement;
+        const ctx = canvas.getContext('2d');
+        if (!container || !ctx) return;
+
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const palette = [
+            [142, 243, 230], // mint aqua
+            [92, 193, 209],  // bright aqua
+            [255, 255, 255], // crisp white
+            [255, 178, 107], // warm gold-orange
+            [227, 116, 52],  // PuskesMap accent orange (#e37434)
+        ];
+
+        let width = 0;
+        let height = 0;
+        let dpr = 1;
+        let particles = [];
+        let isPointerActive = false;
+        let halo = 0;
+        let targetX = 0;
+        let targetY = 0;
+        let cursorX = 0;
+        let cursorY = 0;
+        let rafId = null;
+
+        const sampleColor = (angleNorm) => {
+            const scaled = ((angleNorm % 1) + 1) % 1 * palette.length;
+            const idx = Math.floor(scaled);
+            const nextIdx = (idx + 1) % palette.length;
+            const frac = scaled - idx;
+            const c1 = palette[idx];
+            const c2 = palette[nextIdx];
+            const r = Math.round(c1[0] + (c2[0] - c1[0]) * frac);
+            const g = Math.round(c1[1] + (c2[1] - c1[1]) * frac);
+            const b = Math.round(c1[2] + (c2[2] - c1[2]) * frac);
+            return `${r}, ${g}, ${b}`;
+        };
+
+        const buildField = () => {
+            const rect = container.getBoundingClientRect();
+            const nextW = Math.max(1, Math.round(rect.width));
+            const nextH = Math.max(1, Math.round(rect.height));
+            const nextDpr = Math.min(window.devicePixelRatio || 1, 2);
+            if (nextW === width && nextH === height && nextDpr === dpr && particles.length > 0) {
+                return;
+            }
+            width = nextW;
+            height = nextH;
+            dpr = nextDpr;
+
+            canvas.width = Math.round(width * dpr);
+            canvas.height = Math.round(height * dpr);
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const spacing = width < 640 ? 24 : 26;
+            const cols = Math.ceil(width / spacing) + 1;
+            const rows = Math.ceil(height / spacing) + 1;
+            const nextParticles = [];
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    // Hash deterministik agar posisi titik terasa organik & konsisten saat resize
+                    const seed = Math.sin((c + 1) * 12.9898 + (r + 1) * 78.233) * 43758.5453;
+                    const randA = seed - Math.floor(seed);
+                    const randB = (seed * 1.37) - Math.floor(seed * 1.37);
+                    const hx = (c + 0.15 + randA * 0.7) * spacing;
+                    const hy = (r + 0.15 + randB * 0.7) * spacing;
+
+                    nextParticles.push({
+                        hx,
+                        hy,
+                        x: hx,
+                        y: hy,
+                        vx: 0,
+                        vy: 0,
+                        size: 1.5 + randA * 1.4,
+                        phase: randB * Math.PI * 2,
+                    });
+                }
+            }
+
+            particles = nextParticles;
+        };
+
+        const startLoop = () => {
+            if (rafId !== null) return;
+            rafId = window.requestAnimationFrame(renderFrame);
+        };
+
+        const renderFrame = (now) => {
+            rafId = null;
+
+            halo += ((isPointerActive ? 1 : 0) - halo) * (isPointerActive ? 0.14 : 0.08);
+            cursorX += (targetX - cursorX) * 0.22;
+            cursorY += (targetY - cursorY) * 0.22;
+
+            ctx.clearRect(0, 0, width, height);
+
+            const radius = Math.min(340, Math.max(200, width * 0.27));
+            let anyMoving = false;
+
+            for (let i = 0; i < particles.length; i++) {
+                const p = particles[i];
+                const dxHome = cursorX - p.hx;
+                const dyHome = cursorY - p.hy;
+                const hDist = Math.hypot(dxHome, dyHome);
+
+                const inField = hDist < radius;
+                const t = inField ? (1 - hDist / radius) : 0;
+                const strength = t > 0 ? Math.pow(t, 1.25) * halo : 0;
+
+                if (strength > 0.005 && !reduceMotion) {
+                    const dist = Math.max(hDist, 1);
+                    const nx = dxHome / dist;
+                    const ny = dyHome / dist;
+                    const txUnit = -ny;
+                    const tyUnit = nx;
+
+                    const wave = Math.sin(now * 0.0024 + p.phase) * 3.2 * strength;
+                    const pull = strength * 28 + wave;
+                    const swirl = strength * 10;
+
+                    const goalX = p.hx + nx * pull + txUnit * swirl;
+                    const goalY = p.hy + ny * pull + tyUnit * swirl;
+
+                    p.vx = (p.vx + (goalX - p.x) * 0.16) * 0.76;
+                    p.vy = (p.vy + (goalY - p.y) * 0.16) * 0.76;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    anyMoving = true;
+                } else if (Math.abs(p.x - p.hx) > 0.05 || Math.abs(p.y - p.hy) > 0.05 || Math.abs(p.vx) > 0.05 || Math.abs(p.vy) > 0.05) {
+                    p.vx = (p.vx + (p.hx - p.x) * 0.14) * 0.76;
+                    p.vy = (p.vy + (p.hy - p.y) * 0.14) * 0.76;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    anyMoving = true;
+                } else {
+                    p.x = p.hx;
+                    p.y = p.hy;
+                    p.vx = 0;
+                    p.vy = 0;
+                }
+
+                if (strength > 0.015) {
+                    const dx = cursorX - p.x;
+                    const dy = cursorY - p.y;
+                    const dist = Math.hypot(dx, dy) || 1;
+                    const centerFade = Math.min(1, dist / 26);
+                    const alpha = Math.min(0.92, strength * 0.95 * centerFade);
+
+                    if (alpha > 0.015) {
+                        const angle = Math.atan2(dy, dx);
+                        const arcNorm = (angle + Math.PI) / (Math.PI * 2) + now * 0.000035;
+                        const rgb = sampleColor(arcNorm);
+                        const dashLen = reduceMotion ? 0.5 : strength * 7.5;
+                        const halfLen = dashLen * 0.5;
+                        const cos = Math.cos(angle);
+                        const sin = Math.sin(angle);
+
+                        ctx.strokeStyle = `rgba(${rgb}, ${alpha.toFixed(3)})`;
+                        ctx.lineWidth = p.size + strength * 1.1;
+                        ctx.lineCap = 'round';
+                        ctx.beginPath();
+                        ctx.moveTo(p.x - cos * halfLen, p.y - sin * halfLen);
+                        ctx.lineTo(p.x + cos * (halfLen + 0.4), p.y + sin * (halfLen + 0.4));
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            if (isPointerActive || halo > 0.005 || anyMoving) {
+                startLoop();
+            }
+        };
+
+        const updatePointer = (event) => {
+            if (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
+                return;
+            }
+            const rect = container.getBoundingClientRect();
+            const nextX = event.clientX - rect.left;
+            const nextY = event.clientY - rect.top;
+            if (!isPointerActive) {
+                cursorX = nextX;
+                cursorY = nextY;
+            }
+            targetX = nextX;
+            targetY = nextY;
+            isPointerActive = true;
+            startLoop();
+        };
+
+        container.addEventListener('pointerenter', updatePointer, { passive: true });
+        container.addEventListener('pointermove', updatePointer, { passive: true });
+        container.addEventListener('pointerleave', () => {
+            isPointerActive = false;
+            startLoop();
+        }, { passive: true });
+
+        if (window.ResizeObserver) {
+            new ResizeObserver(buildField).observe(container);
+        } else {
+            window.addEventListener('resize', buildField, { passive: true });
+        }
+
+        buildField();
     });
 
     document.querySelectorAll('[data-scroll-target]').forEach((button) => {
@@ -165,6 +672,12 @@ function initPuskesMapApp() {
                 const distEl = document.getElementById('info-card-distance');
                 if (nameEl && pin.dataset.pinName) nameEl.textContent = pin.dataset.pinName;
                 if (distEl && pin.dataset.pinDistance) distEl.textContent = `Kec. ${pin.dataset.pinDistrict} · Jarak ${pin.dataset.pinDistance}`;
+
+                if (pin.dataset.pinDistrict) {
+                    const slug = pin.dataset.pinDistrict.toLowerCase().replace(/\s+/g, '-');
+                    const shape = map.querySelector(`[data-district-shape="${slug}"]`);
+                    if (shape) open(shape);
+                }
             });
         });
 

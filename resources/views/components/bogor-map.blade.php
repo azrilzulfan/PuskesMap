@@ -7,9 +7,10 @@
         'tanah-sareal' => [
             'name' => 'Tanah Sareal',
             'fill' => '#7ed0c9',
-            'pill' => '#007979',
+            'pill' => '#c2561a',
             'cx' => 365,
-            'cy' => 210,
+            'cy' => 220,
+            'pillWidth' => 136,
             'd' => 'M351.3 26.4 L364.4 25.4 L378.2 25.1 L388 28.2 L395.6 28.7 L406.4 25.3 L423.6 25.3 L432.2 32.2 L433.8 47.8 L434.9 66.9 L430.4 82.2 L425.8 96.9 L429.5 107.8 L440 119.1 L445.8 129.6 L449.4 137.6 L448.9 145.8 L445.8 154.5 L438.9 157.3 L433.3 160.4 L430.2 164.7 L424.9 166.9 L420.9 170.9 L421.8 178 L425.4 187.3 L425.8 198.7 L429.8 206.2 L439.1 211.1 L447.6 219.4 L454.4 222.2 L460.7 219.8 L464 222.2 L464.7 231.6 L463.8 245.1 L469.5 263.8 L480.7 279.1 L483.3 289.1 L488.4 299.1 L500.3 313.8 L500.7 323.8 L493.3 326.9 L489.3 334.8 L486.9 352 L479.3 366.2 L473.8 380.2 L471.4 393.3 L463.1 404.9 L450.9 411.8 L438.2 417.8 L423.8 421.3 L412 423.8 L403.8 419.8 L399.1 409.3 L391.8 400.4 L377.1 395.8 L361.5 393.4 L348.3 381.2 L326.2 353.6 L307.5 327.9 L300.9 322.9 L301.8 330.6 L303.2 342.5 L295.3 346.2 L289.5 339.4 L291.4 326.6 L287.8 318 L276.4 305 L265.3 280.6 L261.5 266 L265.8 257.6 L265.8 246.7 L260.2 233.3 L255.8 219.8 L246.7 204.6 L235.5 193.1 L229.4 181.1 L223.1 167.8 L223.3 159.3 L230 153.4 L235.8 142.9 L237.3 132.4 L237.8 124.4 L235.3 117.6 L235.3 111.8 L240 108.7 L244.7 101.8 L244.7 89.8 L244.8 78.7 L252.5 66.9 L254.2 56.9 L250.2 50 L252.2 42.7 L262.4 34.6 L274.2 31.1 L282.4 30.6 L291.3 33.8 L304 37.1 L316.7 43.4 L327.8 43.8 L340.2 35.1 Z',
             'puskesmas' => [
                 ['Puskesmas Tanah Sareal', '1,1 km', true, true, 'Sedang'],
@@ -22,9 +23,10 @@
         'bogor-barat' => [
             'name' => 'Bogor Barat',
             'fill' => '#a7e6bc',
-            'pill' => '#0b5c5c',
-            'cx' => 235,
-            'cy' => 420,
+            'pill' => '#c2561a',
+            'cx' => 225,
+            'cy' => 415,
+            'pillWidth' => 132,
             'd' => 'M100.2 206.4 L108.2 207.1 L123.6 216 L137.4 219.3 L142.7 223.3 L143.3 231.1 L147.8 238 L156.7 242.2 L163.6 243.8 L166.7 248 L167.8 254 L172.4 258.7 L180 258.7 L186.7 250 L191.3 234 L198 226.6 L205.6 231.3 L213.3 238.9 L222.7 239.1 L229.1 231.4 L233.3 218.6 L238.7 209.6 L242.4 203.8 L247.3 206.4 L253.8 219.8 L258.2 233.3 L263.8 246.7 L263.8 257.1 L259.5 264.9 L260.7 273.6 L264.6 286.8 L275.3 308 L286.3 325.3 L288 339.8 L294.4 348.2 L304.2 349.1 L307.4 342.9 L304.2 330.6 L307.5 330.4 L320.7 349.2 L331.8 363.6 L339.1 373.3 L349.8 385.6 L356.7 406.8 L354.5 439.4 L343.8 454.9 L335.8 462.9 L331.8 473.1 L326.2 482 L321.8 488.7 L313.6 494.6 L307.3 506.9 L309.2 525.8 L308 546 L311.6 556.2 L319.3 561.5 L330.4 570.9 L344 577.8 L355.4 587.8 L357.8 602.7 L353.8 616.9 L349.4 632.4 L340.9 646.5 L332.9 650.2 L330.2 642 L331.4 626 L326.7 615.6 L313.4 611.1 L295.5 611.8 L286.2 609.6 L284.2 604 L277.8 598.9 L266.2 592 L257.6 580.4 L250.9 576.9 L245.6 578.2 L240.9 575.1 L240.2 568.9 L245.6 562.7 L248.9 554 L243.6 545.3 L233.6 544 L222 550.5 L211.8 553.8 L205.6 556.2 L200.4 554.7 L198.2 547.6 L200.2 538.4 L195.6 530 L182.8 522.4 L179.8 515.1 L184.2 506 L184.2 495.6 L180.6 484 L179.8 472.9 L175.6 465.3 L169.8 460.2 L166.7 452.9 L161.1 447.8 L152.4 445.4 L143.6 440.2 L136.2 434.5 L133.1 424.6 L125.2 420.2 L108 420.5 L94.2 415.8 L83.5 410.7 L77.8 402.7 L72.6 391.8 L74.2 384.9 L83.6 378.9 L90.9 368.2 L89.1 360.9 L85.1 356.2 L85.4 348.4 L81.6 341.3 L74 340.2 L66.4 342.9 L62.2 337.8 L62.2 324.4 L63.1 310.9 L67.8 298.2 L72.6 285.1 L79.8 273.6 L87.5 255.8 L98 239.8 L100.7 230.4 L98.2 224.4 L98.7 216.9 Z',
             'puskesmas' => [
                 ['Puskesmas Pasir Mulya', '2,3 km', true, true, 'Sepi'],
@@ -37,9 +39,10 @@
         'bogor-utara' => [
             'name' => 'Bogor Utara',
             'fill' => '#88d6cf',
-            'pill' => '#007979',
+            'pill' => '#c2561a',
             'cx' => 585,
-            'cy' => 340,
+            'cy' => 355,
+            'pillWidth' => 132,
             'd' => 'M586.7 173.7 L592.9 183.8 L593.8 194.4 L592.6 204 L600.4 211.4 L617.6 211.1 L626.7 209.1 L628.9 213.1 L634.6 216.7 L647.6 218.6 L658.9 225.1 L666 234.6 L677.8 251.8 L684.5 272.5 L681.8 285.6 L682.2 294.4 L687.8 303.6 L687.8 314.2 L682.2 327.4 L681.8 336.4 L685.8 344 L687.3 351.6 L688.2 362 L688.6 383.3 L695.3 408 L703.2 426.2 L699.1 443.4 L690.2 458.6 L683.4 477.1 L672.4 500 L655.6 521.9 L632.4 521.6 L614.2 511.3 L598.2 505.3 L587.3 504.9 L583.3 509.3 L582.7 516.7 L574.7 518.5 L554.2 514 L537.5 511.6 L530.7 502.4 L525.8 488.2 L523.6 469.1 L520.2 447.8 L514.6 430.4 L510.5 416.4 L500.9 406.6 L490 405.3 L480.9 410.4 L475.3 418 L470.5 427.8 L458.9 438 L449.1 438.7 L446.2 431.1 L443.8 421.8 L448.8 414.7 L464.5 405.1 L475.6 389.8 L483.8 370.6 L492 353.4 L495.1 337.3 L502 329.4 L509.8 321.8 L506.7 311.6 L494.2 294.6 L488 280.9 L479.3 271.6 L471.3 258.9 L469.3 241.1 L470.2 227.1 L471.1 216.2 L475.8 206.9 L479.3 194.6 L484.4 187.3 L491.1 189.5 L497.8 200.2 L504.5 211.8 L506.6 223.8 L511.6 230.2 L519.3 231.3 L528.7 230.5 L534.2 221.6 L536.6 210.6 L543.1 205.1 L547.8 195.6 L551.7 180.2 L568.4 173.8 Z',
             'puskesmas' => [
                 ['Puskesmas Bogor Utara', '4,4 km', true, true, 'Sedang'],
@@ -50,9 +53,10 @@
         'bogor-tengah' => [
             'name' => 'Bogor Tengah',
             'fill' => '#b7ebc8',
-            'pill' => '#0b5c5c',
+            'pill' => '#c2561a',
             'cx' => 435,
-            'cy' => 515,
+            'cy' => 525,
+            'pillWidth' => 136,
             'd' => 'M373.8 398.2 L390 401.6 L397.1 407.8 L399.8 417.6 L407.8 424.5 L422.9 423.3 L438.5 424.2 L444.7 431.6 L445.3 439.1 L449.3 443.1 L459.8 440 L472.5 427.3 L480.2 414.9 L489.6 407.8 L500.4 408.2 L508.9 416.9 L512.6 430.4 L517.8 446.4 L520.9 461.8 L522.7 474.2 L524.2 488.7 L528.2 502 L531.8 512.2 L539.3 515.8 L552.4 514.6 L565.8 518 L572.2 528 L571.1 545.4 L565.1 559.1 L555.1 565.8 L539.4 570 L517.8 578.5 L500.6 582.9 L488.9 585.1 L474.6 588.6 L465.3 598 L460.2 609.1 L453.8 618.4 L447.8 625.8 L438 625.8 L426.4 620.2 L416 616.2 L404.2 614 L390.6 616.9 L382.4 614.7 L374.9 607.3 L364 599.4 L358.7 588.2 L353.1 580 L343.1 574.9 L330.4 568.9 L319.3 559.5 L312 554.7 L309.5 545.6 L311.2 525.8 L308.8 507.3 L313.6 496.6 L321.1 493.1 L325.1 489.1 L328.2 482 L333.8 473.1 L337.3 463.3 L342.9 457.3 L351.6 454.7 L358.7 446 L360.7 425.6 L362 404.8 Z',
             'puskesmas' => [
                 ['Puskesmas Sempur', '1,2 km', false, false, 'Sepi'],
@@ -65,9 +69,10 @@
         'bogor-timur' => [
             'name' => 'Bogor Timur',
             'fill' => '#75c8c1',
-            'pill' => '#007979',
-            'cx' => 570,
-            'cy' => 645,
+            'pill' => '#c2561a',
+            'cx' => 585,
+            'cy' => 655,
+            'pillWidth' => 132,
             'd' => 'M591.7 509.5 L609.8 512.2 L630.6 523.6 L648.5 537.3 L648.7 554 L640.6 571.1 L637.1 584.2 L634.9 593.3 L635.8 605.3 L639.4 622 L640.2 637.4 L642.7 647.8 L647.1 659.1 L654.9 671.3 L661.5 686.4 L670 703.6 L674.2 719.1 L678.7 735.5 L684.2 756.9 L691.4 773.6 L695.8 786 L701.1 801.5 L694.6 820.3 L664.2 822.7 L640.2 810.4 L625.8 800.9 L607.6 791.1 L590.8 775.9 L583.4 745.5 L575.3 727.1 L567.6 726.2 L559.6 732.2 L547.4 732.5 L525.4 718.9 L498.4 695.8 L483.5 676.6 L477.2 664.2 L466.4 651.8 L459.8 641.1 L454.2 630.9 L454.6 621.1 L463.1 607.8 L474.6 592.8 L489.8 586.7 L502.9 583.8 L518.6 580 L540.2 571.5 L559.1 563.6 L570.9 547.6 L576.6 529.1 L583.4 517.1 Z',
             'puskesmas' => [
                 ['Puskesmas Bogor Timur', '3,9 km', true, true, 'Sedang'],
@@ -77,9 +82,10 @@
         'bogor-selatan' => [
             'name' => 'Bogor Selatan',
             'fill' => '#9ce1b4',
-            'pill' => '#0b5c5c',
-            'cx' => 465,
-            'cy' => 775,
+            'pill' => '#c2561a',
+            'cx' => 460,
+            'cy' => 815,
+            'pillWidth' => 142,
             'd' => 'M362.6 608.6 L374.5 609.3 L381.3 615.6 L390.2 618.5 L404.2 616 L416 618.2 L426.4 622.2 L438 627.8 L449.1 631.8 L456.7 638.9 L464 650.9 L475.2 664.2 L481.5 676.6 L496.8 696.2 L524.9 720.5 L546.5 734.9 L557.3 735.4 L566.7 728.6 L574.9 728.6 L581.4 738.9 L583.3 751.8 L585.1 761.3 L585.1 771.6 L583.8 781.1 L590.8 787.6 L608.9 793.8 L624.4 802.2 L639.3 812 L664.2 824.7 L693.7 830.6 L701.1 840.2 L699.6 853.2 L694.8 858.6 L691.8 868.2 L678.9 881.2 L662.9 886.6 L652.6 894.4 L651.8 905.6 L654.5 917.8 L651.8 931.8 L650.9 941.1 L652.7 947.3 L649.8 953.8 L641.8 956.9 L636.9 962.2 L633.8 971.8 L624.7 981.5 L611.3 994.5 L601.3 1001.1 L595.1 999.8 L588.4 994.2 L581.6 990.2 L575.8 983.6 L570.9 974 L561.8 967.1 L554 966.2 L547.6 966.6 L542.6 972 L542.7 980.4 L539.4 989.1 L529.3 992 L516.5 985.3 L500.8 977.6 L491.4 970.4 L483.1 963.6 L478.7 956.4 L472.7 951.3 L464.2 947.8 L457.4 941.8 L448.6 937.1 L447.1 930.2 L452.9 918.9 L453.1 908.9 L448 904.2 L441.1 904.2 L434.2 898.9 L429.8 886.2 L428.6 874.7 L437.6 862.4 L438 851.8 L424 852.6 L405.6 865.8 L390 869.1 L386.6 864 L391.8 855.8 L390 843.3 L381.7 832 L382.2 821.1 L381.8 810.2 L374 806.6 L364.9 809.8 L355.8 813.1 L346 822.9 L341.4 836.2 L335.8 847.3 L329.8 856.5 L321.3 859.3 L315.3 864.2 L313.1 873.8 L309.6 878.2 L304 877.8 L299.8 880 L297.4 885.8 L292.2 896 L286.9 908.4 L277.8 918.9 L270.9 920.7 L268.4 916 L269.3 910 L271.8 903.6 L269.1 897.8 L262.9 895.1 L255.8 893.8 L244.4 893.8 L232.9 888.7 L224.4 880.6 L214.9 880.6 L200.2 885.6 L188 883.8 L178.9 880.2 L173.8 873.1 L175.8 864.2 L184 858.7 L192.2 851.1 L197.3 840.9 L203.1 830.7 L212 820.6 L227.4 815.1 L239.6 806.5 L247.6 793.3 L255.3 787.4 L265.1 776.9 L271.8 760 L274.2 749.1 L280.4 741.3 L288.2 733.4 L294.2 723.5 L303.1 718.2 L310.2 712 L314.2 703.6 L318 694.4 L313.6 688.6 L305.3 688.7 L301.3 686.7 L302.9 681.3 L308 676.2 L312.2 668 L311.1 659.3 L306 655.8 L300 656.2 L291.8 655.3 L283.3 652.9 L283.4 643.1 L281.1 629.8 L278 620.4 L284.4 615.8 L296.4 614.2 L309.1 611.8 L320.4 613.8 L328 625.5 L329.5 643.6 L338.2 647 L351.2 631.1 L355.8 616.4 Z',
             'puskesmas' => [
                 ['Puskesmas Bogor Selatan', '4,8 km', true, true, 'Sedang'],
@@ -92,18 +98,27 @@
     ];
 
     $pins = [
-        ['Puskesmas Tanah Sareal', 370, 225, 'Tanah Sareal', '1,1 km', true, true, 'Sedang'],
-        ['Puskesmas Kedung Badak', 440, 290, 'Tanah Sareal', '1,5 km', true, false, 'Sedang'],
-        ['Puskesmas Mekarwangi', 330, 305, 'Tanah Sareal', '2,0 km', true, true, 'Ramai'],
-        ['Puskesmas Pasir Mulya', 225, 445, 'Bogor Barat', '2,3 km', true, true, 'Sepi'],
-        ['Puskesmas Semplak', 280, 345, 'Bogor Barat', '3,7 km', true, true, 'Sedang'],
-        ['Puskesmas Bogor Utara', 605, 420, 'Bogor Utara', '4,4 km', true, true, 'Sedang'],
-        ['Puskesmas Tegal Gundil', 560, 260, 'Bogor Utara', '3,2 km', true, false, 'Sedang'],
-        ['Puskesmas Sempur', 445, 465, 'Bogor Tengah', '1,2 km', false, false, 'Sepi'],
-        ['Puskesmas Merdeka', 395, 495, 'Bogor Tengah', '1,8 km', true, false, 'Sedang'],
-        ['Puskesmas Bogor Timur', 595, 585, 'Bogor Timur', '3,9 km', true, true, 'Sedang'],
-        ['Puskesmas Bondongan', 430, 665, 'Bogor Selatan', '4,5 km', true, false, 'Sedang'],
-        ['Puskesmas Bogor Selatan', 505, 810, 'Bogor Selatan', '4,8 km', true, true, 'Sedang'],
+        ['Puskesmas Tanah Sareal', 310, 150, 'Tanah Sareal', '1,1 km', true, true, 'Sedang'],
+        ['Puskesmas Kedung Badak', 440, 310, 'Tanah Sareal', '1,5 km', true, false, 'Sedang'],
+        ['Puskesmas Mekarwangi', 295, 295, 'Tanah Sareal', '2,0 km', true, true, 'Ramai'],
+        ['Puskesmas Pasir Mulya', 255, 525, 'Bogor Barat', '2,3 km', true, true, 'Sepi'],
+        ['Puskesmas Semplak', 260, 325, 'Bogor Barat', '3,7 km', true, true, 'Sedang'],
+        ['Puskesmas Bogor Utara', 620, 445, 'Bogor Utara', '4,4 km', true, true, 'Sedang'],
+        ['Puskesmas Tegal Gundil', 535, 270, 'Bogor Utara', '3,2 km', true, false, 'Sedang'],
+        ['Puskesmas Sempur', 500, 475, 'Bogor Tengah', '1,2 km', false, false, 'Sepi'],
+        ['Puskesmas Merdeka', 365, 475, 'Bogor Tengah', '1,8 km', true, false, 'Sedang'],
+        ['Puskesmas Bogor Timur', 555, 580, 'Bogor Timur', '3,9 km', true, true, 'Sedang'],
+        ['Puskesmas Bondongan', 375, 725, 'Bogor Selatan', '4,5 km', true, false, 'Sedang'],
+        ['Puskesmas Bogor Selatan', 535, 905, 'Bogor Selatan', '4,8 km', true, true, 'Sedang'],
+    ];
+
+    $buildingSpots = [
+        [365, 95],
+        [145, 285],
+        [595, 235],
+        [415, 425],
+        [580, 715],
+        [450, 685],
     ];
 @endphp
 
@@ -116,6 +131,22 @@
             <filter id="pin-badge-shadow" x="-15%" y="-15%" width="130%" height="130%">
                 <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#0b5c5c" flood-opacity="0.22"/>
             </filter>
+            {{-- Simbol Point SVG (public/images/point.svg) --}}
+            <symbol id="puskesmas-point-svg" viewBox="0 0 861 1199">
+                <path d="M416.518 0.444065C429.466 -0.318314 445.612 -0.0185804 458.548 0.734948C572.133 6.47766 678.528 58.0499 753.38 143.651C865.706 270.32 896.213 445.277 814.273 595.606C778.71 660.863 735.88 717.672 692.174 777.434C637.8 851.778 582.232 927.419 534.889 1006.41C509.745 1048.11 487.553 1091.52 468.468 1136.31C464.371 1145.81 460.453 1155.39 456.714 1165.04C452.968 1174.78 449.619 1187.47 441.879 1194.34C430.93 1201.12 418.181 1198.59 412.285 1186.47C408.995 1179.72 406.501 1171.71 403.823 1164.58C400.062 1154.55 395.998 1144.62 391.637 1134.83C372.292 1090.35 349.915 1047.25 324.664 1005.84C275.999 926.102 220.068 849.682 165.67 773.842C122.868 713.359 76.9171 654.62 42.9227 588.515C31.777 566.842 24.6497 547.206 17.247 524.069C-64.9752 267.077 159.748 14.0618 416.518 0.444065Z" fill="#C2561A"/>
+                <path d="M409.207 83.6191C423.79 82.3372 444.781 83.0159 459.251 84.4128C526.746 91.0215 590.688 117.777 642.767 161.202C710.55 217.448 753.495 298.082 762.334 385.705C770.784 476.626 739.024 566.796 680.937 636.488C632.259 695.274 565.019 735.763 490.282 751.297C476.508 754.09 463.572 755.393 449.606 756.671C442.742 756.863 435.915 757.01 429.051 757.042C256.577 757.847 111.075 609.993 96.8364 441.338C89.4803 354.205 119.641 268.187 175.901 201.82C234.742 132.827 318.762 90.2592 409.207 83.6191Z" fill="#E5E5E4"/>
+                <path d="M310.123 211.909C334.109 211.21 358.848 212.336 382.769 211.808C416.23 211.07 412.33 229.663 412.029 254.785C461.929 254.721 467.075 249.97 466.979 301.58L466.998 347.074L468.129 347.071L572.031 347.008C587.62 347.003 604.481 346.536 620.121 347.565C621.7 347.67 626.481 348.844 627.804 349.541C642.748 357.412 639.955 374.414 639.929 388.606L639.878 425.494L639.929 557.659C639.948 589.532 642.709 605.359 602.57 603.901C591.295 603.491 577.547 603.842 566.049 603.83L354.818 603.793L289.503 603.813C281.092 603.818 263.237 604.277 255.514 603.524C250.774 603.069 246.298 601.133 242.722 597.989C237.157 593.058 235.061 586.94 235.01 579.746C234.865 559.204 235.008 538.476 235.006 517.945L235.028 390.844L234.969 313.715C234.849 253.96 230.161 255.001 290.57 254.656C290.835 236.533 285.906 215.663 310.123 211.909Z" fill="#C2561A"/>
+                <path d="M318.844 487.719C332.04 487.023 347.83 487.898 361.272 487.537C366.069 487.408 384.742 487.263 388.355 487.964C393.592 495.034 389.63 554.78 390.736 566.926C391.031 570.168 390.307 573.386 387.779 575.704C375.216 576.334 360.5 575.698 347.778 575.949C341.968 576.063 322.755 576.293 318.163 575.185C316.536 572.972 315.84 567.763 315.87 564.933C316.135 540.429 314.978 515.638 316.442 491.211C316.509 490.11 318.084 488.481 318.844 487.719Z" fill="#E5E5E4"/>
+                <path d="M346.168 227.805C347.2 227.761 348.233 227.724 349.265 227.694C365.388 227.244 362.393 238.403 362.118 250.618C367.621 250.547 378.293 249.256 382.554 252.968C386.475 256.369 386.333 266.2 382.862 269.649C378.716 273.77 367.945 272.442 362.141 272.328C362.051 281.705 365.06 289.234 356.22 294.831C354.408 294.993 352.593 295.117 350.776 295.203C337.674 295.71 340.204 281.209 340.317 272.277L328.306 272.537C316.707 272.699 314.129 261.699 319.935 253.051C322.363 249.435 335.241 250.521 340.3 250.653C340.402 241.607 337.629 233.228 346.168 227.805Z" fill="#E5E5E4"/>
+                <path d="M373.583 406.622C388.15 405.863 403.376 406.676 418.025 406.441C429.792 406.253 430.022 413.173 429.185 422.759C428.405 431.639 432.522 437.422 423.893 443.079C409.593 444.417 392.055 442.847 377.547 443.153C364.02 443.438 370.233 423.877 368.696 415.452C368.071 412.024 371.238 408.655 373.583 406.622Z" fill="#E5E5E4"/>
+                <path d="M473.792 397.173L502.976 397.014C520.643 396.975 531.195 393.605 528.325 415.572C527.271 423.61 532.071 428.309 522.758 433.841C511.324 434.6 498.675 433.765 487.17 434.072C472.642 434.46 466.531 434.575 468.199 417.79C468.973 410.035 464.582 402.269 473.792 397.173Z" fill="#E5E5E4"/>
+                <path d="M474.776 486.117C482.951 486.042 522.093 484.115 526.401 488.803C529.22 491.867 529.067 512.176 528.146 516.797C527.52 519.938 525.583 521.283 522.995 522.877C506.894 523.258 488.499 524.011 472.661 521.96C466.314 521.138 468.487 505.793 468.065 500.989C467.477 494.306 467.643 488.539 474.776 486.117Z" fill="#E5E5E4"/>
+                <path d="M278.006 406.661C285.412 406.179 327.485 404.938 331.516 408.934C334.24 411.634 334.12 431.726 333.455 436.346C332.989 439.583 331.418 441.037 328.891 442.921C317.954 444.268 297.766 442.643 286.125 443.335C283.731 443.432 276.164 442.664 274.974 440.363C271.665 433.969 273.838 422.409 273.235 415.145C272.935 411.532 275.728 408.629 278.006 406.661Z" fill="#E5E5E4"/>
+                <path d="M557.823 486.151C571.98 486.061 586.342 485.773 600.493 486.201C611.512 486.346 610.847 495.206 610.272 503.637C609.716 511.831 612.714 519.463 603.912 522.962C594.312 523.026 560.475 524.771 553.841 521.399C552.223 520.58 551.092 519.501 550.626 517.681C549.443 513.112 549.354 493.089 551.802 489.365C553.24 487.173 555.368 486.55 557.823 486.151Z" fill="#E5E5E4"/>
+                <path d="M556.634 397.281C572.395 396.881 590.17 395.993 605.638 398.217C612.4 399.19 609.626 414.289 610.234 419.471C611.02 426.126 610.611 431.361 603.701 433.953C587.71 434.043 570.459 434.94 554.716 433.09C548.452 432.354 550.357 415.871 549.961 411.477C549.405 405.281 549.846 399.311 556.634 397.281Z" fill="#E5E5E4"/>
+                <path d="M373.804 317.83C383.76 317.302 394.435 317.827 404.473 317.649C410.908 317.534 422.956 316.463 427.702 320.827C430.042 325.478 429.364 330.018 429.166 335.06C428.827 343.643 431.895 348.478 424.11 354.01C417.301 354.644 374.857 355.664 371.11 352.062C367.732 348.815 368.222 330.914 368.741 325.992C369.169 321.932 370.671 320.274 373.804 317.83Z" fill="#E5E5E4"/>
+                <path d="M278.419 317.787C293.774 317.407 309.527 317.62 324.88 317.887C334.919 318.061 333.928 327.044 333.455 334.421C332.896 343.137 336.387 348.21 328.434 354.065C313.714 355.238 296.558 353.901 281.699 354.093C272.69 354.209 272.728 345.857 273.282 339.131C274.01 330.304 270.142 323.671 278.419 317.787Z" fill="#E5E5E4"/>
+            </symbol>
         </defs>
 
         {{-- Lapisan Siluet Dasar (Outer Aqua Rim) --}}
@@ -134,30 +165,7 @@
             @endforeach
         </g>
 
-        {{-- Garis Pembatas Sub-Wilayah / Kelurahan Halus di Dalam Peta --}}
-        <g fill="none" stroke="#ffffff" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.55" pointer-events="none">
-            <path d="M260 155 C330 175 400 160 445 200"/>
-            <path d="M125 320 C190 340 260 325 335 370"/>
-            <path d="M170 460 C235 470 295 450 350 475"/>
-            <path d="M495 295 C565 315 630 305 685 330"/>
-            <path d="M350 715 C430 730 510 715 585 750"/>
-            <path d="M405 835 C475 850 545 835 615 860"/>
-        </g>
-
-        {{-- Label Kelurahan Halus (Muted Teal Sub-Labels ala Referensi) --}}
-        <g font-family="Plus Jakarta Sans, sans-serif" font-size="13" font-weight="600" fill="#3b7d79" opacity="0.72" text-anchor="middle" pointer-events="none">
-            <text x="355" y="115">Kayumanis</text>
-            <text x="415" y="295">Kedung Badak</text>
-            <text x="195" y="310">Semplak</text>
-            <text x="245" y="510">Pasir Mulya</text>
-            <text x="575" y="245">Tegal Gundil</text>
-            <text x="615" y="425">Bantarjati</text>
-            <text x="605" y="705">Sukasari</text>
-            <text x="385" y="725">Bondongan</text>
-            <text x="520" y="885">Mulyaharja</text>
-        </g>
-
-        {{-- ================= ORNAMEN ILUSTRASI POHON & BUKIT KECIL (Sesuai Referensi) ================= --}}
+        {{-- ================= ORNAMEN ILUSTRASI POHON, BUKIT & BANGUNAN PUSKESMAS ================= --}}
         {{-- Cluster 3 Pohon Pinus di Kiri Luar Peta --}}
         <g transform="translate(52, 545)" pointer-events="none">
             <ellipse cx="26" cy="34" rx="26" ry="5" fill="#d9ece9"/>
@@ -222,7 +230,36 @@
             <circle cx="32" cy="19" r="7" fill="#399974"/>
         </g>
 
-        {{-- ================= TITIK PUSKESMAS INTERAKTIF ================= --}}
+        {{-- Ilustrasi Bangunan Puskesmas (Desain Flat Vektor Senada dengan Pohon) --}}
+        @foreach ($buildingSpots as [$bx, $by])
+            <g transform="translate({{ $bx }}, {{ $by }})" pointer-events="none">
+                {{-- Bayangan Dasar Halus --}}
+                <ellipse cx="23" cy="31" rx="23" ry="4.5" fill="#3a9b8c" opacity="0.22"/>
+                {{-- Pohon Pinus Kecil Pendamping --}}
+                <g transform="translate(1, 7)">
+                    <polygon points="6,0 0,13 12,13" fill="#4eb09f"/>
+                    <polygon points="6,5 1,18 11,18" fill="#2c8577"/>
+                    <rect x="4.8" y="18" width="2.4" height="5" fill="#5c4033"/>
+                </g>
+                {{-- Bangunan Utama Puskesmas --}}
+                <g transform="translate(11, 4)">
+                    {{-- Dinding Bangunan --}}
+                    <rect x="3" y="10" width="26" height="16" rx="1.5" fill="#f3fbf9" stroke="#2c8577" stroke-width="1.2"/>
+                    {{-- Sayap Atap & Atap Pelana Teal --}}
+                    <polygon points="0,11 16,2 32,11" fill="#2c8577"/>
+                    <polygon points="3,11 16,4 29,11" fill="#3a9b8c"/>
+                    {{-- Pintu Tengah & Jendela Kiri-Kanan --}}
+                    <rect x="13" y="17" width="6" height="9" rx="1" fill="#2c8577"/>
+                    <rect x="6" y="14" width="4.5" height="4.5" rx="0.8" fill="#7ed0c9"/>
+                    <rect x="21.5" y="14" width="4.5" height="4.5" rx="0.8" fill="#7ed0c9"/>
+                    {{-- Badge Signboard Bulat dengan Tanda Plus (+) Puskesmas --}}
+                    <circle cx="16" cy="8.5" r="5" fill="#ffffff" stroke="#2c8577" stroke-width="1.2"/>
+                    <path d="M16 6 V11 M13.5 8.5 H18.5" stroke="#007979" stroke-width="1.8" stroke-linecap="round"/>
+                </g>
+            </g>
+        @endforeach
+
+        {{-- ================= MARKER POINT PUSKESMAS INTERAKTIF (public/images/point.svg) ================= --}}
         @if ($interactivePins)
             <g class="pins-layer">
                 @foreach ($pins as [$name, $px, $py, $dist, $distance, $igd, $inap, $crowd])
@@ -238,101 +275,55 @@
                        data-pin-inap="{{ $inap ? '1' : '0' }}"
                        data-pin-crowd="{{ $crowd }}">
                         <title>{{ $name }} ({{ $dist }} · {{ $distance }})</title>
-                        <circle cx="0" cy="0" r="8" fill="#007979" opacity="0.22"/>
-                        <circle cx="0" cy="0" r="4.5" fill="#0b5c5c" stroke="#ffffff" stroke-width="2"/>
+                        {{-- Bayangan Titik Pin --}}
+                        <ellipse cx="0" cy="1.5" rx="6" ry="2.5" fill="#0b5c5c" opacity="0.22"/>
+                        {{-- Ikon Point SVG --}}
+                        <use href="#puskesmas-point-svg" x="-13" y="-36.2" width="26" height="36.2" />
                     </g>
                 @endforeach
             </g>
         @endif
 
-        {{-- ================= LABEL CALLOUT GARIS & PIN UTAMA (Sesuai Referensi) ================= --}}
+        {{-- ================= LABEL 6 KECAMATAN (BUTTON #c2561a + POINT SVG) ================= --}}
         @if ($labels)
             <g font-family="Plus Jakarta Sans, sans-serif" pointer-events="none">
-                {{-- Tanah Sareal --}}
-                <circle cx="365" cy="210" r="3.5" fill="#0b5c5c"/>
-                <line x1="365" y1="210" x2="430" y2="210" stroke="#0b5c5c" stroke-width="1.5"/>
-                <text x="438" y="215" font-size="16" font-weight="800" fill="#0b5c5c">Tanah Sareal ▸</text>
-
-                {{-- Bogor Utara --}}
-                <circle cx="570" cy="340" r="3.5" fill="#0b5c5c"/>
-                <line x1="570" y1="340" x2="615" y2="340" stroke="#0b5c5c" stroke-width="1.5"/>
-                <text x="622" y="345" font-size="15" font-weight="800" fill="#0b5c5c">Bogor Utara ▸</text>
-
-                {{-- Bogor Barat --}}
-                <circle cx="255" cy="400" r="3.5" fill="#0b5c5c"/>
-                <line x1="190" y1="400" x2="255" y2="400" stroke="#0b5c5c" stroke-width="1.5"/>
-                <text x="184" y="405" font-size="15" font-weight="800" fill="#0b5c5c" text-anchor="end">◂ Bogor Barat</text>
-
-                {{-- Bogor Tengah (Pin Sorotan Utama + Pill Badge Biru/Teal ala Referensi) --}}
-                <g transform="translate(435, 515)" filter="url(#pin-badge-shadow)">
-                    {{-- Pin Icon --}}
-                    <path d="M0 -4 C-11 -16 -11 -30 0 -30 C11 -30 11 -16 0 -4 Z" fill="#0d6e79" stroke="#ffffff" stroke-width="2"/>
-                    <circle cy="-19" r="4.5" fill="#ffffff"/>
-                    {{-- Rounded Pill Badge --}}
-                    <rect x="-68" y="0" width="136" height="30" rx="15" fill="#0d6e79" stroke="#ffffff" stroke-width="2"/>
-                    <text x="0" y="20" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">Bogor Tengah</text>
-                </g>
-
-                {{-- Bogor Timur (Callout Line ke Kanan ala Referensi) --}}
-                <circle cx="565" cy="615" r="3.5" fill="#0b5c5c"/>
-                <polyline points="565,615 628,615" fill="none" stroke="#0b5c5c" stroke-width="1.5"/>
-                <text x="634" y="620" font-size="15" font-weight="800" fill="#0b5c5c">Bogor Timur ▸</text>
-
-                {{-- Bogor Selatan --}}
-                <circle cx="455" cy="775" r="3.5" fill="#0b5c5c"/>
-                <line x1="455" y1="775" x2="520" y2="775" stroke="#0b5c5c" stroke-width="1.5"/>
-                <text x="528" y="780" font-size="16" font-weight="800" fill="#0b5c5c">Bogor Selatan ▸</text>
+                @foreach ($districts as $id => $district)
+                    @php
+                        $pw = $district['pillWidth'] ?? 136;
+                        $halfPw = $pw / 2;
+                    @endphp
+                    <g transform="translate({{ $district['cx'] }}, {{ $district['cy'] }})" filter="url(#pin-badge-shadow)">
+                        {{-- Pin Point SVG di Atas Button Kecamatan --}}
+                        <use href="#puskesmas-point-svg" x="-14" y="-42" width="28" height="39" />
+                        {{-- Rounded Pill Badge Kecamatan (#c2561a) --}}
+                        <rect x="-{{ $halfPw }}" y="0" width="{{ $pw }}" height="30" rx="15" fill="{{ $district['pill'] }}" stroke="#ffffff" stroke-width="2"/>
+                        <text x="0" y="20" font-size="14" font-weight="800" fill="#ffffff" text-anchor="middle">{{ $district['name'] }}</text>
+                    </g>
+                @endforeach
             </g>
         @endif
     </svg>
 
-    {{-- Popup kecamatan interaktif --}}
+    {{-- Popup kecamatan interaktif (Hanya menampilkan nama kecamatan & jumlah puskesmas terdata) --}}
     @foreach ($districts as $id => $district)
         <div data-district-popup="{{ $id }}"
              data-x="{{ round($district['cx'] / 768 * 100, 2) }}"
              data-y="{{ round($district['cy'] / 1024 * 100, 2) }}"
              role="dialog"
              aria-label="Puskesmas di {{ $district['name'] }}"
-             class="absolute z-40 hidden w-[calc(100%-1.5rem)] max-w-[280px] sm:w-[280px] rounded-2xl bg-white/95 backdrop-blur-md p-4 text-left shadow-2xl border border-primary/20 transition-all duration-200">
-            {{-- Header popup --}}
-            <div class="flex items-center justify-between pb-2.5 border-b border-gray-100">
-                <div class="flex items-center gap-2">
-                    <span class="size-3.5 rounded-full shadow-xs" style="background-color: {{ $district['pill'] }}"></span>
+             class="absolute z-40 hidden w-max max-w-[240px] rounded-2xl bg-white/95 backdrop-blur-md px-4 py-3 text-left shadow-2xl border border-primary/20 transition-all duration-200">
+            <div class="flex items-center justify-between gap-4">
+                <div class="flex items-center gap-2.5">
+                    <span class="size-3.5 shrink-0 rounded-full shadow-xs" style="background-color: {{ $district['pill'] }}"></span>
                     <div>
                         <h3 class="text-sm font-bold text-ink leading-tight">Kec. {{ $district['name'] }}</h3>
-                        <span class="text-[11px] text-muted">{{ count($district['puskesmas']) }} Puskesmas terdata</span>
+                        <span class="text-xs text-muted">{{ count($district['puskesmas']) }} Puskesmas terdata</span>
                     </div>
                 </div>
-                <button type="button" data-popup-close aria-label="Tutup" class="size-6 flex items-center justify-center rounded-full text-muted hover:bg-surface-mint transition-colors">
+                <button type="button" data-popup-close aria-label="Tutup" class="size-6 shrink-0 flex items-center justify-center rounded-full text-muted hover:bg-surface-mint transition-colors cursor-pointer">
                     <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></svg>
                 </button>
             </div>
-
-            {{-- List puskesmas --}}
-            <div class="mt-3 max-h-[175px] overflow-y-auto space-y-2 pr-1 no-scrollbar">
-                @foreach ($district['puskesmas'] as $p)
-                    <div class="rounded-xl bg-surface-mint/70 p-2.5 text-xs">
-                        <div class="font-semibold text-ink leading-snug">{{ $p[0] }}</div>
-                        <div class="mt-1.5 flex flex-wrap gap-1">
-                            <span class="inline-flex items-center rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-primary-dark shadow-xs">{{ $p[1] }}</span>
-                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-800">Buka</span>
-                            @if ($p[2])
-                                <span class="inline-flex items-center rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-semibold text-accent-strong">IGD 24 Jam</span>
-                            @endif
-                            @if ($p[3] ?? false)
-                                <span class="inline-flex items-center rounded-full bg-sky-100 px-2 py-0.5 text-[10px] font-semibold text-sky-800">Rawat Inap</span>
-                            @endif
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            {{-- Action button --}}
-            <button type="button" data-select-district="{{ $district['name'] }}"
-                    class="mt-3 flex w-full items-center justify-center gap-1.5 rounded-full bg-primary py-2 text-xs font-semibold text-white shadow-sm hover:bg-primary-dark transition-colors">
-                <span>Filter di Daftar Puskesmas</span>
-                <svg class="size-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-            </button>
         </div>
     @endforeach
 </div>

@@ -1,8 +1,74 @@
 @php
     $navLinks = [
         ['label' => 'Tentang', 'href' => '#wilayah'],
-        ['label' => 'Fitur', 'href' => '#peta'],
+        ['label' => 'Fitur', 'href' => '#fitur'],
         ['label' => 'Puskesmas', 'href' => '#cari'],
+    ];
+
+    $featureBubblesLeft = [
+        [
+            'label' => 'IGD 24 Jam',
+            'icon' => '🚑',
+            'bg' => 'from-[#32d96a] to-[#12b84a]',
+            'shadow' => 'shadow-[0_14px_28px_-6px_rgba(18,184,74,0.45)]',
+            'align' => 'md:self-end md:mr-4 lg:mr-8',
+            'tilt' => '-rotate-6',
+            'float' => 'float-soft',
+            'delay' => 80,
+        ],
+        [
+            'label' => 'Rekomendasi MAUT',
+            'icon' => '🎯',
+            'bg' => 'from-[#ff8b3d] to-[#e35d17]',
+            'shadow' => 'shadow-[0_16px_30px_-6px_rgba(227,93,23,0.46)]',
+            'align' => 'md:self-start md:ml-0 lg:ml-2',
+            'tilt' => '-rotate-3',
+            'float' => 'float-soft-alt',
+            'delay' => 160,
+        ],
+        [
+            'label' => 'Radius 1–5 km',
+            'icon' => '📍',
+            'bg' => 'from-[#18adad] to-[#007979]',
+            'shadow' => 'shadow-[0_14px_28px_-6px_rgba(0,121,121,0.42)]',
+            'align' => 'md:self-end md:mr-2 lg:mr-6',
+            'tilt' => 'rotate-3',
+            'float' => 'float-soft',
+            'delay' => 240,
+        ],
+    ];
+
+    $featureBubblesRight = [
+        [
+            'label' => '9 Profesi Nakes',
+            'icon' => '👩‍⚕️',
+            'bg' => 'from-[#ffda3d] to-[#f4aa00]',
+            'shadow' => 'shadow-[0_14px_28px_-6px_rgba(244,170,0,0.45)]',
+            'align' => 'md:self-start md:ml-4 lg:ml-8',
+            'tilt' => 'rotate-6',
+            'float' => 'float-soft-alt',
+            'delay' => 120,
+        ],
+        [
+            'label' => 'Peta WebGIS',
+            'icon' => '🗺️',
+            'bg' => 'from-[#288eff] to-[#005ae8]',
+            'shadow' => 'shadow-[0_16px_30px_-6px_rgba(0,90,232,0.44)]',
+            'align' => 'md:self-end md:mr-0 lg:mr-2',
+            'tilt' => '-rotate-3',
+            'float' => 'float-soft',
+            'delay' => 200,
+        ],
+        [
+            'label' => 'Info Rawat Inap',
+            'icon' => '🛏️',
+            'bg' => 'from-[#ff6b7b] to-[#e23d52]',
+            'shadow' => 'shadow-[0_14px_28px_-6px_rgba(226,61,82,0.42)]',
+            'align' => 'md:self-start md:ml-2 lg:ml-6',
+            'tilt' => '-rotate-4',
+            'float' => 'float-soft-alt',
+            'delay' => 280,
+        ],
     ];
 
     $highlights = [
@@ -34,27 +100,110 @@
         ['tag' => 'Analitik SDSS', 'title' => 'Pemetaan Indeks Beban Wilayah (PSW-Index) 6 Kecamatan', 'meta' => 'Dinas Kesehatan', 'highlight' => false],
     ];
 
-    $districts = [
-        ['name' => 'Semua', 'label' => 'Semua Wilayah', 'count' => '25 Unit', 'icon' => 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-        ['name' => 'Tanah Sareal', 'label' => 'Tanah Sareal', 'count' => '5 Unit', 'icon' => 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4'],
-        ['name' => 'Bogor Tengah', 'label' => 'Bogor Tengah', 'count' => '5 Unit', 'icon' => 'M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z'],
-        ['name' => 'Bogor Barat', 'label' => 'Bogor Barat', 'count' => '5 Unit', 'icon' => 'M4.26 10.147a60.438 60.438 0 0 0-.491 6.347A48.62 48.62 0 0 1 12 20.904a48.62 48.62 0 0 1 8.232-4.41 60.46 60.46 0 0 0-.491-6.347m-15.482 0a50.636 50.636 0 0 0-2.658-.813A59.906 59.906 0 0 1 12 3.493a59.903 59.903 0 0 1 10.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.717 50.717 0 0 1 12 13.489a50.702 50.702 0 0 1 7.74-3.342'],
-        ['name' => 'Bogor Selatan', 'label' => 'Bogor Selatan', 'count' => '5 Unit', 'icon' => 'M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25'],
-        ['name' => 'Bogor Utara', 'label' => 'Bogor Utara', 'count' => '3 Unit', 'icon' => 'M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z'],
-        ['name' => 'Bogor Timur', 'label' => 'Bogor Timur', 'count' => '2 Unit', 'icon' => 'M15 10.5a3 3 0 11-6 0 3 3 0 016 0z M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z'],
-    ];
-
     $cardColors = ['bg-card-mint', 'bg-card-peach', 'bg-card-green', 'bg-card-salmon', 'bg-card-blue'];
 
+    /**
+     * Data kartu puskesmas pada landing page.
+     * Tempat upload gambar masing-masing puskesmas:
+     * Simpan file foto ke `public/images/puskesmas/` lalu sesuaikan path pada key `'image'` di bawah ini.
+     */
     $puskesmas = [
-        ['name' => 'Puskesmas Tanah Sareal', 'district' => 'Tanah Sareal', 'address' => 'Jl. Kesehatan No. 1, Tanah Sareal', 'distance' => '1,1 km', 'hours' => '07.30 – 16.00 WIB', 'igd' => true, 'inap' => true, 'nakes' => '100%', 'crowd' => 'Sedang'],
-        ['name' => 'Puskesmas Sempur', 'district' => 'Bogor Tengah', 'address' => 'Jl. Sempur Kaler No. 12, Bogor Tengah', 'distance' => '1,2 km', 'hours' => '07.30 – 14.30 WIB', 'igd' => false, 'inap' => false, 'nakes' => '89%', 'crowd' => 'Sepi'],
-        ['name' => 'Puskesmas Kedung Badak', 'district' => 'Tanah Sareal', 'address' => 'Jl. Kol. Enjo Martadisastra, Kedung Badak', 'distance' => '1,5 km', 'hours' => 'Buka 24 Jam (IGD)', 'igd' => true, 'inap' => false, 'nakes' => '100%', 'crowd' => 'Sedang'],
-        ['name' => 'Puskesmas Mekarwangi', 'district' => 'Tanah Sareal', 'address' => 'Perum Bukit Cimanggu City, Mekarwangi', 'distance' => '2,0 km', 'hours' => 'Buka 24 Jam (IGD)', 'igd' => true, 'inap' => true, 'nakes' => '100%', 'crowd' => 'Ramai'],
-        ['name' => 'Puskesmas Pasir Mulya', 'district' => 'Bogor Barat', 'address' => 'Jl. Gunung Batu No. 45, Pasir Mulya', 'distance' => '2,3 km', 'hours' => 'Buka 24 Jam (IGD)', 'igd' => true, 'inap' => true, 'nakes' => '100%', 'crowd' => 'Sepi'],
-        ['name' => 'Puskesmas Bogor Timur', 'district' => 'Bogor Timur', 'address' => 'Jl. Pakuan No. 8, Baranangsiang', 'distance' => '2,4 km', 'hours' => 'Buka 24 Jam (IGD)', 'igd' => true, 'inap' => true, 'nakes' => '100%', 'crowd' => 'Sedang'],
-        ['name' => 'Puskesmas Bogor Utara', 'district' => 'Bogor Utara', 'address' => 'Jl. Kresna Raya No. 14, Bantarjati', 'distance' => '2,6 km', 'hours' => 'Buka 24 Jam (IGD)', 'igd' => true, 'inap' => true, 'nakes' => '100%', 'crowd' => 'Sedang'],
-        ['name' => 'Puskesmas Bogor Selatan', 'district' => 'Bogor Selatan', 'address' => 'Jl. Batutulis No. 40, Bogor Selatan', 'distance' => '2,8 km', 'hours' => 'Buka 24 Jam (IGD)', 'igd' => true, 'inap' => true, 'nakes' => '100%', 'crowd' => 'Sedang'],
+        [
+            'name' => 'Puskesmas Tanah Sareal',
+            'district' => 'Tanah Sareal',
+            'address' => 'Jl. Kesehatan No. 1, Tanah Sareal',
+            'distance' => '1,1 km',
+            'hours' => '07.30 – 16.00 WIB',
+            'igd' => true,
+            'inap' => true,
+            'nakes' => '100%',
+            'crowd' => 'Sedang',
+            'image' => 'images/puskesmas/puskesmas-tanah-sareal.jpg',
+        ],
+        [
+            'name' => 'Puskesmas Sempur',
+            'district' => 'Bogor Tengah',
+            'address' => 'Jl. Sempur Kaler No. 12, Bogor Tengah',
+            'distance' => '1,2 km',
+            'hours' => '07.30 – 14.30 WIB',
+            'igd' => false,
+            'inap' => false,
+            'nakes' => '89%',
+            'crowd' => 'Sepi',
+            'image' => 'images/puskesmas/puskesmas-sempur.jpg',
+        ],
+        [
+            'name' => 'Puskesmas Kedung Badak',
+            'district' => 'Tanah Sareal',
+            'address' => 'Jl. Kol. Enjo Martadisastra, Kedung Badak',
+            'distance' => '1,5 km',
+            'hours' => 'Buka 24 Jam (IGD)',
+            'igd' => true,
+            'inap' => false,
+            'nakes' => '100%',
+            'crowd' => 'Sedang',
+            'image' => 'images/puskesmas/puskesmas-kedung-badak.jpg',
+        ],
+        [
+            'name' => 'Puskesmas Mekarwangi',
+            'district' => 'Tanah Sareal',
+            'address' => 'Perum Bukit Cimanggu City, Mekarwangi',
+            'distance' => '2,0 km',
+            'hours' => 'Buka 24 Jam (IGD)',
+            'igd' => true,
+            'inap' => true,
+            'nakes' => '100%',
+            'crowd' => 'Ramai',
+            'image' => 'images/puskesmas/puskesmas-mekarwangi.jpg',
+        ],
+        [
+            'name' => 'Puskesmas Pasir Mulya',
+            'district' => 'Bogor Barat',
+            'address' => 'Jl. Gunung Batu No. 45, Pasir Mulya',
+            'distance' => '2,3 km',
+            'hours' => 'Buka 24 Jam (IGD)',
+            'igd' => true,
+            'inap' => true,
+            'nakes' => '100%',
+            'crowd' => 'Sepi',
+            'image' => 'images/puskesmas/puskesmas-pasir-mulya.jpg',
+        ],
+        [
+            'name' => 'Puskesmas Bogor Timur',
+            'district' => 'Bogor Timur',
+            'address' => 'Jl. Pakuan No. 8, Baranangsiang',
+            'distance' => '2,4 km',
+            'hours' => 'Buka 24 Jam (IGD)',
+            'igd' => true,
+            'inap' => true,
+            'nakes' => '100%',
+            'crowd' => 'Sedang',
+            'image' => 'images/puskesmas/puskesmas-bogor-timur.jpg',
+        ],
+        [
+            'name' => 'Puskesmas Bogor Utara',
+            'district' => 'Bogor Utara',
+            'address' => 'Jl. Kresna Raya No. 14, Bantarjati',
+            'distance' => '2,6 km',
+            'hours' => 'Buka 24 Jam (IGD)',
+            'igd' => true,
+            'inap' => true,
+            'nakes' => '100%',
+            'crowd' => 'Sedang',
+            'image' => 'images/puskesmas/puskesmas-bogor-utara.jpg',
+        ],
+        [
+            'name' => 'Puskesmas Bogor Selatan',
+            'district' => 'Bogor Selatan',
+            'address' => 'Jl. Batutulis No. 40, Bogor Selatan',
+            'distance' => '2,8 km',
+            'hours' => 'Buka 24 Jam (IGD)',
+            'igd' => true,
+            'inap' => true,
+            'nakes' => '100%',
+            'crowd' => 'Sedang',
+            'image' => 'images/puskesmas/puskesmas-bogor-selatan.jpg',
+        ],
     ];
 
     $hashtags = ['#Semua', '#IGD24Jam', '#RawatInap', '#BukaSekarang'];
@@ -98,41 +247,54 @@
 <x-layout>
     {{-- ================= HERO SECTION ================= --}}
     <header id="beranda" class="relative bg-white">
-        {{-- Floating Pill Navbar (Dikeluarkan dari clip-path agar dropdown HP tidak pernah terpotong!) --}}
-        <nav class="absolute left-1/2 top-3 sm:top-6 z-40 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-[1040px] -translate-x-1/2" aria-label="Navigasi utama">
-            <div class="flex h-13 sm:h-[68px] items-center justify-between rounded-full bg-white pl-3.5 pr-2 sm:pl-8 sm:pr-4 shadow-nav">
-                <a href="#beranda" class="flex items-center gap-2 sm:gap-2.5 shrink-0" aria-label="PuskesMap">
-                    <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-7 sm:h-9 w-auto">
-                    <span class="text-[15px] sm:text-xl font-extrabold tracking-tight text-primary">PuskesMap</span>
+        {{-- Floating Pill Navbar (Fixed di Atas, Shrink-on-Scroll ke Logo Blur Pill) --}}
+        <nav id="main-navbar"
+             class="fixed left-1/2 top-3 sm:top-5 z-50 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-[1040px] -translate-x-1/2 flex flex-col items-center pointer-events-none"
+             aria-label="Navigasi utama">
+            <div id="nav-pill"
+                 class="nav-pill pointer-events-auto flex h-13 sm:h-[68px] w-full items-center rounded-full bg-white/95 backdrop-blur-md pl-3.5 pr-2 sm:pl-8 sm:pr-4 shadow-nav border border-white/80">
+                <a href="#beranda"
+                   class="nav-brand group mr-auto flex items-center gap-2 sm:gap-2.5 shrink-0"
+                   aria-label="PuskesMap - Kembali ke atas"
+                   title="PuskesMap">
+                    <img src="{{ asset('images/logo-sm.png') }}" alt="" class="nav-brand-logo size-7 sm:size-9 object-contain transition-transform duration-300 group-hover:scale-110">
+                    <span class="nav-brand-text whitespace-nowrap text-[15px] sm:text-xl font-extrabold tracking-tight text-primary">PuskesMap</span>
                 </a>
 
-                <div class="flex items-center gap-1.5 sm:gap-8">
-                    <ul class="hidden items-center gap-9 text-base font-bold text-body md:flex">
+                <div class="nav-actions flex items-center gap-1.5 sm:gap-5 py-1.5 overflow-hidden">
+                    <ul id="nav-links-list" class="relative hidden items-center gap-1 text-[15px] font-bold text-body md:flex">
+                        <span id="nav-hover-pill" aria-hidden="true"
+                              class="pointer-events-none absolute left-0 top-1/2 h-9 rounded-full bg-surface-mint border border-primary/15 shadow-[0_2px_10px_rgba(0,121,121,0.10)] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"></span>
                         @foreach ($navLinks as $link)
                             <li>
                                 <a href="{{ $link['href'] }}" data-nav-link
-                                   class="transition-colors hover:text-primary">
-                                    {{ $link['label'] }}
+                                   class="nav-link group relative z-10 inline-flex items-center px-4 py-2 rounded-full transition-all duration-300 ease-out hover:text-primary-dark hover:-translate-y-0.5 active:scale-95">
+                                    <span class="relative">
+                                        {{ $link['label'] }}
+                                        <span aria-hidden="true"
+                                              class="nav-link-bar absolute -bottom-1 left-0 h-[2.5px] w-full origin-center scale-x-0 rounded-full bg-gradient-to-r from-primary to-accent transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100"></span>
+                                    </span>
                                 </a>
                             </li>
                         @endforeach
                     </ul>
 
                     <a href="{{ route('peta') }}"
-                       class="inline-flex h-8 sm:h-11 items-center justify-center rounded-full bg-accent px-4 sm:px-7 text-xs sm:text-base font-bold text-white shadow-xs transition-all hover:bg-accent-strong active:scale-95">
-                        Peta
+                       class="group inline-flex h-8 sm:h-11 shrink-0 items-center justify-center gap-1.5 rounded-full bg-accent px-4 sm:px-6 text-xs sm:text-[15px] font-bold text-white shadow-xs transition-all duration-300 hover:bg-accent-strong hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(227,116,52,0.34)] active:scale-95">
+                        <span>Peta</span>
+                        <svg class="hidden sm:block size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
                     </a>
 
                     <button type="button" id="nav-toggle" aria-label="Buka menu" aria-expanded="false" aria-controls="nav-menu"
-                            class="flex size-8 sm:size-10 items-center justify-center rounded-full text-ink hover:bg-surface-mint md:hidden cursor-pointer">
+                            class="flex size-8 sm:size-10 shrink-0 items-center justify-center rounded-full text-ink hover:bg-surface-mint md:hidden cursor-pointer transition-colors">
                         <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
                     </button>
                 </div>
             </div>
 
-            <ul id="nav-menu" class="mt-2 hidden rounded-2xl bg-white/95 backdrop-blur-md p-3 text-sm font-bold shadow-float border border-primary/15 md:hidden">
+            <ul id="nav-menu" class="pointer-events-auto mt-2 hidden w-full rounded-2xl bg-white/95 backdrop-blur-md p-3 text-sm font-bold shadow-float border border-primary/15 md:hidden">
                 @foreach ($navLinks as $link)
-                    <li><a href="{{ $link['href'] }}" data-mobile-nav-link class="block rounded-xl px-3.5 py-2.5 text-ink hover:bg-surface-mint hover:text-primary">{{ $link['label'] }}</a></li>
+                    <li><a href="{{ $link['href'] }}" data-mobile-nav-link class="block rounded-xl px-3.5 py-2.5 text-ink hover:bg-surface-mint hover:text-primary transition-colors">{{ $link['label'] }}</a></li>
                 @endforeach
                 <li class="mt-2 border-t border-gray-100 pt-2">
                     <a href="{{ route('peta') }}" class="flex h-10 items-center justify-center rounded-full bg-accent font-extrabold text-white shadow-xs">Buka Dasbor Peta GIS &rarr;</a>
@@ -189,34 +351,24 @@
 
         {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA DENGAN PALET PUSKESMAP) ================= --}}
         <div id="wilayah" class="relative z-20 mx-auto max-w-[1140px] px-4 sm:px-6 pt-3 pb-8 lg:pt-8 lg:pb-14">
-            {{-- Garis Lengkung Halus di Latar Belakang (Sesuai Referensi Peta) --}}
-            <svg class="pointer-events-none absolute inset-x-0 top-1/2 -translate-y-1/2 w-full h-48 text-[#e5f2f0] -z-10 hidden lg:block" viewBox="0 0 1200 200" fill="none" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M0 160 Q600 -30 1200 140" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
-            </svg>
-
             <div class="grid items-center gap-0 lg:grid-cols-[1.05fr_1fr]">
-                {{-- Kartu "Wilayah" di Kiri (Tertimpa Peta di Bawah pada HP & di Kanan pada Desktop) --}}
-                <div data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-11 sm:pb-14 lg:py-14 lg:pl-12 lg:pr-56 lg:-mr-48 shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
-                    <h2 class="text-3xl sm:text-[44px] font-extrabold tracking-tight text-primary-dark leading-none">
-                        Wilayah
-                    </h2>
+                {{-- Kartu "Wilayah" di Kiri (Diperpanjang ke Kanan Sampai ke Belakang Peta) --}}
+                <div data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-11 sm:pb-14 lg:py-20 lg:pl-12 lg:pr-[430px] lg:-mr-[410px] shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
+                    <div class="lg:max-w-[460px]">
+                        <h2 class="text-3xl sm:text-[44px] font-extrabold tracking-tight text-primary-dark leading-none">
+                            Wilayah
+                        </h2>
 
-                    {{-- Garis Gelombang Putih (Wavy Underline ala Referensi Territoire) --}}
-                    <svg class="mt-2.5 sm:mt-3 h-3 w-20 sm:w-24 text-white" viewBox="0 0 100 12" fill="none" aria-hidden="true">
-                        <path d="M2 8 C22 1, 42 13, 64 5 C78 0, 88 8, 98 4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                    </svg>
+                        {{-- Garis Gelombang Putih (Wavy Underline ala Referensi Territoire) --}}
+                        <svg class="mt-2.5 sm:mt-3 h-3 w-20 sm:w-24 text-white" viewBox="0 0 100 12" fill="none" aria-hidden="true">
+                            <path d="M2 8 C22 1, 42 13, 64 5 C78 0, 88 8, 98 4" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                        </svg>
 
-                    <p class="mt-4 sm:mt-5 text-xs sm:text-[15px] leading-relaxed text-body font-medium">
-                        PuskesMap memetakan 25 puskesmas induk di enam kecamatan Kota Bogor: Tanah Sareal, Bogor Utara,
-                        Bogor Barat, Bogor Tengah, Bogor Timur, dan Bogor Selatan, dilengkapi informasi kesiapan IGD 24 jam,
-                        fasilitas rawat inap, kelengkapan 9 profesi tenaga kesehatan, serta jam operasional harian.
-                    </p>
-
-                    <div class="mt-6 sm:mt-8">
-                        <a href="{{ route('peta') }}"
-                           class="inline-flex h-10 sm:h-11 items-center justify-center rounded-full bg-white px-6 sm:px-8 text-xs font-extrabold uppercase tracking-wider text-primary-dark shadow-sm transition-all hover:bg-primary hover:text-white hover:scale-105">
-                            Jelajahi Wilayah
-                        </a>
+                        <p class="mt-4 sm:mt-5 text-xs sm:text-[15px] leading-relaxed text-body font-medium">
+                            PuskesMap memetakan 25 puskesmas induk di enam kecamatan Kota Bogor: Tanah Sareal, Bogor Utara,
+                            Bogor Barat, Bogor Tengah, Bogor Timur, dan Bogor Selatan, dilengkapi informasi kesiapan IGD 24 jam,
+                            fasilitas rawat inap, kelengkapan 9 profesi tenaga kesehatan, serta jam operasional harian.
+                        </p>
                     </div>
                 </div>
 
@@ -240,153 +392,156 @@
         </div>
     </header>
 
-    {{-- ================= SECTION TENGAH: PILIH KECAMATAN DENGAN 7 IKON BULAT ESTETIK ================= --}}
-    <section id="cari" class="relative bg-white pt-10 pb-14">
-        <div class="mx-auto max-w-[1140px] px-6">
-            {{-- Heading Tengah dengan Ornamen Senyum / Lengkung di Atasnya --}}
-            <div class="text-center">
-                <div class="mx-auto mb-2 flex flex-col items-center justify-center text-primary/40" aria-hidden="true">
-                    <div class="flex gap-2 mb-1">
-                        <span class="size-1.5 rounded-full bg-primary/40"></span>
-                        <span class="size-1.5 rounded-full bg-primary/40"></span>
-                    </div>
-                    <svg class="w-8 h-3" viewBox="0 0 32 12" fill="none"><path d="M2 2C9 10 23 10 30 2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+    {{-- ================= SECTION FITUR PUSKESMAP (POLOS PUTIH + BUBBLE FLOATING KIRI & KANAN) ================= --}}
+    <section id="fitur" class="relative bg-white py-10 sm:py-16 lg:py-20 overflow-hidden">
+        <div class="mx-auto max-w-[1140px] px-4 sm:px-6">
+            <div class="grid grid-cols-1 items-center gap-7 md:grid-cols-[1fr_minmax(300px,430px)_1fr] lg:grid-cols-[1fr_470px_1fr] md:gap-4 lg:gap-6">
+                {{-- Judul Utama di Tengah --}}
+                <div data-reveal="up" class="order-1 md:order-2 text-center px-2">
+                    <span class="inline-block text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.2em] text-muted/80">
+                        FITUR UNGGULAN
+                    </span>
+                    <h2 class="mt-2 text-2xl sm:text-4xl lg:text-[42px] font-extrabold tracking-tight leading-[1.16] text-ink">
+                        Fitur apa saja yang ada di
+                        <span class="block text-accent">PUSKESMAP?</span>
+                    </h2>
                 </div>
 
-                <h2 data-reveal="up" data-reveal-delay="80" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
-                    Jangan Bingung Cari Faskes! <span class="text-primary">PUSKESMAP</span>
-                </h2>
-                <p data-reveal="up" data-reveal-delay="180" class="mt-1.5 text-xs sm:text-sm font-medium text-muted">
-                    Pilih kecamatan di bawah ini untuk memfilter puskesmas terdekat sesuai kebutuhan layananmu
-                </p>
-            </div>
-
-            {{-- Baris Ikon Bulat Kecamatan (Swipeable di HP & Terpusat di Desktop) --}}
-            <div id="district-row" data-reveal-stagger="70" data-reveal-type="pop" class="no-scrollbar mt-7 sm:mt-9 -mx-4 px-4 sm:mx-0 sm:px-2 flex items-center justify-start sm:justify-center gap-4 sm:gap-7 overflow-x-auto snap-x snap-mandatory py-2" role="tablist" aria-label="Pilih Kecamatan">
-                @foreach ($districts as $d)
-                    <button type="button"
-                            role="tab"
-                            data-district-btn
-                            data-district="{{ $d['name'] }}"
-                            aria-selected="{{ $loop->first ? 'true' : 'false' }}"
-                            class="group snap-start flex shrink-0 flex-col items-center gap-2 cursor-pointer focus:outline-none">
-                        <div class="relative flex size-15 sm:size-[74px] items-center justify-center rounded-full border-2 border-gray-200 bg-white text-ink shadow-xs transition-all duration-200 group-hover:border-primary group-hover:-translate-y-1 group-aria-selected:border-transparent group-aria-selected:bg-gradient-to-br group-aria-selected:from-surface-sky group-aria-selected:to-primary group-aria-selected:text-white group-aria-selected:shadow-[0_10px_25px_rgba(0,121,121,0.28)]">
-                            <svg class="size-6 sm:size-7 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $d['icon'] }}"/>
-                            </svg>
-                            <span class="absolute -bottom-1 -right-1 rounded-full bg-surface-mint px-1.5 py-0.5 text-[9px] font-extrabold text-primary-dark border border-primary/20 shadow-2xs group-aria-selected:bg-accent group-aria-selected:text-white group-aria-selected:border-white">
-                                {{ $d['count'] }}
-                            </span>
+                {{-- Bubble Fitur Sisi Kiri --}}
+                <div class="order-2 md:order-1 flex flex-wrap justify-center gap-3 md:flex-col md:gap-7 lg:gap-9">
+                    @foreach ($featureBubblesLeft as $bubble)
+                        <div data-reveal="pop" data-reveal-delay="{{ $bubble['delay'] }}" class="{{ $bubble['align'] }}">
+                            <div class="{{ $bubble['float'] }}">
+                                <div class="inline-flex items-center gap-2 sm:gap-2.5 rounded-full bg-gradient-to-b {{ $bubble['bg'] }} {{ $bubble['shadow'] }} {{ $bubble['tilt'] }} px-4 py-2 sm:px-6 sm:py-3 text-white ring-1 ring-white/40 transition-transform duration-300 ease-out hover:scale-105 hover:rotate-0 cursor-default select-none">
+                                    <span class="text-base sm:text-xl leading-none" aria-hidden="true">{{ $bubble['icon'] }}</span>
+                                    <span class="whitespace-nowrap text-xs sm:text-base lg:text-[17px] font-extrabold tracking-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.16)]">{{ $bubble['label'] }}</span>
+                                </div>
+                            </div>
                         </div>
-                        <span class="text-[11px] sm:text-xs font-bold text-muted transition-colors group-hover:text-primary group-aria-selected:text-primary-dark group-aria-selected:font-extrabold">
-                            {{ $d['label'] }}
-                        </span>
-                    </button>
-                @endforeach
+                    @endforeach
+                </div>
+
+                {{-- Bubble Fitur Sisi Kanan --}}
+                <div class="order-3 md:order-3 flex flex-wrap justify-center gap-3 md:flex-col md:gap-7 lg:gap-9">
+                    @foreach ($featureBubblesRight as $bubble)
+                        <div data-reveal="pop" data-reveal-delay="{{ $bubble['delay'] }}" class="{{ $bubble['align'] }}">
+                            <div class="{{ $bubble['float'] }}">
+                                <div class="inline-flex items-center gap-2 sm:gap-2.5 rounded-full bg-gradient-to-b {{ $bubble['bg'] }} {{ $bubble['shadow'] }} {{ $bubble['tilt'] }} px-4 py-2 sm:px-6 sm:py-3 text-white ring-1 ring-white/40 transition-transform duration-300 ease-out hover:scale-105 hover:rotate-0 cursor-default select-none">
+                                    <span class="text-base sm:text-xl leading-none" aria-hidden="true">{{ $bubble['icon'] }}</span>
+                                    <span class="whitespace-nowrap text-xs sm:text-base lg:text-[17px] font-extrabold tracking-tight drop-shadow-[0_1px_1px_rgba(0,0,0,0.16)]">{{ $bubble['label'] }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
         </div>
     </section>
 
-    {{-- ================= WAVE SECTION BIRU/TEAL: CAROUSEL KARTU PUSKESMAS & STATUS STRIP ================= --}}
-    <section class="relative bg-gradient-to-b from-[#138282] via-primary to-primary-dark text-white">
-        {{-- Top Organic Wave Divider --}}
-        <div class="w-full overflow-hidden leading-none bg-white" aria-hidden="true">
+    {{-- ================= SECTION PUSKESMAS TERPADU (WAVE + HEADING + HEALTH PATTERN + MARQUEE INTERAKTIF KE KIRI) ================= --}}
+    <section id="cari" class="relative bg-gradient-to-b from-[#138282] via-primary to-primary-dark text-white overflow-hidden">
+        {{-- Top Organic Wave Divider (isi putih hanya di atas kurva agar partikel tembus sampai batas gelombang) --}}
+        <div class="relative z-10 w-full overflow-hidden leading-none pointer-events-none" aria-hidden="true">
             <svg class="relative block w-full h-[42px] sm:h-[86px]" viewBox="0 0 1440 100" preserveAspectRatio="none">
-                <path d="M0,15 C320,105 680,-25 1120,65 C1280,95 1380,80 1440,55 L1440,100 L0,100 Z" fill="#138282"></path>
+                <path d="M0,15 C320,105 680,-25 1120,65 C1280,95 1380,80 1440,55 L1440,0 L0,0 Z" fill="#ffffff"></path>
             </svg>
         </div>
 
-        <div class="mx-auto max-w-[1180px] px-4 sm:px-6 pt-4 sm:pt-6 pb-14 sm:pb-20">
-            {{-- Carousel Kartu Putih Vertikal (Peek Card UX di HP) --}}
-            <div class="relative">
-                {{-- Tombol Kiri --}}
-                <button type="button" data-scroll-target="#card-track" data-scroll-dir="-1" aria-label="Kartu sebelumnya"
-                        class="hidden sm:flex absolute -left-5 top-1/2 -translate-y-1/2 z-20 size-11 cursor-pointer items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md border border-white/40 hover:bg-white hover:text-primary-dark transition-all shadow-lg">
-                    <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6"/></svg>
-                </button>
+        {{-- Canvas Partikel Kursor Interaktif (Background tetap polos saat tidak ada kursor) --}}
+        <canvas id="cari-particles"
+                data-cursor-particles
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-0 z-0 h-full w-full"></canvas>
 
-                <div id="card-track" data-reveal-stagger="90" class="no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-1 flex snap-x snap-mandatory gap-4 sm:gap-6 overflow-x-auto scroll-smooth py-3">
-                    @foreach ($puskesmas as $item)
-                        @php
-                            $pastel = $cardColors[$loop->index % count($cardColors)];
-                        @endphp
-                        <article data-district-card="{{ $item['district'] }}"
-                                 class="w-[78vw] max-w-[270px] sm:w-[262px] shrink-0 snap-start rounded-2xl bg-white p-4 text-ink shadow-[0_16px_40px_rgba(7,52,52,0.22)] transition-all duration-200 hover:-translate-y-1.5 flex flex-col justify-between">
-                            <div>
-                                {{-- Ilustrasi Header Kartu (Tidak Kosong!) --}}
-                                <div class="relative h-[142px] w-full rounded-xl {{ $pastel }} overflow-hidden p-3.5 flex flex-col justify-between">
-                                    <div class="flex items-center justify-between z-10">
-                                        <span class="rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-extrabold text-primary-dark shadow-2xs">
-                                            Kec. {{ $item['district'] }}
-                                        </span>
-                                        <span class="rounded-full bg-primary-dark/90 px-2.5 py-0.5 text-[10px] font-bold text-white">
-                                            {{ $item['distance'] }}
-                                        </span>
-                                    </div>
+        {{-- Heading Section di Dalam Area Hijau/Teal agar Terlihat 1 Section --}}
+        <div class="relative z-10 mx-auto max-w-[1140px] px-6 pt-5 sm:pt-7 pb-6 sm:pb-8 text-center">
+            <h2 data-reveal="up" data-reveal-delay="80" class="text-2xl sm:text-4xl font-extrabold tracking-tight text-white">
+                Jangan Bingung Cari Faskes! <span class="text-accent drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">PUSKESMAP</span>
+            </h2>
+            <p data-reveal="up" data-reveal-delay="180" class="mx-auto mt-2 max-w-2xl text-xs sm:text-sm font-medium text-white/90">
+                Informasi kesiapan IGD 24 jam, tenaga kesehatan, dan operasional puskesmas induk Kota Bogor
+            </p>
+        </div>
 
-                                    {{-- Ilustrasi Gedung Puskesmas Vektor di Dalam Kartu --}}
-                                    <div class="my-auto flex items-center justify-center">
-                                        <div class="flex size-14 items-center justify-center rounded-2xl bg-white/85 shadow-xs backdrop-blur-xs">
-                                            <svg class="size-8 text-primary" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M12 7v4m-2-2h4"/>
-                                            </svg>
+        {{-- Full-Width Edge-to-Edge Marquee Berjalan Perlahan ke Kiri & Bisa Digeser Tangan --}}
+        <div data-marquee class="marquee-wrap relative z-10 w-full overflow-hidden pt-2 sm:pt-3 pb-14 sm:pb-20 cursor-grab active:cursor-grabbing select-none">
+            <div data-marquee-track class="marquee-track">
+                @for ($copy = 0; $copy < 2; $copy++)
+                    <div class="marquee-group flex shrink-0 items-stretch gap-5 sm:gap-6 pr-5 sm:pr-6" @if ($copy === 1) aria-hidden="true" @endif>
+                        @foreach ($puskesmas as $item)
+                            @php
+                                $pastel = $cardColors[$loop->index % count($cardColors)];
+                                $hasImage = ! empty($item['image']) && file_exists(public_path($item['image']));
+                            @endphp
+                            <article class="marquee-card group/card w-[258px] sm:w-[272px] shrink-0 rounded-2xl bg-white p-4 text-ink shadow-[0_16px_40px_rgba(7,52,52,0.22)] flex flex-col justify-between">
+                                <div>
+                                    {{-- Slot Foto / Ilustrasi Header Kartu Puskesmas --}}
+                                    <div class="relative h-[152px] w-full rounded-xl {{ $pastel }} overflow-hidden p-3.5 flex flex-col justify-between">
+                                        @if ($hasImage)
+                                            <img src="{{ asset($item['image']) }}"
+                                                 alt="{{ $copy === 0 ? $item['name'] : '' }}"
+                                                 loading="lazy"
+                                                 draggable="false"
+                                                 class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover/card:scale-105">
+                                            <div class="absolute inset-0 bg-gradient-to-t from-ink/65 via-ink/15 to-ink/25" aria-hidden="true"></div>
+                                        @endif
+
+                                        <div class="relative z-10 flex items-center justify-between">
+                                            <span class="rounded-full bg-white/95 px-2.5 py-0.5 text-[10px] font-extrabold text-primary-dark shadow-2xs transition-colors group-hover/card:text-accent-strong">
+                                                Kec. {{ $item['district'] }}
+                                            </span>
+                                            <span class="rounded-full bg-primary-dark/90 px-2.5 py-0.5 text-[10px] font-bold text-white transition-colors group-hover/card:bg-accent-strong">
+                                                {{ $item['distance'] }}
+                                            </span>
+                                        </div>
+
+                                        @unless ($hasImage)
+                                            {{-- Placeholder Foto Puskesmas (Otomatis diganti foto asli saat file tersedia di public/images/puskesmas/) --}}
+                                            <div class="relative z-10 my-auto flex flex-col items-center justify-center gap-1.5">
+                                                <div class="flex size-14 items-center justify-center rounded-2xl bg-white/85 shadow-xs backdrop-blur-xs">
+                                                    <svg class="size-8 text-primary transition-colors group-hover/card:text-accent-strong" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M12 7v4m-2-2h4"/>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        @endunless
+
+                                        <div class="relative z-10 flex items-center justify-between text-[10px] font-bold {{ $hasImage ? 'text-white' : 'text-primary-dark/80' }}">
+                                            <span>9 Nakes: {{ $item['nakes'] }}</span>
+                                            <span>{{ $item['igd'] ? '🚨 IGD 24 Jam' : '🩺 Rawat Jalan' }}</span>
                                         </div>
                                     </div>
 
-                                    <div class="flex items-center justify-between text-[10px] font-bold text-primary-dark/80 z-10">
-                                        <span>9 Nakes: {{ $item['nakes'] }}</span>
-                                        <span>{{ $item['igd'] ? '🚨 IGD 24 Jam' : '🩺 Rawat Jalan' }}</span>
+                                    {{-- Informasi Teks Kartu --}}
+                                    <div class="mt-3.5 px-1">
+                                        <span class="text-[11px] font-extrabold text-primary uppercase tracking-wider transition-colors group-hover/card:text-[#ffe2af]">Puskesmas Induk</span>
+                                        <h3 class="mt-0.5 text-base font-extrabold leading-snug text-ink line-clamp-1 transition-colors group-hover/card:text-white">{{ $item['name'] }}</h3>
+                                        <p class="mt-1 text-xs text-muted line-clamp-1 transition-colors">📍 {{ $item['address'] }}</p>
+                                        <p class="mt-1 text-[11px] font-semibold text-muted transition-colors">⏰ {{ $item['hours'] }}</p>
+
+                                        <x-crowd-bar :level="$item['crowd']" :label="'Keramaian: ' . $item['crowd']" />
                                     </div>
                                 </div>
 
-                                {{-- Informasi Teks Kartu --}}
-                                <div class="mt-3.5 px-1">
-                                    <span class="text-[11px] font-extrabold text-primary uppercase tracking-wider">Puskesmas Induk</span>
-                                    <h3 class="mt-0.5 text-base font-extrabold leading-snug text-ink line-clamp-1">{{ $item['name'] }}</h3>
-                                    <p class="mt-1 text-xs text-muted line-clamp-1">📍 {{ $item['address'] }}</p>
-                                    <p class="mt-1 text-[11px] font-semibold text-muted">⏰ {{ $item['hours'] }}</p>
-
-                                    <x-crowd-bar :level="$item['crowd']" :label="'Keramaian: ' . $item['crowd']" />
+                                {{-- Tombol Pill di Bawah Kartu --}}
+                                <div class="mt-4 pt-1">
+                                    <a href="{{ route('peta') }}"
+                                       draggable="false"
+                                       @if ($copy === 1) tabindex="-1" @endif
+                                       class="flex h-9 w-full items-center justify-center gap-1.5 rounded-full bg-primary text-xs font-extrabold text-white shadow-xs transition-all hover:bg-primary-dark hover:scale-[1.02] group-hover/card:shadow-md">
+                                        <span>Lihat di Peta</span>
+                                        <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
+                                    </a>
                                 </div>
-                            </div>
-
-                            {{-- Tombol Pill di Bawah Kartu --}}
-                            <div class="mt-4 pt-1">
-                                <a href="{{ route('peta') }}"
-                                   class="flex h-9 w-full items-center justify-center gap-1.5 rounded-full bg-primary text-xs font-extrabold text-white shadow-xs transition-colors hover:bg-primary-dark">
-                                    <span>Lihat di Peta</span>
-                                    <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
-                                </a>
-                            </div>
-                        </article>
-                    @endforeach
-                </div>
-
-                {{-- Tombol Kanan --}}
-                <button type="button" data-scroll-target="#card-track" data-scroll-dir="1" aria-label="Kartu berikutnya"
-                        class="hidden sm:flex absolute -right-5 top-1/2 -translate-y-1/2 z-20 size-11 cursor-pointer items-center justify-center rounded-full bg-white/20 text-white backdrop-blur-md border border-white/40 hover:bg-white hover:text-primary-dark transition-all shadow-lg">
-                    <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
-                </button>
-
-                {{-- Kontrol Geser Kartu Khusus HP --}}
-                <div class="mt-2 flex sm:hidden items-center justify-between px-1">
-                    <span class="text-[11px] font-semibold text-white/80">&larr; Geser kartu untuk melihat lainnya &rarr;</span>
-                    <div class="flex items-center gap-2">
-                        <button type="button" data-scroll-target="#card-track" data-scroll-dir="-1" aria-label="Sebelumnya"
-                                class="flex size-8 items-center justify-center rounded-full bg-white/20 text-white border border-white/30">
-                            <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6"/></svg>
-                        </button>
-                        <button type="button" data-scroll-target="#card-track" data-scroll-dir="1" aria-label="Berikutnya"
-                                class="flex size-8 items-center justify-center rounded-full bg-white/20 text-white border border-white/30">
-                            <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/></svg>
-                        </button>
+                            </article>
+                        @endforeach
                     </div>
-                </div>
+                @endfor
             </div>
         </div>
 
         {{-- Bottom Organic Wave Divider Menuju Sekilas di Peta --}}
-        <div class="w-full overflow-hidden leading-none" aria-hidden="true">
+        <div class="relative z-10 w-full overflow-hidden leading-none" aria-hidden="true">
             <svg class="relative block w-full h-[40px] sm:h-[76px]" viewBox="0 0 1440 100" preserveAspectRatio="none">
                 <path d="M0,60 C380,110 820,-10 1440,50 L1440,100 L0,100 Z" fill="#e8f4f2"></path>
             </svg>
