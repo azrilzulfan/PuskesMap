@@ -142,7 +142,7 @@
 
         <div class="relative h-[380px] sm:h-auto sm:aspect-[1170/760] sm:min-h-[520px] w-full overflow-hidden [clip-path:ellipse(140%_100%_at_50%_0%)] sm:[clip-path:ellipse(92%_100%_at_50%_0%)]">
             {{-- Ilustrasi Utama Kota Bogor --}}
-            <div id="hero-lottie" role="img" aria-label="Ilustrasi Kota Bogor"
+            <div id="hero-lottie" data-parallax="0.1" data-parallax-max="40" role="img" aria-label="Ilustrasi Kota Bogor"
                  data-src="{{ asset('images/main-hero.json') }}"
                  class="absolute left-1/2 -translate-x-1/2 w-[155%] sm:left-[-11.54%] sm:translate-x-0 top-0 h-[112%] sm:h-[115%] sm:w-[123.08%] max-w-none"></div>
             <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie_svg.min.js"></script>
@@ -163,25 +163,25 @@
             </script>
 
             {{-- Floating Decorative Badges & Judul Hero di Area Langit/Awan --}}
-            <div class="absolute inset-x-0 top-[21%] sm:top-[19%] lg:top-[20%] z-10 flex flex-col items-center px-4 text-center">
+            <div data-parallax-title class="absolute inset-x-0 top-[21%] sm:top-[19%] lg:top-[20%] z-10 flex flex-col items-center px-4 text-center">
                 <div class="relative inline-flex items-center gap-2 sm:gap-5">
                     {{-- Badge Dekoratif Kiri --}}
-                    <span class="flex absolute -left-7 -top-2 sm:-left-16 sm:-top-5 size-6 sm:size-12 items-center justify-center rounded-lg sm:rounded-2xl bg-primary/90 text-white shadow-lg -rotate-12 backdrop-blur-xs" aria-hidden="true">
+                    <span class="float-soft flex absolute -left-7 -top-2 sm:-left-16 sm:-top-5 size-6 sm:size-12 items-center justify-center rounded-lg sm:rounded-2xl bg-primary/90 text-white shadow-lg -rotate-12 backdrop-blur-xs" aria-hidden="true">
                         <svg class="size-3.5 sm:size-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
                     </span>
 
-                    <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-9 w-auto sm:h-[86px] lg:h-[96px] drop-shadow-md">
-                    <h1 class="text-3xl font-extrabold tracking-tight leading-none text-primary-dark sm:text-6xl lg:text-[74px] drop-shadow-xs">
+                    <img data-reveal="pop" data-reveal-delay="150" src="{{ asset('images/logo-sm.png') }}" alt="" class="h-9 w-auto sm:h-[86px] lg:h-[96px] drop-shadow-md">
+                    <h1 data-reveal="up" data-reveal-delay="300" class="text-3xl font-extrabold tracking-tight leading-none text-primary-dark sm:text-6xl lg:text-[74px] drop-shadow-xs">
                         PuskesMap
                     </h1>
 
                     {{-- Badge Dekoratif Kanan --}}
-                    <span class="flex absolute -right-7 -bottom-1.5 sm:-right-16 sm:-bottom-3 size-6 sm:size-12 items-center justify-center rounded-lg sm:rounded-2xl bg-accent/95 text-white shadow-lg rotate-12 backdrop-blur-xs" aria-hidden="true">
+                    <span class="float-soft-alt flex absolute -right-7 -bottom-1.5 sm:-right-16 sm:-bottom-3 size-6 sm:size-12 items-center justify-center rounded-lg sm:rounded-2xl bg-accent/95 text-white shadow-lg rotate-12 backdrop-blur-xs" aria-hidden="true">
                         <svg class="size-3.5 sm:size-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
                     </span>
                 </div>
 
-                <p class="mt-2.5 sm:mt-4 max-w-[92vw] rounded-full bg-white/88 px-3.5 py-1 sm:px-7 sm:py-2 text-[11px] sm:text-lg lg:text-xl font-extrabold text-primary-dark shadow-sm backdrop-blur-md border border-white">
+                <p data-reveal="up" data-reveal-delay="500" class="mt-2.5 sm:mt-4 max-w-[92vw] rounded-full bg-white/88 px-3.5 py-1 sm:px-7 sm:py-2 text-[11px] sm:text-lg lg:text-xl font-extrabold text-primary-dark shadow-sm backdrop-blur-md border border-white">
                     Peta puskesmas Kota Bogor, di satu tempat
                 </p>
             </div>
@@ -196,7 +196,7 @@
 
             <div class="grid items-center gap-0 lg:grid-cols-[1.05fr_1fr]">
                 {{-- Kartu "Wilayah" di Kiri (Tertimpa Peta di Bawah pada HP & di Kanan pada Desktop) --}}
-                <div class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-11 sm:pb-14 lg:py-14 lg:pl-12 lg:pr-44 lg:-mr-36 shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
+                <div data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-11 sm:pb-14 lg:py-14 lg:pl-12 lg:pr-44 lg:-mr-36 shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
                     <h2 class="text-3xl sm:text-[44px] font-extrabold tracking-tight text-primary-dark leading-none">
                         Wilayah
                     </h2>
@@ -221,7 +221,7 @@
                 </div>
 
                 {{-- Peta Vektor Kota Bogor (Palet Mint-Teal-Sage) Menimpa Kartu --}}
-                <div class="relative z-20 -mt-7 sm:-mt-10 lg:-mt-32 lg:-ml-8 flex flex-col items-center px-1 sm:px-0">
+                <div data-reveal="right" data-reveal-delay="150" class="relative z-20 -mt-7 sm:-mt-10 lg:-mt-32 lg:-ml-8 flex flex-col items-center px-1 sm:px-0">
                     <x-bogor-map class="mx-auto w-full max-w-[460px] sm:max-w-[510px]" />
 
                     <span class="mt-1 lg:hidden inline-flex items-center gap-1.5 rounded-full bg-surface-mint px-3.5 py-1 text-[11px] font-bold text-primary-dark">
@@ -253,16 +253,16 @@
                     <svg class="w-8 h-3" viewBox="0 0 32 12" fill="none"><path d="M2 2C9 10 23 10 30 2" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
                 </div>
 
-                <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
+                <h2 data-reveal="up" data-reveal-delay="80" class="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
                     Jangan Bingung Cari Faskes! <span class="text-primary">PUSKESMAP</span>
                 </h2>
-                <p class="mt-1.5 text-xs sm:text-sm font-medium text-muted">
+                <p data-reveal="up" data-reveal-delay="180" class="mt-1.5 text-xs sm:text-sm font-medium text-muted">
                     Pilih kecamatan di bawah ini untuk memfilter puskesmas terdekat sesuai kebutuhan layananmu
                 </p>
             </div>
 
             {{-- Baris Ikon Bulat Kecamatan (Swipeable di HP & Terpusat di Desktop) --}}
-            <div id="district-row" class="no-scrollbar mt-7 sm:mt-9 -mx-4 px-4 sm:mx-0 sm:px-2 flex items-center justify-start sm:justify-center gap-4 sm:gap-7 overflow-x-auto snap-x snap-mandatory py-2" role="tablist" aria-label="Pilih Kecamatan">
+            <div id="district-row" data-reveal-stagger="70" data-reveal-type="pop" class="no-scrollbar mt-7 sm:mt-9 -mx-4 px-4 sm:mx-0 sm:px-2 flex items-center justify-start sm:justify-center gap-4 sm:gap-7 overflow-x-auto snap-x snap-mandatory py-2" role="tablist" aria-label="Pilih Kecamatan">
                 @foreach ($districts as $d)
                     <button type="button"
                             role="tab"
@@ -305,7 +305,7 @@
                     <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m15 18-6-6 6-6"/></svg>
                 </button>
 
-                <div id="card-track" class="no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-1 flex snap-x snap-mandatory gap-4 sm:gap-6 overflow-x-auto scroll-smooth py-3">
+                <div id="card-track" data-reveal-stagger="90" class="no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-1 flex snap-x snap-mandatory gap-4 sm:gap-6 overflow-x-auto scroll-smooth py-3">
                     @foreach ($puskesmas as $item)
                         @php
                             $pastel = $cardColors[$loop->index % count($cardColors)];
@@ -385,7 +385,7 @@
             </div>
 
             {{-- Horizontal White Pill Strip (Responsif Grid 2 Kolom di HP) --}}
-            <div class="relative mt-8 sm:mt-12">
+            <div data-reveal="up" class="relative mt-8 sm:mt-12">
                 <div class="flex flex-col lg:flex-row items-center justify-between gap-4 rounded-3xl lg:rounded-full bg-white p-4 sm:px-6 sm:py-4 text-ink shadow-[0_14px_34px_rgba(7,52,52,0.2)]">
                     <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-center sm:text-left">
                         <span class="rounded-full bg-primary px-3.5 py-1 text-xs font-extrabold text-white">Sebaran Wilayah</span>
@@ -428,14 +428,14 @@
     <section id="peta" class="bg-gradient-to-b from-surface-mint via-[#eef7f6] to-white pt-8 sm:pt-10 pb-14 sm:pb-24">
         <div class="mx-auto max-w-[1180px] px-4 sm:px-6">
             <div class="text-center">
-                <span class="inline-block rounded-full bg-white px-4 py-1 text-xs font-extrabold text-primary shadow-2xs border border-primary/15">
+                <span data-reveal="pop" class="inline-block rounded-full bg-white px-4 py-1 text-xs font-extrabold text-primary shadow-2xs border border-primary/15">
                      PRATINJAU SPASIAL KOTA BOGOR
                 </span>
-                <h2 class="mt-2 text-2xl sm:text-4xl font-extrabold leading-tight text-primary-dark">Sekilas di Peta</h2>
-                <p class="mt-1.5 text-xs sm:text-sm font-medium text-muted">
+                <h2 data-reveal="up" data-reveal-delay="100" class="mt-2 text-2xl sm:text-4xl font-extrabold leading-tight text-primary-dark">Sekilas di Peta</h2>
+                <p data-reveal="up" data-reveal-delay="180" class="mt-1.5 text-xs sm:text-sm font-medium text-muted">
                     Peta jalan interaktif real-time 25 Puskesmas Induk di 6 Kecamatan Kota Bogor
                 </p>
-                <div class="mt-4 sm:mt-5 flex flex-wrap justify-center gap-2">
+                <div data-reveal-stagger="60" class="mt-4 sm:mt-5 flex flex-wrap justify-center gap-2">
                     @foreach ($hashtags as $tag)
                         <button type="button" data-chip aria-pressed="{{ $loop->first ? 'true' : 'false' }}"
                                 class="h-8 cursor-pointer rounded-full border border-primary/20 bg-white px-3.5 sm:px-4 text-xs font-bold text-ink shadow-2xs transition-colors aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-white">
@@ -446,7 +446,7 @@
             </div>
 
             {{-- Container Peta Jalan Interaktif (Stacked Bersih di HP agar Peta 100% Terbuka, Floating Overlay di Desktop!) --}}
-            <div class="relative mt-6 sm:mt-8 flex flex-col sm:block sm:h-[560px] rounded-3xl border-2 border-primary/20 bg-white sm:bg-[#f3f6f4] shadow-[0_24px_60px_rgba(0,121,121,0.14)] overflow-hidden">
+            <div data-reveal="zoom" class="relative mt-6 sm:mt-8 flex flex-col sm:block sm:h-[560px] rounded-3xl border-2 border-primary/20 bg-white sm:bg-[#f3f6f4] shadow-[0_24px_60px_rgba(0,121,121,0.14)] overflow-hidden">
                 {{-- Kartu Kontrol Radius: Header Ringkas di HP, Floating Card Kiri Atas di Desktop --}}
                 <div class="relative sm:absolute sm:left-5 sm:top-5 z-20 w-full sm:w-[275px] sm:rounded-2xl bg-white sm:bg-white/95 sm:backdrop-blur-md p-3.5 sm:p-4 sm:shadow-float border-b sm:border border-gray-100">
                     <div class="flex items-center justify-between gap-2">
@@ -529,7 +529,7 @@
     {{-- ================= FOOTER INTERAKTIF (SESUAI REFERENSI CHAUMES-EN-RETZ DENGAN PALET PUSKESMAP) ================= --}}
     <footer class="bg-[#084747] text-white pt-16 pb-10 border-t border-white/10">
         <div class="mx-auto max-w-[1180px] px-6">
-            <div class="grid grid-cols-1 lg:grid-cols-[270px_1fr_52px] gap-10 lg:gap-9 items-center">
+            <div data-reveal-stagger="140" class="grid grid-cols-1 lg:grid-cols-[270px_1fr_52px] gap-10 lg:gap-9 items-center">
                 {{-- Kolom Kiri: Brand Terpusat, Tombol Pill Oranye, dan Identitas Instansi (Persis Referensi Chaumes-en-Retz) --}}
                 <div class="flex flex-col items-center text-center">
                     <span class="text-[10px] font-bold uppercase tracking-[0.38em] text-white/75">
