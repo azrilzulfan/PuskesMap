@@ -30,11 +30,49 @@ function initPuskesMapApp() {
         const navLinksList = document.getElementById('nav-links-list');
         const hoverPill = document.getElementById('nav-hover-pill');
         const navLinks = Array.from(navbar.querySelectorAll('[data-nav-link]'));
+        const mobileDockBar = document.getElementById('mobile-dock-bar');
+        const mobileDockLinks = Array.from(document.querySelectorAll('[data-mobile-dock-link]'));
         let hoveredLink = null;
         let activeLink = null;
+        let activeMobileDockLink = mobileDockLinks[0] || null;
+        let dockClickLockUntil = 0;
         let manualExpanded = false;
         let expandedAtScrollY = 0;
         let navTicking = false;
+
+        const positionMobileDockNotch = (target) => {
+            if (!mobileDockBar || !target || mobileDockBar.offsetWidth === 0) return;
+            const centerX = target.offsetLeft + target.offsetWidth / 2;
+            mobileDockBar.style.setProperty('--dock-x', `${centerX}px`);
+            if (!mobileDockBar.classList.contains('is-ready')) {
+                window.requestAnimationFrame(() => mobileDockBar.classList.add('is-ready'));
+            }
+        };
+
+        const activateMobileDock = (target) => {
+            if (!target) return;
+            activeMobileDockLink = target;
+            mobileDockLinks.forEach((l) => l.classList.toggle('is-active', l === target));
+            positionMobileDockNotch(target);
+        };
+
+        mobileDockLinks.forEach((dockLink) => {
+            dockLink.addEventListener('click', (event) => {
+                dockClickLockUntil = performance.now() + 720;
+                activateMobileDock(dockLink);
+
+                const routeUrl = dockLink.getAttribute('data-mobile-dock-route');
+                if (routeUrl && !event.metaKey && !event.ctrlKey && !event.shiftKey) {
+                    event.preventDefault();
+                    const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+                    if (reduceMotion) {
+                        window.location.assign(routeUrl);
+                    } else {
+                        setTimeout(() => window.location.assign(routeUrl), 240);
+                    }
+                }
+            });
+        });
 
         const moveHoverPill = (target) => {
             if (!hoverPill || !navLinksList) return;
@@ -68,6 +106,25 @@ function initPuskesMapApp() {
             navLinks.forEach((link) => link.classList.toggle('is-active', link === activeLink));
             if (!hoveredLink) {
                 moveHoverPill(activeLink);
+            }
+
+            if (mobileDockLinks.length && performance.now() >= dockClickLockUntil) {
+                let matchedDock = mobileDockLinks[0];
+                let dockMatchedTop = -Infinity;
+                mobileDockLinks.forEach((dockLink) => {
+                    const href = dockLink.getAttribute('data-mobile-dock-link');
+                    if (!href) return;
+                    const section = document.querySelector(href);
+                    if (!section) return;
+                    const top = section.getBoundingClientRect().top + window.scrollY;
+                    if (scrollRef >= top && top > dockMatchedTop) {
+                        dockMatchedTop = top;
+                        matchedDock = dockLink;
+                    }
+                });
+                activateMobileDock(matchedDock);
+            } else if (activeMobileDockLink) {
+                positionMobileDockNotch(activeMobileDockLink);
             }
         };
 
@@ -152,7 +209,10 @@ function initPuskesMapApp() {
             }
         }, { passive: true });
 
-        window.addEventListener('resize', () => moveHoverPill(hoveredLink || activeLink), { passive: true });
+        window.addEventListener('resize', () => {
+            moveHoverPill(hoveredLink || activeLink);
+            positionMobileDockNotch(activeMobileDockLink);
+        }, { passive: true });
         updateNavbarState();
     }
 

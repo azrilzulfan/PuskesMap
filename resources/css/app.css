@@ -212,9 +212,62 @@
   display: none;
 }
 
+/* ===== Mobile Curved Notch Bottom Navbar (< 768px) ===== */
+.mobile-dock-shadow {
+  filter:
+    drop-shadow(0 -3px 16px rgba(0, 121, 121, 0.12))
+    drop-shadow(0 8px 22px rgba(8, 71, 71, 0.15));
+}
+
+.mobile-dock-notch-track,
+.mobile-dock-orb {
+  will-change: transform;
+}
+
+.mobile-dock-bar.is-ready .mobile-dock-notch-track,
+.mobile-dock-bar.is-ready .mobile-dock-orb {
+  transition: transform 0.46s cubic-bezier(0.32, 1.24, 0.62, 1);
+}
+
+.mobile-dock-notch-track {
+  transform: translate3d(calc(var(--dock-x, 42px) - 50%), 0, 0);
+}
+
+.mobile-dock-orb {
+  transform: translate3d(var(--dock-x, 42px), 0, 0);
+}
+
+.mobile-dock-link {
+  color: #7b8f8f;
+  font-weight: 600;
+  transition: color 0.22s ease;
+}
+
+.mobile-dock-link .mobile-dock-icon {
+  transition:
+    color 0.2s ease,
+    transform 0.44s cubic-bezier(0.32, 1.24, 0.62, 1);
+}
+
+.mobile-dock-link.is-active {
+  color: var(--color-primary-dark);
+  font-weight: 800;
+}
+
+.mobile-dock-link.is-active .mobile-dock-icon {
+  color: #ffffff;
+  transform: translate3d(0, -22.5px, 0) scale(1.1);
+}
+
 /* ===== Animasi Scroll Landing Page ===== */
 html {
-  scroll-padding-top: 5rem;
+  scroll-padding-top: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: 5rem;
+  }
 }
 
 .js [data-reveal]:not(.is-revealed) {
@@ -385,5 +438,11 @@ html {
   .float-soft,
   .float-soft-alt {
     animation: none;
+  }
+
+  .mobile-dock-bar.is-ready .mobile-dock-notch-track,
+  .mobile-dock-bar.is-ready .mobile-dock-orb,
+  .mobile-dock-link .mobile-dock-icon {
+    transition: none;
   }
 }

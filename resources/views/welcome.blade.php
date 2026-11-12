@@ -225,7 +225,6 @@
         ['label' => 'Daftar 25 Puskesmas', 'href' => '#cari'],
         ['label' => 'Pratinjau Peta', 'href' => '#peta'],
         ['label' => 'Peta & Rekomendasi Terdekat', 'href' => route('peta')],
-        ['label' => 'Standar Permenkes 43/2019', 'href' => route('peta')],
     ];
 
     $footerTabs = [
@@ -259,22 +258,22 @@
 <x-layout>
     {{-- ================= HERO SECTION ================= --}}
     <header id="beranda" class="relative bg-white">
-        {{-- Floating Pill Navbar (Fixed di Atas, Shrink-on-Scroll ke Logo Blur Pill) --}}
+        {{-- Floating Pill Navbar Desktop (Fixed di Atas, Shrink-on-Scroll ke Logo Blur Pill) --}}
         <nav id="main-navbar"
-             class="fixed left-1/2 top-3 sm:top-5 z-50 w-[calc(100%-1.5rem)] sm:w-[calc(100%-2rem)] max-w-[1040px] -translate-x-1/2 flex flex-col items-center pointer-events-none"
-             aria-label="Navigasi utama">
+             class="hidden md:flex fixed left-1/2 top-5 z-50 w-[calc(100%-2rem)] max-w-[1040px] -translate-x-1/2 flex-col items-center pointer-events-none"
+             aria-label="Navigasi utama desktop">
             <div id="nav-pill"
-                 class="nav-pill pointer-events-auto flex h-13 sm:h-[68px] w-full items-center rounded-full bg-white/95 backdrop-blur-md pl-3.5 pr-2 sm:pl-8 sm:pr-4 shadow-nav border border-white/80">
+                 class="nav-pill pointer-events-auto flex h-[68px] w-full items-center rounded-full bg-white/95 backdrop-blur-md pl-8 pr-4 shadow-nav border border-white/80">
                 <a href="#beranda"
-                   class="nav-brand group mr-auto flex items-center gap-2 sm:gap-2.5 shrink-0"
+                   class="nav-brand group mr-auto flex items-center gap-2.5 shrink-0"
                    aria-label="PuskesMap - Kembali ke atas"
                    title="PuskesMap">
-                    <img src="{{ asset('images/logo-sm.png') }}" alt="" class="nav-brand-logo size-7 sm:size-9 object-contain transition-transform duration-300 group-hover:scale-110">
-                    <span class="nav-brand-text whitespace-nowrap text-[15px] sm:text-xl font-extrabold tracking-tight text-primary">PuskesMap</span>
+                    <img src="{{ asset('images/logo-sm.png') }}" alt="" class="nav-brand-logo size-9 object-contain transition-transform duration-300 group-hover:scale-110">
+                    <span class="nav-brand-text whitespace-nowrap text-xl font-extrabold tracking-tight text-primary">PuskesMap</span>
                 </a>
 
-                <div class="nav-actions flex items-center gap-1.5 sm:gap-5 py-1.5 overflow-hidden">
-                    <ul id="nav-links-list" class="relative hidden items-center gap-1 text-[15px] font-bold text-body md:flex">
+                <div class="nav-actions flex items-center gap-5 py-1.5 overflow-hidden">
+                    <ul id="nav-links-list" class="relative flex items-center gap-1 text-[15px] font-bold text-body">
                         <span id="nav-hover-pill" aria-hidden="true"
                               class="pointer-events-none absolute left-0 top-1/2 h-9 rounded-full bg-surface-mint border border-primary/15 shadow-[0_2px_10px_rgba(0,121,121,0.10)] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"></span>
                         @foreach ($navLinks as $link)
@@ -292,29 +291,83 @@
                     </ul>
 
                     <a href="{{ route('peta') }}"
-                       class="group inline-flex h-8 sm:h-11 shrink-0 items-center justify-center gap-1.5 rounded-full bg-accent px-4 sm:px-6 text-xs sm:text-[15px] font-bold text-white shadow-xs transition-all duration-300 hover:bg-accent-strong hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(227,116,52,0.34)] active:scale-95">
+                       class="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-accent px-6 text-[15px] font-bold text-white shadow-xs transition-all duration-300 hover:bg-accent-strong hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(227,116,52,0.34)] active:scale-95">
                         <span>Peta</span>
-                        <svg class="hidden sm:block size-3.5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
                     </a>
-
-                    <button type="button" id="nav-toggle" aria-label="Buka menu" aria-expanded="false" aria-controls="nav-menu"
-                            class="flex size-8 sm:size-10 shrink-0 items-center justify-center rounded-full text-ink hover:bg-surface-mint md:hidden cursor-pointer transition-colors">
-                        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
-                    </button>
                 </div>
             </div>
-
-            <ul id="nav-menu" class="pointer-events-auto mt-2 hidden w-full rounded-2xl bg-white/95 backdrop-blur-md p-3 text-sm font-bold shadow-float border border-primary/15 md:hidden">
-                @foreach ($navLinks as $link)
-                    <li><a href="{{ $link['href'] }}" data-mobile-nav-link class="block rounded-xl px-3.5 py-2.5 text-ink hover:bg-surface-mint hover:text-primary transition-colors">{{ $link['label'] }}</a></li>
-                @endforeach
-                <li class="mt-2 border-t border-gray-100 pt-2">
-                    <a href="{{ route('peta') }}" class="flex h-10 items-center justify-center rounded-full bg-accent font-extrabold text-white shadow-xs">Buka Dasbor Peta GIS &rarr;</a>
-                </li>
-            </ul>
         </nav>
 
-        <div class="relative h-[380px] sm:h-auto sm:aspect-[1170/760] sm:min-h-[520px] w-full overflow-hidden [clip-path:ellipse(140%_100%_at_50%_0%)] sm:[clip-path:ellipse(92%_100%_at_50%_0%)]">
+        {{-- Floating Sliding Curved-Notch Bottom Navbar Khusus Mobile (< 768px) --}}
+        <nav id="mobile-bottom-nav"
+             class="md:hidden fixed inset-x-0 bottom-3.5 z-50 px-3.5 pointer-events-none select-none"
+             aria-label="Navigasi bawah mobile">
+            <div id="mobile-dock-bar" class="mobile-dock-bar relative mx-auto w-full max-w-[404px] h-[64px] pointer-events-auto">
+                {{-- Background Bar Putih dengan Cekungan Melengkung yang Ikut Bergeser --}}
+                <div class="mobile-dock-shadow pointer-events-none absolute inset-0" aria-hidden="true">
+                    <div class="relative h-full w-full overflow-hidden rounded-[22px]">
+                        <div id="mobile-dock-notch-track" class="mobile-dock-notch-track absolute inset-y-0 left-0 flex w-[200%]">
+                            <div class="flex-1 bg-white"></div>
+                            <svg class="block h-full w-[82px] shrink-0 -mx-px" viewBox="0 0 82 64" preserveAspectRatio="none">
+                                <path d="M0,0 C15,0 17,33 41,33 C65,33 67,0 82,0 L82,64 L0,64 Z" fill="#ffffff" />
+                            </svg>
+                            <div class="flex-1 bg-white"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Lingkaran Teal PuskesMap Melayang yang Ikut Menggeser Bersama Cekungan --}}
+                <div id="mobile-dock-orb"
+                     class="mobile-dock-orb pointer-events-none absolute -top-[22px] left-0 z-10 -ml-[24px] size-[48px] rounded-full bg-gradient-to-b from-primary to-primary-dark shadow-[0_10px_24px_rgba(0,121,121,0.36)] ring-2 ring-white/80"
+                     aria-hidden="true"></div>
+
+                {{-- 5 Item Navigasi Mobile (Peta di Tengah, Ikon & Label Rata Tengah dengan Padding Seimbang) --}}
+                <div class="relative z-20 grid h-full grid-cols-5 items-stretch px-3">
+                    <a href="#beranda" data-mobile-dock-link="#beranda"
+                       class="mobile-dock-link is-active relative flex flex-col items-center justify-center gap-[5px]">
+                        <svg class="mobile-dock-icon size-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z" />
+                            <path d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z" />
+                        </svg>
+                        <span class="text-[10.5px] leading-none tracking-tight">Beranda</span>
+                    </a>
+
+                    <a href="#wilayah" data-mobile-dock-link="#wilayah"
+                       class="mobile-dock-link relative flex flex-col items-center justify-center gap-[5px]">
+                        <svg class="mobile-dock-icon size-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-[10.5px] leading-none tracking-tight">Wilayah</span>
+                    </a>
+
+                    <a href="{{ route('peta') }}" data-mobile-dock-link="#peta" data-mobile-dock-route="{{ route('peta') }}"
+                       class="mobile-dock-link relative flex flex-col items-center justify-center gap-[5px]">
+                        <svg class="mobile-dock-icon size-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M8.161 2.58a1.875 1.875 0 0 1 1.678 0l4.993 2.498c.106.052.23.052.336 0l3.869-1.935A1.875 1.875 0 0 1 21.75 4.82v12.485c0 .71-.401 1.36-1.037 1.677l-4.875 2.437a1.875 1.875 0 0 1-1.676 0l-4.994-2.497a.375.375 0 0 0-.336 0l-3.868 1.935A1.875 1.875 0 0 1 2.25 19.18V6.695c0-.71.401-1.36 1.036-1.677l4.875-2.437ZM9 6a.75.75 0 0 1 .75.75V15a.75.75 0 0 1-1.5 0V6.75A.75.75 0 0 1 9 6Zm6.75 3a.75.75 0 0 0-1.5 0v8.25a.75.75 0 0 0 1.5 0V9Z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-[10.5px] leading-none tracking-tight">Peta</span>
+                    </a>
+
+                    <a href="#fitur" data-mobile-dock-link="#fitur"
+                       class="mobile-dock-link relative flex flex-col items-center justify-center gap-[5px]">
+                        <svg class="mobile-dock-icon size-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M3 6a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3v2.25a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3V6ZM3 15.75a3 3 0 0 1 3-3h2.25a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-2.25Zm9.75 0a3 3 0 0 1 3-3H18a3 3 0 0 1 3 3V18a3 3 0 0 1-3 3h-2.25a3 3 0 0 1-3-3v-2.25Z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-[10.5px] leading-none tracking-tight">Fitur</span>
+                    </a>
+
+                    <a href="#cari" data-mobile-dock-link="#cari"
+                       class="mobile-dock-link relative flex flex-col items-center justify-center gap-[5px]">
+                        <svg class="mobile-dock-icon size-5 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M4.5 2.25a.75.75 0 0 0 0 1.5v16.5h-.75a.75.75 0 0 0 0 1.5h16.5a.75.75 0 0 0 0-1.5h-.75V3.75a.75.75 0 0 0 0-1.5h-15ZM9 6a.75.75 0 0 0 0 1.5h1.5A.75.75 0 0 0 11.25 9v1.5a.75.75 0 0 0 1.5 0V9a.75.75 0 0 0 .75-.75H15a.75.75 0 0 0 0-1.5h-1.5A.75.75 0 0 0 12.75 5.25V3.75a.75.75 0 0 0-1.5 0v1.5A.75.75 0 0 0 10.5 6H9Zm-1.5 9.75A.75.75 0 0 1 8.25 15h7.5a.75.75 0 0 1 .75.75v4.5h-9v-4.5Z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="text-[10.5px] leading-none tracking-tight">Faskes</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="relative h-[360px] sm:h-auto sm:aspect-[1170/760] sm:min-h-[520px] w-full overflow-hidden [clip-path:ellipse(140%_100%_at_50%_0%)] sm:[clip-path:ellipse(92%_100%_at_50%_0%)]">
             {{-- Ilustrasi Utama Kota Bogor --}}
             <div id="hero-lottie" data-parallax="0.1" data-parallax-max="40" role="img" aria-label="Ilustrasi Kota Bogor"
                  data-src="{{ asset('images/main-hero.json') }}"
@@ -337,7 +390,7 @@
             </script>
 
             {{-- Floating Decorative Badges & Judul Hero di Area Langit/Awan --}}
-            <div data-parallax-title class="absolute inset-x-0 top-[21%] sm:top-[19%] lg:top-[20%] z-10 flex flex-col items-center px-4 text-center">
+            <div data-parallax-title class="absolute inset-x-0 top-[15%] sm:top-[19%] lg:top-[20%] z-10 flex flex-col items-center px-4 text-center">
                 <div class="relative inline-flex items-center gap-2 sm:gap-5">
                     {{-- Badge Dekoratif Kiri --}}
                     <span class="float-soft flex absolute -left-7 -top-2 sm:-left-16 sm:-top-5 size-6 sm:size-12 items-center justify-center rounded-lg sm:rounded-2xl bg-primary/90 text-white shadow-lg -rotate-12 backdrop-blur-xs" aria-hidden="true">
@@ -428,12 +481,12 @@
 
             {{-- Bubble Fitur Sisi Kiri & Kanan (Tanpa Emoji, Menggunakan Elemen Ikon SVG) --}}
             @foreach (['order-1' => $featureBubblesLeft, 'order-3' => $featureBubblesRight] as $orderClass => $bubbles)
-                <div class="{{ $orderClass }} flex flex-wrap justify-center gap-3.5 sm:gap-5 lg:contents">
+                <div class="{{ $orderClass }} flex flex-wrap justify-center gap-2.5 sm:gap-5 lg:contents">
                     @foreach ($bubbles as $bubble)
                         <div data-reveal="pop" data-reveal-delay="{{ $bubble['delay'] }}" class="{{ $bubble['pos'] }}">
                             <div class="{{ $bubble['float'] }}">
-                                <div class="inline-flex items-center gap-2.5 sm:gap-3.5 rounded-full bg-gradient-to-b {{ $bubble['bg'] }} {{ $bubble['shadow'] }} {{ $bubble['tilt'] }} {{ $bubble['text'] }} px-5 py-2.5 sm:px-7 sm:py-3.5 lg:px-8 lg:py-4 ring-1 ring-white/50 transition-transform duration-300 ease-out hover:scale-105 hover:rotate-0 cursor-default select-none">
-                                    <span class="flex size-8 sm:size-10 lg:size-11 shrink-0 items-center justify-center rounded-full {{ $bubble['iconWrap'] }}" aria-hidden="true">
+                                <div class="inline-flex items-center gap-2 sm:gap-3.5 rounded-full bg-gradient-to-b {{ $bubble['bg'] }} {{ $bubble['shadow'] }} {{ $bubble['tilt'] }} {{ $bubble['text'] }} px-4 py-2 sm:px-7 sm:py-3.5 lg:px-8 lg:py-4 ring-1 ring-white/50 transition-transform duration-300 ease-out hover:scale-105 hover:rotate-0 cursor-default select-none">
+                                    <span class="flex size-7 sm:size-10 lg:size-11 shrink-0 items-center justify-center rounded-full {{ $bubble['iconWrap'] }}" aria-hidden="true">
                                         @switch($bubble['icon'])
                                             @case('shield-plus')
                                                 <svg class="size-4 sm:size-5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
@@ -568,9 +621,8 @@
                                     <a href="{{ route('peta') }}"
                                        draggable="false"
                                        @if ($copy === 1) tabindex="-1" @endif
-                                       class="flex h-9 w-full items-center justify-center gap-1.5 rounded-full bg-primary text-xs font-extrabold text-white shadow-xs transition-all hover:bg-primary-dark hover:scale-[1.02] group-hover/card:shadow-md">
+                                       class="flex h-9 w-full items-center justify-center rounded-full bg-primary text-xs font-extrabold text-white shadow-xs transition-all hover:bg-primary-dark hover:scale-[1.02] group-hover/card:shadow-md">
                                         <span>Lihat di Peta</span>
-                                        <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>
                                     </a>
                                 </div>
                             </article>
@@ -663,41 +715,41 @@
         </div>
     </section>
 
-    {{-- ================= FOOTER INTERAKTIF (SESUAI REFERENSI CHAUMES-EN-RETZ DENGAN PALET PUSKESMAP) ================= --}}
-    <footer class="bg-[#084747] text-white pt-12 sm:pt-16 pb-10 border-t border-white/10">
-        <div class="mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
-            <div data-reveal-stagger="140" class="grid grid-cols-1 lg:grid-cols-[270px_1fr_52px] gap-10 lg:gap-9 items-center">
-                {{-- Kolom Kiri: Brand Terpusat, Tombol Pill Oranye, dan Identitas Instansi (Persis Referensi Chaumes-en-Retz) --}}
+    {{-- ================= TRANSISI GELOMBANG ORGANIK & KONTUR SPASIAL MENUJU FOOTER ================= --}}
+    <div class="relative bg-white overflow-hidden leading-none select-none" aria-hidden="true">
+        <svg class="relative block w-full h-[56px] sm:h-[104px] -mb-px" viewBox="0 0 1440 120" preserveAspectRatio="none">
+            {{-- Layer 1: Gelombang Mint Lembut (Menyambung dari Section Atas) --}}
+            <path d="M0,42 C280,108 580,-8 920,56 C1160,98 1320,38 1440,22 L1440,120 L0,120 Z" fill="#dff2ef"></path>
+            {{-- Layer 2: Gelombang Teal Menengah --}}
+            <path d="M0,66 C340,10 700,106 1060,44 C1240,14 1360,48 1440,66 L1440,120 L0,120 Z" fill="#0d6363" opacity="0.9"></path>
+            {{-- Garis Rute Kontur Spasial Halus (Non-Scaling Stroke agar Tetap Rapi) --}}
+            <path d="M0,56 C340,2 700,98 1060,36 C1240,8 1360,38 1440,54" fill="none" stroke="#ffe2af" stroke-width="2" stroke-dasharray="8 9" stroke-linecap="round" vector-effect="non-scaling-stroke" opacity="0.7"></path>
+            {{-- Layer 3: Gelombang Utama Footer (#084747) --}}
+            <path d="M0,80 C360,26 720,114 1100,58 C1260,36 1370,64 1440,78 L1440,120 L0,120 Z" fill="#084747"></path>
+        </svg>
+    </div>
+
+    {{-- ================= FOOTER INTERAKTIF DENGAN PALET PUSKESMAP ================= --}}
+    <footer class="relative bg-[#084747] text-white pt-8 sm:pt-12 pb-28 md:pb-10 overflow-hidden">
+        {{-- Ambient Glow Halus di Latar Footer --}}
+        <div class="pointer-events-none absolute -top-20 left-1/4 size-80 rounded-full bg-primary/25 blur-3xl" aria-hidden="true"></div>
+        <div class="pointer-events-none absolute bottom-0 right-10 size-72 rounded-full bg-accent/10 blur-3xl" aria-hidden="true"></div>
+
+        <div class="relative z-10 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
+            <div data-reveal-stagger="140" class="grid grid-cols-1 lg:grid-cols-[240px_1fr_52px] gap-10 lg:gap-9 items-center">
+                {{-- Kolom Kiri: Brand PuskesMap Bersih --}}
                 <div class="flex flex-col items-center text-center">
-                    <span class="text-[10px] font-bold uppercase tracking-[0.38em] text-white/75">
-                        KOTA BOGOR
-                    </span>
-                    <a href="#beranda" class="mt-1 flex flex-col items-center group">
-                        <span class="block text-4xl sm:text-[42px] font-extrabold tracking-tight text-white leading-none">
+                    <a href="#beranda" class="flex flex-col items-center gap-3 group">
+                        <div class="flex size-16 items-center justify-center rounded-3xl border border-white/20 bg-white/10 shadow-[0_12px_28px_rgba(0,0,0,0.18)] backdrop-blur-xs transition-transform duration-300 group-hover:scale-105">
+                            <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-9 w-auto brightness-110">
+                        </div>
+                        <span class="block text-3xl sm:text-[38px] font-extrabold tracking-tight text-white leading-none">
                             PuskesMap
                         </span>
-                        <span class="block font-serif italic text-xl sm:text-2xl font-bold text-surface-sky -mt-1">
-                            WebGIS &amp; SDSS
-                        </span>
                     </a>
-
-                    {{-- Tombol Pill Oranye ("NOUS CONTACTER" -> "BUKA PETA GIS") --}}
-                    <a href="{{ route('peta') }}"
-                       class="mt-6 inline-flex items-center justify-center gap-2.5 rounded-full bg-accent hover:bg-accent-strong px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider text-white shadow-lg transition-all hover:scale-105">
-                        <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path stroke-linecap="round" stroke-linejoin="round" d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                        <span>HUBUNGI &amp; PETA GIS</span>
-                    </a>
-
-                    {{-- Emblem Instansi di Bawah Tombol Oranye (Seperti "PORNIC agglo PAYS DE RETZ") --}}
-                    <div class="mt-7 flex items-center justify-center gap-2.5 opacity-85">
-                        <div class="text-right leading-tight">
-                            <span class="block text-xs font-extrabold tracking-wider text-white">DINKES</span>
-                            <span class="block text-[9px] font-bold uppercase tracking-widest text-surface-sky">KOTA BOGOR</span>
-                        </div>
-                        <div class="flex size-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-surface-sky">
-                            <img src="{{ asset('images/logo-sm.png') }}" alt="" class="h-5 w-auto brightness-125">
-                        </div>
-                    </div>
+                    <p class="mt-3 max-w-[200px] text-xs sm:text-sm font-medium leading-relaxed text-white/75">
+                        Peta layanan puskesmas induk di Kota Bogor
+                    </p>
                 </div>
 
                 {{-- Kolom Tengah: Kotak Berbingkai dengan 3 Tab di Kiri & Detail di Kanan --}}
