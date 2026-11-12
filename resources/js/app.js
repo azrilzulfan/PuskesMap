@@ -1,8 +1,9 @@
+import './reveal.js';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 window.L = L;
 
-document.addEventListener('DOMContentLoaded', () => {
+function initPuskesMapApp() {
     // ==========================================
     // 1. GLOBAL & LANDING PAGE INTERACTION
     // ==========================================
@@ -183,7 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (leafletContainer) {
         initPuskesMapSDSS();
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPuskesMapApp);
+} else {
+    initPuskesMapApp();
+}
 
 /**
  * Inisialisasi Peta Jalan Interaktif (Real Street Map) pada Section "Sekilas di Peta" Landing Page
@@ -200,10 +207,15 @@ function initLandingPreviewMap() {
         .addAttribution('&copy; OpenStreetMap &bull; PuskesMap Kota Bogor')
         .addTo(map);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        subdomains: 'abcd',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &bull; PuskesMap',
     }).addTo(map);
+
+    map.whenReady(() => {
+        map.invalidateSize();
+        setTimeout(() => map.invalidateSize(), 300);
+    });
 
     // Lingkaran Radius Geodetik 3 km
     const radiusCircle = L.circle(BOGOR_CENTER, {
@@ -256,7 +268,7 @@ function initLandingPreviewMap() {
         const tagsEl = document.getElementById('info-card-tags');
         if (nameEl) nameEl.textContent = item.name;
         if (distEl) distEl.textContent = `Kec. ${item.district} · Jarak ${item.distance}`;
-        if (scoreEl) scoreEl.innerHTML = `<span class="text-primary">★</span> <span>Nakes ${item.nakes}</span>`;
+        if (scoreEl) scoreEl.innerHTML = `<span class="text-primary inline-flex items-center"><svg class="size-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></span> <span>Nakes ${item.nakes}</span>`;
         if (tagsEl) {
             tagsEl.innerHTML = `
                 <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">${item.distance}</span>
@@ -334,14 +346,11 @@ function initLandingPreviewMap() {
  */
 function initPuskesMapSDSS() {
     const faskesDataEl = document.getElementById('puskesmas-data');
-    const districtDataEl = document.getElementById('district-data');
     if (!faskesDataEl) return;
 
     let puskesmasList = [];
-    let districtList = [];
     try {
         puskesmasList = JSON.parse(faskesDataEl.textContent);
-        if (districtDataEl) districtList = JSON.parse(districtDataEl.textContent);
     } catch (e) {
         console.error('Gagal membaca payload data:', e);
         return;
@@ -360,10 +369,15 @@ function initPuskesMapSDSS() {
         .addAttribution('&copy; <a href="https://openstreetmap.org" class="text-primary hover:underline">OpenStreetMap</a> &bull; PuskesMap SDSS')
         .addTo(map);
 
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        subdomains: 'abcd',
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &bull; PuskesMap',
     }).addTo(map);
+
+    map.whenReady(() => {
+        map.invalidateSize();
+        setTimeout(() => map.invalidateSize(), 300);
+    });
 
     // Marker Icon Generator (Bergaya Lingkaran Modern dengan Halo seperti Referensi 1 & 2)
     const createPinIcon = (color = '#1B2524', isSpotlight = false) => {
@@ -400,8 +414,6 @@ function initPuskesMapSDSS() {
     });
 
     const markers = {};
-    const buffer15Group = L.layerGroup();
-    const buffer30Group = L.layerGroup();
     let userMarker = null;
     let userRadiusCircle = null;
     let geodesicLine = null;
@@ -507,7 +519,7 @@ function initPuskesMapSDSS() {
                     <span class="inline-flex items-center rounded-full bg-surface-mint px-2 py-0.5 text-[10px] font-bold text-primary-dark">${item.distance}</span>
                 </div>
                 <h3 class="text-sm font-bold text-primary-dark mt-2 leading-tight">${item.name}</h3>
-                <p class="text-[11px] text-muted mt-1 leading-snug">📍 ${item.address}</p>
+                <p class="text-[11px] text-muted mt-1 leading-snug">${item.address}</p>
                 
                 <div class="mt-2.5 flex flex-wrap gap-1">
                     <span class="rounded-full bg-surface-mint px-2 py-0.5 text-[10px] font-semibold text-primary-dark">${item.hours}</span>
@@ -517,8 +529,8 @@ function initPuskesMapSDSS() {
                 </div>
 
                 <div class="mt-3 pt-2 border-t border-gray-100 flex items-center justify-between text-[11px]">
-                    <span class="text-muted">Beban Wilayah (PSW):</span>
-                    <span class="font-bold ${item.psw_index === 'Tinggi' ? 'text-accent' : 'text-primary'}">${item.psw_index} (${item.psw_score})</span>
+                    <span class="text-muted">Estimasi Keramaian:</span>
+                    <span class="font-bold ${item.crowd === 'Ramai' ? 'text-accent' : (item.crowd === 'Sepi' ? 'text-crowd-low' : 'text-primary')}">${item.crowd}</span>
                 </div>
 
                 <div class="mt-3.5 grid grid-cols-2 gap-1.5">
@@ -545,27 +557,7 @@ function initPuskesMapSDSS() {
             }
         });
         markers[item.id] = marker;
-
-        // Buat Buffer Geometri Servis Area (FR-09 / UC-11)
-        L.circle([item.lat, item.lng], {
-            radius: 1500,
-            color: '#007979',
-            weight: 1,
-            fillColor: '#42A08C',
-            fillOpacity: 0.12,
-        }).addTo(buffer15Group);
-
-        L.circle([item.lat, item.lng], {
-            radius: 3000,
-            color: '#0B5C5C',
-            weight: 1,
-            fillColor: '#BEE9F0',
-            fillOpacity: 0.08,
-        }).addTo(buffer30Group);
     });
-
-    // Default aktifkan buffer 3,0 km
-    buffer30Group.addTo(map);
 
     // ==========================================
     // FILTER MULTIKRITERIA & PENCARIAN (FR-03 & FR-04)
@@ -805,9 +797,9 @@ function initPuskesMapSDSS() {
         const container = document.getElementById('maut-cards-container');
         if (container) {
             const medals = [
-                { badge: '🥇 Peringkat #1', color: 'border-accent bg-accent/10 text-accent-strong' },
-                { badge: '🥈 Peringkat #2', color: 'border-primary bg-primary/10 text-primary-dark' },
-                { badge: '🥉 Peringkat #3', color: 'border-gray-300 bg-gray-50 text-gray-700' },
+                { badge: 'Peringkat #1', color: 'border-accent bg-accent/10 text-accent-strong' },
+                { badge: 'Peringkat #2', color: 'border-primary bg-primary/10 text-primary-dark' },
+                { badge: 'Peringkat #3', color: 'border-gray-300 bg-gray-50 text-gray-700' },
             ];
 
             container.innerHTML = top3.map((item, idx) => `
@@ -865,7 +857,7 @@ function initPuskesMapSDSS() {
 
         // Beri pin-pulse spotlight pada marker terpilih
         markers[id].setIcon(createPinIcon('#E37434', true));
-        updateFloatingCard(item, '🥇 Rekomendasi Terbaik MAUT', true);
+        updateFloatingCard(item, 'Rekomendasi Terbaik MAUT', true);
         drawGeodesicLineTo(item);
         map.flyTo([item.lat, item.lng], 15, { duration: 1.2 });
         if (window.innerWidth >= 640) {
@@ -962,7 +954,7 @@ function initPuskesMapSDSS() {
 
         if (userMarker) map.removeLayer(userMarker);
         userMarker = L.marker(currentUserCoords, { icon: userLocationIcon }).addTo(map);
-        userMarker.bindPopup(`<b>📍 ${labelText}</b><br><span class="text-xs text-muted">${coords[0].toFixed(4)}, ${coords[1].toFixed(4)}</span>`);
+        userMarker.bindPopup(`<b>${labelText}</b><br><span class="text-xs text-muted">${coords[0].toFixed(4)}, ${coords[1].toFixed(4)}</span>`);
 
         const refBadge = document.getElementById('ref-coord-badge');
         if (refBadge) refBadge.textContent = labelText;
@@ -1062,93 +1054,10 @@ function initPuskesMapSDSS() {
     }
 
     // ==========================================
-    // DASBOR SDSS DINKES (LAYERS & CSV EXPORT)
+    // MODE SWITCHER: DAFTAR FASKES VS SPK MAUT
     // ==========================================
-    const layerBuffer15 = document.getElementById('layer-buffer-15');
-    const layerBuffer30 = document.getElementById('layer-buffer-30');
-    const layerPsw = document.getElementById('layer-psw-index');
-
-    layerBuffer15?.addEventListener('change', (e) => {
-        if (e.target.checked) buffer15Group.addTo(map);
-        else map.removeLayer(buffer15Group);
-    });
-
-    layerBuffer30?.addEventListener('change', (e) => {
-        if (e.target.checked) buffer30Group.addTo(map);
-        else map.removeLayer(buffer30Group);
-    });
-
-    layerPsw?.addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        puskesmasList.forEach((item) => {
-            if (markers[item.id]) {
-                const color = isChecked
-                    ? (item.psw_index === 'Tinggi' ? '#E37434' : (item.psw_index === 'Ideal' ? '#007979' : '#1D5FA8'))
-                    : '#E11D2E';
-                markers[item.id].setIcon(createPinIcon(color, false));
-            }
-        });
-    });
-
-    // Ekspor Data Rekapitulasi CSV (FR-21 SRS)
-    document.getElementById('btn-export-csv')?.addEventListener('click', () => {
-        const headers = ['Kode', 'Nama Puskesmas', 'Kecamatan', 'Alamat', 'Latitude', 'Longitude', 'IGD 24 Jam', 'Rawat Inap', 'Kepatuhan Nakes (%)', 'Total Posyandu', 'Total Sekolah UKS', 'Kunjungan Bulanan', 'PSW-Index'];
-        const rows = puskesmasList.map(p => [
-            p.code, `"${p.name}"`, `"${p.district}"`, `"${p.address}"`, p.lat, p.lng,
-            p.igd ? 'Ya' : 'Tidak', p.inap ? 'Ya' : 'Tidak', p.nakes_score, p.posyandu_count, p.school_count, p.monthly_visits, p.psw_index
-        ]);
-
-        const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
-        const encodedUri = encodeURI(csvContent);
-        const link = document.createElement('a');
-        link.setAttribute('href', encodedUri);
-        link.setAttribute('download', `Rekapitulasi_Puskesmas_Kota_Bogor_${new Date().toISOString().slice(0, 10)}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    });
-
-    // ==========================================
-    // NAV TABS SWITCHER (PETA PUBLIK VS DINKES)
-    // ==========================================
-    const tabPublic = document.getElementById('tab-nav-public');
-    const tabDinkes = document.getElementById('tab-nav-dinkes');
-    const panelPublic = document.getElementById('panel-public');
-    const panelDinkes = document.getElementById('panel-dinkes');
-
-    const setPublicTabActive = () => {
-        if (!tabPublic || !tabDinkes) return;
-        tabPublic.classList.add('bg-primary', 'text-white', 'shadow-xs');
-        tabPublic.classList.remove('text-primary-dark');
-        tabDinkes.classList.remove('bg-primary', 'text-white', 'shadow-xs');
-        tabDinkes.classList.add('text-primary-dark');
-
-        panelPublic?.classList.remove('hidden');
-        panelDinkes?.classList.add('hidden');
-    };
-
-    const setDinkesTabActive = () => {
-        if (!tabPublic || !tabDinkes) return;
-        tabDinkes.classList.add('bg-primary', 'text-white', 'shadow-xs');
-        tabDinkes.classList.remove('text-primary-dark');
-        tabPublic.classList.remove('bg-primary', 'text-white', 'shadow-xs');
-        tabPublic.classList.add('text-primary-dark');
-
-        panelDinkes?.classList.remove('hidden');
-        panelPublic?.classList.add('hidden');
-    };
-
-    tabPublic?.addEventListener('click', () => {
-        setPublicTabActive();
-        if (window.innerWidth < 1024) toggleMobileSidebar(false);
-    });
-
-    tabDinkes?.addEventListener('click', () => {
-        setDinkesTabActive();
-        if (window.innerWidth < 1024) toggleMobileSidebar(true);
-    });
-
-    // Subtab Switcher: Daftar Faskes vs MAUT (Bergaya Pill "[📍 Places] [🍕 Dishes]" di Referensi 1)
+    const tabNavFaskes = document.getElementById('tab-nav-faskes');
+    const tabNavMaut = document.getElementById('tab-nav-maut');
     const subtabBtnFaskes = document.getElementById('subtab-btn-faskes');
     const subtabBtnMaut = document.getElementById('subtab-btn-maut');
     const subtabContentFaskes = document.getElementById('subtab-content-faskes');
@@ -1172,6 +1081,18 @@ function initPuskesMapSDSS() {
             subtabBtnMaut.classList.toggle('text-ink', isFaskes);
         }
 
+        if (tabNavFaskes && tabNavMaut) {
+            tabNavFaskes.classList.toggle('bg-primary', isFaskes);
+            tabNavFaskes.classList.toggle('text-white', isFaskes);
+            tabNavFaskes.classList.toggle('shadow-2xs', isFaskes);
+            tabNavFaskes.classList.toggle('text-ink', !isFaskes);
+
+            tabNavMaut.classList.toggle('bg-primary', !isFaskes);
+            tabNavMaut.classList.toggle('text-white', !isFaskes);
+            tabNavMaut.classList.toggle('shadow-2xs', !isFaskes);
+            tabNavMaut.classList.toggle('text-ink', isFaskes);
+        }
+
         subtabContentFaskes?.classList.toggle('hidden', !isFaskes);
         subtabContentMaut?.classList.toggle('hidden', isFaskes);
 
@@ -1179,6 +1100,16 @@ function initPuskesMapSDSS() {
             runMautEngine(false);
         }
     };
+
+    tabNavFaskes?.addEventListener('click', () => {
+        activateSubtab('faskes');
+        if (window.innerWidth < 1024) toggleMobileSidebar(true);
+    });
+
+    tabNavMaut?.addEventListener('click', () => {
+        activateSubtab('maut');
+        if (window.innerWidth < 1024) toggleMobileSidebar(true);
+    });
 
     subtabBtnFaskes?.addEventListener('click', () => activateSubtab('faskes'));
     subtabBtnMaut?.addEventListener('click', () => activateSubtab('maut'));
@@ -1200,7 +1131,6 @@ function initPuskesMapSDSS() {
 
             const radio = document.querySelector(`input[name="maut-scenario"][value="${val}"]`);
             if (radio) radio.checked = true;
-            setPublicTabActive();
             activateSubtab('maut');
             if (window.innerWidth < 1024) toggleLeftFilter(false);
             runMautEngine();
@@ -1218,7 +1148,7 @@ function initPuskesMapSDSS() {
         setTimeout(() => map.invalidateSize(), 260);
     });
 
-    // Mobile Drawers (Kiri: Filter & Radius, Kanan: Daftar Faskes / MAUT / Dinkes) + Backdrop
+    // Mobile Drawers (Kiri: Filter & Radius, Kanan: Daftar Faskes / MAUT) + Backdrop
     const sidebar = document.getElementById('map-sidebar');
     const toggleBtn = document.getElementById('btn-toggle-sidebar');
     const mobileBackdrop = document.getElementById('mobile-drawer-backdrop');
@@ -1254,7 +1184,6 @@ function initPuskesMapSDSS() {
 
     toggleBtn?.addEventListener('click', () => toggleMobileSidebar());
     document.getElementById('btn-close-sidebar-mobile')?.addEventListener('click', () => toggleMobileSidebar(false));
-    document.getElementById('btn-close-dinkes-mobile')?.addEventListener('click', () => toggleMobileSidebar(false));
 
     document.getElementById('btn-open-left-filter')?.addEventListener('click', () => toggleLeftFilter(true));
     document.getElementById('mobile-dock-filter')?.addEventListener('click', () => toggleLeftFilter(true));
@@ -1262,13 +1191,11 @@ function initPuskesMapSDSS() {
     document.getElementById('btn-apply-left-filter-mobile')?.addEventListener('click', () => toggleLeftFilter(false));
 
     document.getElementById('mobile-dock-faskes')?.addEventListener('click', () => {
-        setPublicTabActive();
         activateSubtab('faskes');
         toggleMobileSidebar(true);
     });
 
     document.getElementById('mobile-dock-maut')?.addEventListener('click', () => {
-        setPublicTabActive();
         activateSubtab('maut');
         toggleMobileSidebar(true);
     });

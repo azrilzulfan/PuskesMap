@@ -1,5 +1,5 @@
-<x-layout title="PuskesMap SDSS - Peta & Dasbor Spasial Puskesmas Kota Bogor" body-class="h-dvh w-screen overflow-hidden bg-[#f4f7f6] flex flex-col text-ink font-sans">
-    {{-- ================= TOP HEADER BAR (2 Baris Rapi di HP agar Tidak Kepotong, 1 Baris di Desktop) ================= --}}
+<x-layout title="Peta Interaktif Puskesmas Kota Bogor - PuskesMap" body-class="h-dvh w-screen overflow-hidden bg-[#f4f7f6] flex flex-col text-ink font-sans">
+    {{-- Header Bar --}}
     <header class="shrink-0 bg-white border-b border-gray-100 px-3.5 py-2.5 sm:py-0 sm:h-[68px] sm:px-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 sm:gap-4 z-30">
         {{-- Baris Atas di HP / Sisi Kiri-Kanan di Desktop --}}
         <div class="flex items-center justify-between sm:contents">
@@ -24,19 +24,19 @@
                     </select>
                 </div>
 
-                {{-- Pill Pemilih Mode Publik vs Dinkes --}}
+                {{-- Pill Pemilih Mode (Daftar Faskes vs SPK MAUT) --}}
                 <div class="flex items-center rounded-full bg-gray-100/90 p-0.5 sm:p-1 border border-gray-200/60 text-[11px] sm:text-xs font-extrabold">
-                    <button type="button" id="tab-nav-public"
+                    <button type="button" id="tab-nav-faskes"
                             class="nav-mode-btn rounded-full px-3 sm:px-3.5 py-1 sm:py-1.5 bg-primary text-white shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer">
                         <span class="size-1.5 sm:size-2 rounded-full bg-white"></span>
-                        <span class="hidden sm:inline">Eksplorasi &amp; MAUT</span>
-                        <span class="sm:hidden">Peta</span>
+                        <span class="hidden sm:inline">Daftar Faskes</span>
+                        <span class="sm:hidden">Faskes</span>
                     </button>
-                    <button type="button" id="tab-nav-dinkes"
+                    <button type="button" id="tab-nav-maut"
                             class="nav-mode-btn rounded-full px-3 sm:px-3.5 py-1 sm:py-1.5 text-ink hover:text-primary transition-all flex items-center gap-1 cursor-pointer">
-                        <svg class="size-3.5 text-primary" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-                        <span class="hidden sm:inline">Analitik Dinkes</span>
-                        <span class="sm:hidden">Dinkes</span>
+                        <svg class="size-3.5 text-accent" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                        <span class="hidden sm:inline">SPK MAUT</span>
+                        <span class="sm:hidden">MAUT</span>
                     </button>
                 </div>
 
@@ -48,7 +48,7 @@
 
                 <div class="h-6 w-px bg-gray-200 hidden sm:block"></div>
 
-                {{-- Tombol Tutup / Kembali ke Beranda ('✕') --}}
+                {{-- Tombol Kembali ke Beranda --}}
                 <a href="{{ route('home') }}" title="Kembali ke Beranda" aria-label="Kembali ke Beranda"
                    class="flex size-8 sm:size-9 items-center justify-center rounded-xl bg-gray-100/80 hover:bg-gray-200/80 text-ink transition-colors">
                     <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -56,18 +56,18 @@
             </div>
         </div>
 
-        {{-- Baris Kedua di HP / Tengah di Desktop: Search Input Penuh & Tombol Filter --}}
+        {{-- Baris Kedua di HP / Tengah di Desktop: Search Input & Tombol Filter --}}
         <div class="flex items-center gap-2 flex-1 max-w-xl min-w-0 sm:order-2">
             <div class="relative flex-1 flex items-center min-w-0">
                 <svg class="absolute left-3.5 size-4 text-muted pointer-events-none" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
                     <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/>
                 </svg>
                 <input type="text" id="sidebar-search"
-                       placeholder="Cari puskesmas, kelurahan, atau jalan..."
+                       placeholder="Cari puskesmas, kelurahan, atau kecamatan..."
                        class="w-full h-9 sm:h-10 rounded-xl bg-gray-100/90 hover:bg-gray-100 focus:bg-white pl-9 sm:pl-10 pr-8 text-xs sm:text-sm font-bold text-ink placeholder:text-muted/70 placeholder:font-medium focus:ring-2 focus:ring-primary/25 focus:outline-none border border-transparent focus:border-primary/30 transition-all">
                 <button type="button" id="btn-clear-search" aria-label="Hapus pencarian"
-                        class="hidden absolute right-2.5 size-5 rounded-full bg-gray-200 hover:bg-gray-300 text-muted hover:text-ink items-center justify-center text-xs cursor-pointer">
-                    ✕
+                        class="hidden absolute right-2.5 size-5 rounded-full bg-gray-200 hover:bg-gray-300 text-muted hover:text-ink flex items-center justify-center text-xs cursor-pointer">
+                    <svg class="size-2.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
 
@@ -120,15 +120,15 @@
         <aside id="left-filter-panel"
                class="fixed lg:relative inset-y-0 left-0 -translate-x-full lg:translate-x-0 flex w-[85vw] max-w-[310px] lg:w-[275px] xl:w-[295px] shrink-0 h-full flex-col justify-between border-r border-gray-100 bg-white px-5 sm:px-6 py-5 overflow-y-auto no-scrollbar select-none z-40 lg:z-20 shadow-2xl lg:shadow-none transition-transform duration-300 ease-in-out">
             <div class="space-y-6">
-                {{-- Header Drawer Khusus HP --}}
+                {{-- Header Drawer Mobile --}}
                 <div class="flex lg:hidden items-center justify-between pb-3 border-b border-gray-100">
                     <span class="text-sm font-extrabold text-ink">Filter &amp; Parameter Spasial</span>
                     <button type="button" id="btn-close-left-filter" aria-label="Tutup Filter"
-                            class="flex size-7 items-center justify-center rounded-full bg-gray-100 text-ink text-xs font-bold">
-                        ✕
+                            class="flex size-7 items-center justify-center rounded-full bg-gray-100 text-ink text-xs font-bold cursor-pointer">
+                        <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
                 </div>
-                {{-- 1. Map View Indicator (Persis Seperti "Map View" dengan Toggle Switch Oranye di Referensi 1) --}}
+                {{-- Status Tampilan Peta --}}
                 <div class="flex items-center justify-between">
                     <div>
                         <span class="text-sm font-extrabold text-ink">Map</span>
@@ -141,7 +141,7 @@
                     </div>
                 </div>
 
-                {{-- 2. Category / Mode Tampilan (Seperti "[📍 Places] [🍕 Dishes]" di Referensi 1) --}}
+                {{-- Kategori Mode Tampilan --}}
                 <div>
                     <h2 class="text-xs font-extrabold uppercase tracking-wider text-ink mb-2.5">Kategori Mode</h2>
                     <div class="grid grid-cols-2 gap-2.5">
@@ -158,7 +158,7 @@
                     </div>
                 </div>
 
-                {{-- 3. Kriteria Layanan (Seperti Checklist "Cuisine" di Referensi 1) --}}
+                {{-- Kriteria Layanan --}}
                 <div>
                     <div class="flex items-center justify-between mb-3">
                         <h2 class="text-xs font-extrabold uppercase tracking-wider text-ink">Filter Layanan</h2>
@@ -199,7 +199,7 @@
                     </div>
                 </div>
 
-                {{-- 4. Radius Jangkauan Geodetik (Seperti Histogram "Price Range" di Referensi 1) --}}
+                {{-- Radius Jangkauan Geodetik --}}
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <div>
@@ -215,7 +215,7 @@
                         </select>
                     </div>
 
-                    {{-- Mini Histogram Dekoratif + Track Slider --}}
+                    {{-- Histogram Dekoratif & Track Slider --}}
                     <div class="pt-2 px-1">
                         <div class="flex items-end justify-between gap-1.5 h-8 px-3">
                             <span class="w-full h-3 rounded-t bg-gray-200"></span>
@@ -227,8 +227,8 @@
                             <span class="w-full h-2 rounded-t bg-gray-100"></span>
                         </div>
                         <div class="relative h-0.5 w-full bg-ink/80 flex items-center justify-between">
-                            <span class="size-4 rounded-md bg-ink text-white text-[9px] flex items-center justify-center font-bold shadow-xs">=</span>
-                            <span class="size-4 rounded-md bg-ink text-white text-[9px] flex items-center justify-center font-bold shadow-xs">=</span>
+                            <span class="size-4 rounded-md bg-ink text-white shadow-xs flex items-center justify-center"><span class="size-1 rounded-full bg-white"></span></span>
+                            <span class="size-4 rounded-md bg-ink text-white shadow-xs flex items-center justify-center"><span class="size-1 rounded-full bg-white"></span></span>
                         </div>
                         <div class="mt-2.5 flex items-center justify-between text-[11px]">
                             <span class="font-bold text-ink">1 km – 5 km</span>
@@ -237,7 +237,7 @@
                     </div>
                 </div>
 
-                {{-- 5. Skenario Prioritas SPK MAUT (Seperti "Star Rating" Pill Boxes di Referensi 1) --}}
+                {{-- Skenario Prioritas SPK MAUT --}}
                 <div>
                     <div class="flex items-center justify-between mb-2.5">
                         <div>
@@ -248,8 +248,8 @@
                     </div>
                     <div class="grid grid-cols-3 gap-2">
                         <button type="button" data-quick-scenario="darurat"
-                                class="quick-scenario-btn h-9 rounded-xl bg-ink text-white text-[11px] font-extrabold flex items-center justify-center gap-1 shadow-2xs transition-all cursor-pointer">
-                            <span class="text-amber-400">★</span>
+                                class="quick-scenario-btn h-9 rounded-xl bg-ink text-white text-[11px] font-extrabold flex items-center justify-center gap-1.5 shadow-2xs transition-all cursor-pointer">
+                            <svg class="size-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                             <span>Darurat</span>
                         </button>
                         <button type="button" data-quick-scenario="reguler"
@@ -264,7 +264,7 @@
                 </div>
             </div>
 
-            {{-- 6. Kartu Ilustrasi Titik Presisi di Bawah Kiri (Seperti Kartu Kuning di Referensi 2) --}}
+            {{-- Kartu Informasi Titik Acuan --}}
             <div class="mt-6 rounded-2xl bg-[#fef6e6] border border-[#f5e4c3] p-4">
                 <div class="flex items-center gap-3">
                     <div class="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-[#f5ab35]/20 text-[#d97706]">
@@ -272,7 +272,7 @@
                     </div>
                     <div>
                         <h3 class="text-xs font-extrabold text-ink leading-snug">Titik Referensi Presisi</h3>
-                        <p class="text-[11px] text-muted leading-tight mt-0.5">Ukur jarak geodetik dari posisimu saat ini</p>
+                        <p class="text-[11px] text-muted leading-tight mt-0.5">Ukur jarak geodetik dari posisi Anda</p>
                     </div>
                 </div>
                 <div class="mt-3.5 grid grid-cols-2 gap-2">
@@ -296,30 +296,30 @@
             </button>
         </aside>
 
-        {{-- ================= KOLOM 2 (TENGAH): KANVAS PETA JALAN BERBINGKAI ROUNDED (Referensi 1 & 2) ================= --}}
+        {{-- Kolom 2: Kanvas Peta WebGIS Interaktif --}}
         <section class="flex-1 h-full relative p-0 sm:p-4 bg-white flex flex-col overflow-hidden">
             <div class="relative flex-1 w-full h-full sm:rounded-[24px] overflow-hidden sm:border border-gray-100 shadow-[0_8px_30px_rgba(15,23,42,0.05)] bg-[#eef3f1]">
-                {{-- 1. Leaflet Interactive Street Map Container --}}
+                {{-- Leaflet Interactive Street Map Container --}}
                 <div id="leaflet-map" class="absolute inset-0 w-full h-full z-10"></div>
 
                 {{-- Banner Instruksi Mode Pilih Titik di Peta (US-05 / FR-05) --}}
                 <div id="pick-point-banner" class="hidden absolute top-3 sm:top-16 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-30">
                     <div class="rounded-2xl sm:rounded-full bg-accent text-white px-4 sm:px-5 py-2 text-[11px] sm:text-xs font-extrabold shadow-float flex items-center justify-between sm:justify-center gap-2 animate-bounce">
-                        <span>📍 Ketuk peta untuk menetapkan titik lokasimu</span>
+                        <span>Ketuk peta untuk menetapkan titik lokasi acuan</span>
                         <button type="button" id="btn-cancel-pick" class="ml-1 rounded-full bg-white/20 hover:bg-white/30 px-2.5 py-0.5 text-[10px] shrink-0 cursor-pointer">Batal</button>
                     </div>
                 </div>
 
-                {{-- Tombol Expand Peta di Kanan Atas Peta (Persis Seperti Tombol Panah Diagonal di Referensi 1) --}}
+                {{-- Tombol Perluas Peta --}}
                 <button type="button" id="btn-expand-map" title="Perluas / Kembalikan Ukuran Peta" aria-label="Perluas Peta"
                         class="hidden lg:flex absolute right-4 top-4 z-20 size-10 items-center justify-center rounded-xl bg-white text-ink shadow-float border border-gray-100 hover:bg-ink hover:text-white transition-colors cursor-pointer">
                     <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l6.75 6.75m0 0h-6m6 0v-6M20.25 10.5L13.5 3.75m0 0h6m-6 0v6"/></svg>
                 </button>
 
-                {{-- Floating Puskesmas Info Card Overlay (Tersembunyi di Awal pada HP agar Peta Terbuka, Muncul Saat Pin Diketuk) --}}
+                {{-- Floating Puskesmas Info Card Overlay --}}
                 <aside id="map-floating-card" aria-label="Ringkasan Puskesmas Terpilih"
                        class="hidden sm:block absolute inset-x-3 bottom-16 sm:inset-x-auto sm:bottom-auto sm:right-4 sm:top-16 z-20 sm:w-[270px] rounded-2xl bg-white/95 backdrop-blur-md p-3.5 shadow-[0_20px_50px_rgba(15,23,42,0.18)] border border-gray-100 transition-all duration-200">
-                    {{-- Header Visual Mini (Tampil di Tablet/Desktop) --}}
+                    {{-- Header Visual Mini --}}
                     <div class="hidden sm:flex relative h-24 w-full rounded-xl bg-gradient-to-br from-surface-mint via-card-mint to-surface-sky overflow-hidden p-2.5 flex-col justify-between mb-3">
                         <div class="flex items-center justify-between z-10">
                             <span id="float-card-badge" class="inline-block rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-extrabold text-primary-dark shadow-2xs">
@@ -327,7 +327,7 @@
                             </span>
                             <button type="button" id="btn-close-float-card" aria-label="Tutup kartu"
                                     class="size-6 rounded-full bg-white/90 hover:bg-white text-ink flex items-center justify-center text-[11px] font-bold shadow-2xs cursor-pointer">
-                                ✕
+                                <svg class="size-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                             </button>
                         </div>
 
@@ -344,7 +344,7 @@
                         </div>
                     </div>
 
-                    {{-- Judul, Skor Bintang & Tombol Tutup Mobile --}}
+                    {{-- Judul, Skor Nakes & Tombol Tutup Mobile --}}
                     <div class="flex items-start justify-between gap-2">
                         <div class="min-w-0">
                             <h3 id="float-card-name" class="text-sm font-extrabold text-ink leading-snug truncate">Puskesmas Tanah Sareal</h3>
@@ -352,12 +352,12 @@
                         </div>
                         <div class="flex items-center gap-1.5 shrink-0">
                             <span class="inline-flex items-center gap-1 rounded-full bg-surface-mint px-2 py-0.5 text-[11px] font-extrabold text-primary-dark">
-                                <span class="text-primary">★</span>
+                                <svg class="size-3 text-primary" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                                 <span id="float-card-nakes">100%</span>
                             </span>
                             <button type="button" id="btn-close-float-card-mobile" aria-label="Tutup kartu"
                                     class="sm:hidden flex size-6 items-center justify-center rounded-full bg-gray-100 text-ink text-xs font-bold">
-                                ✕
+                                <svg class="size-3" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                             </button>
                         </div>
                     </div>
@@ -379,7 +379,7 @@
                     </div>
                 </aside>
 
-                {{-- Kontrol Zoom & Lokasi (Kanan Atas di HP agar Bersih, Kiri Bawah di Desktop) --}}
+                {{-- Kontrol Zoom & Lokasi --}}
                 <div class="absolute right-3 top-3 sm:right-auto sm:top-auto sm:left-4 sm:bottom-4 z-20 flex flex-col gap-1.5 sm:gap-2">
                     <div class="flex flex-col rounded-2xl bg-white/95 backdrop-blur-md shadow-float border border-gray-100 overflow-hidden">
                         <button type="button" id="gis-zoom-in" aria-label="Perbesar peta" title="Perbesar (+)"
@@ -416,7 +416,7 @@
                     <span>Titik Referensi: <strong id="ref-coord-badge" class="text-primary">Pusat Kota Bogor</strong></span>
                 </div>
 
-                {{-- FLOATING BOTTOM ACTION BAR KHUSUS HP (Thumb-Friendly Mobile UX!) --}}
+                {{-- Bilah Aksi Bawah Mobile --}}
                 <div class="flex lg:hidden absolute inset-x-3 bottom-3 z-20 items-center justify-between gap-2 rounded-2xl bg-ink/95 backdrop-blur-md p-1.5 text-white shadow-2xl border border-white/15">
                     <button type="button" id="mobile-dock-faskes"
                             class="flex-1 h-10 rounded-xl bg-white/15 hover:bg-white/25 text-xs font-extrabold flex items-center justify-center gap-1.5 cursor-pointer">
@@ -425,7 +425,7 @@
                     </button>
                     <button type="button" id="mobile-dock-maut"
                             class="flex-1 h-10 rounded-xl bg-accent hover:bg-accent-strong text-white text-xs font-extrabold flex items-center justify-center gap-1.5 shadow-xs cursor-pointer">
-                        <span>★</span>
+                        <svg class="size-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                         <span>SPK MAUT</span>
                     </button>
                     <button type="button" id="mobile-dock-filter"
@@ -436,13 +436,13 @@
             </div>
         </section>
 
-        {{-- ================= KOLOM 3 (KANAN): DAFTAR KARTU VISUAL PUSKESMAS, MAUT & ANALITIK DINKES (Referensi 1) ================= --}}
+        {{-- Kolom 3: Daftar Puskesmas & Rekomendasi MAUT --}}
         <aside id="map-sidebar"
                class="fixed lg:relative inset-y-0 right-0 translate-x-full lg:translate-x-0 w-full sm:w-[360px] xl:w-[390px] shrink-0 h-full flex flex-col bg-white border-l border-gray-100 z-30 shadow-2xl lg:shadow-none transition-transform duration-300 ease-in-out">
 
             {{-- SUB-PANEL 1: DAFTAR FASKES & REKOMENDASI MAUT --}}
             <div id="panel-public" class="flex-1 flex flex-col h-full overflow-hidden">
-                {{-- Header Kolom Kanan (Seperti "16 Results   Popular first ↕" di Referensi 1) --}}
+                {{-- Header Sidebar Hasil --}}
                 <div class="px-5 pt-5 pb-3.5 bg-white flex items-center justify-between shrink-0 border-b border-gray-100">
                     <div class="flex items-baseline gap-1.5">
                         <strong id="puskesmas-counter" class="text-base font-extrabold text-ink">{{ count($puskesmas) }}</strong>
@@ -452,20 +452,20 @@
                     <div class="flex items-center gap-2">
                         <select id="select-sort" aria-label="Urutkan Puskesmas"
                                 class="bg-transparent text-xs font-extrabold text-ink focus:outline-none cursor-pointer">
-                            <option value="distance">Terdekat dulu ↕</option>
-                            <option value="nakes">Nakes Lengkap ↕</option>
-                            <option value="igd">Prioritas IGD 24 Jam ↕</option>
+                            <option value="distance">Terdekat dulu</option>
+                            <option value="nakes">Nakes Lengkap</option>
+                            <option value="igd">Prioritas IGD 24 Jam</option>
                         </select>
 
                         {{-- Tombol Tutup Drawer di Mobile --}}
                         <button type="button" id="btn-close-sidebar-mobile" aria-label="Tutup Daftar"
-                                class="lg:hidden flex size-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-ink text-xs font-bold cursor-pointer">
-                            ✕
+                                class="lg:hidden flex size-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-ink transition-colors cursor-pointer">
+                            <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
                     </div>
                 </div>
 
-                {{-- KONTEN SUBTAB A: DAFTAR KARTU VISUAL PUSKESMAS (Bergaya "Copa Vida" & "ABC Coffee Bar" di Referensi 1) --}}
+                {{-- Subtab A: Daftar Kartu Puskesmas --}}
                 <div id="subtab-content-faskes" class="flex-1 flex flex-col overflow-hidden">
                     @php
                         $pastelColors = ['bg-card-mint', 'bg-card-peach', 'bg-card-green', 'bg-card-salmon', 'bg-card-blue'];
@@ -490,7 +490,7 @@
                                      data-distance="{{ $item['distance'] }}"
                                      class="group cursor-pointer transition-all">
 
-                                {{-- Banner Visual Rounded-2xl dengan Badge Lingkaran Oranye di Kanan Atas (Seperti Referensi 1) --}}
+                                {{-- Banner Visual Puskesmas --}}
                                 <div class="relative h-[136px] w-full rounded-2xl {{ $pastelBg }} overflow-hidden p-3.5 flex flex-col justify-between transition-transform duration-200 group-hover:scale-[1.01]">
                                     {{-- Ornamen Arsitektur Gedung Puskesmas di Latar Banner --}}
                                     <svg class="pointer-events-none absolute -bottom-2 right-6 h-28 w-44 text-primary-dark/10" viewBox="0 0 180 110" fill="currentColor" aria-hidden="true">
@@ -503,10 +503,10 @@
 
                                     <div class="relative z-10 flex items-center justify-between">
                                         <span class="rounded-full bg-white/90 backdrop-blur-xs px-3 py-1 text-[10px] font-extrabold text-ink shadow-2xs">
-                                            Kec. {{ $item['district'] }}
+                                             Kec. {{ $item['district'] }}
                                         </span>
 
-                                        {{-- Lingkaran Oranye di Kanan Atas Banner (Persis Referensi 1) --}}
+                                        {{-- Tombol Sorot Peta --}}
                                         <button type="button" data-focus-btn title="Sorot di Peta"
                                                 class="flex size-8 items-center justify-center rounded-full {{ $item['igd'] ? 'bg-accent text-white' : 'bg-white/90 text-ink' }} shadow-md transition-transform group-hover:scale-110 cursor-pointer">
                                             @if ($item['igd'])
@@ -517,14 +517,14 @@
                                         </button>
                                     </div>
 
-                                    {{-- Ikon Tengah Faskes --}}
+                                    {{-- Ikon Faskes --}}
                                     <div class="relative z-10 my-auto flex items-center gap-3">
                                         <div class="flex size-11 items-center justify-center rounded-2xl bg-white/90 text-primary shadow-xs">
                                             <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M12 7v4m-2-2h4"/></svg>
                                         </div>
                                         <div>
                                             <span class="inline-block rounded-md bg-white/80 px-2 py-0.5 text-[10px] font-extrabold text-primary-dark">
-                                                {{ $item['igd'] ? '🚨 IGD Siaga 24 Jam' : '🩺 Rawat Jalan' }}
+                                                {{ $item['igd'] ? 'IGD 24 Jam' : 'Rawat Jalan' }}
                                             </span>
                                             @if ($item['inap'])
                                                 <span class="inline-block rounded-md bg-primary-dark/85 px-2 py-0.5 text-[10px] font-bold text-white ml-1">
@@ -535,17 +535,19 @@
                                     </div>
 
                                     <div class="relative z-10 flex items-center justify-between text-[10px] font-bold text-ink/75">
-                                        <span>📍 {{ $item['address'] }}</span>
+                                        <span>{{ $item['address'] }}</span>
                                     </div>
                                 </div>
 
-                                {{-- Baris Judul & Bintang Skor di Bawah Banner (Persis "Copa Vida   ★ 5.0" di Referensi 1) --}}
+                                {{-- Judul dan Skor Nakes --}}
                                 <div class="mt-2.5 flex items-center justify-between gap-2 px-0.5">
                                     <h3 class="text-[15px] font-extrabold text-ink group-hover:text-primary transition-colors truncate">
                                         {{ $item['name'] }}
                                     </h3>
                                     <div class="flex items-center gap-1 shrink-0 text-xs font-extrabold text-ink">
-                                        <span class="flex size-4 items-center justify-center rounded-full bg-surface-mint text-primary text-[10px]">★</span>
+                                        <span class="flex size-4 items-center justify-center rounded-full bg-surface-mint text-primary">
+                                            <svg class="size-2.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                                        </span>
                                         <span>{{ $item['nakes_score'] }}%</span>
                                     </div>
                                 </div>
@@ -569,8 +571,8 @@
                         @endforeach
 
                         <div id="sidebar-empty" class="hidden text-center py-12 px-4">
-                            <div class="size-12 rounded-full bg-surface-mint mx-auto flex items-center justify-center text-primary text-xl">
-                                🔍
+                            <div class="size-12 rounded-full bg-surface-mint mx-auto flex items-center justify-center text-primary">
+                                <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                             </div>
                             <h4 class="mt-3 text-sm font-extrabold text-ink">Puskesmas tidak ditemukan</h4>
                             <p class="text-xs text-muted mt-1">Coba ubah kata kunci atau ganti filter layanan di sebelah kiri.</p>
@@ -583,8 +585,8 @@
                     <div class="p-4 bg-white border-b border-gray-100 space-y-3 shrink-0">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center gap-2">
-                                <div class="size-8 rounded-xl bg-accent/15 flex items-center justify-center text-accent font-extrabold text-sm">
-                                    ★
+                                <div class="size-8 rounded-xl bg-accent/15 flex items-center justify-center text-accent">
+                                    <svg class="size-4" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-extrabold text-ink">SPK Metode MAUT</h3>
@@ -602,7 +604,7 @@
                             <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-mint/60 hover:bg-surface-mint cursor-pointer border border-primary/20 transition-colors">
                                 <input type="radio" name="maut-scenario" value="darurat" checked class="text-accent focus:ring-accent">
                                 <div>
-                                    <span class="font-extrabold text-ink block">🚨 Kedaruratan Medis</span>
+                                    <span class="font-extrabold text-ink block">Kedaruratan Medis</span>
                                     <span class="text-[10px] text-muted block">Jarak (40%), IGD 24 Jam (30%), Nakes (15%), Jam (15%)</span>
                                 </div>
                             </label>
@@ -610,7 +612,7 @@
                             <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white hover:bg-surface-mint/40 cursor-pointer border border-gray-200 transition-colors">
                                 <input type="radio" name="maut-scenario" value="reguler" class="text-accent focus:ring-accent">
                                 <div>
-                                    <span class="font-extrabold text-ink block">🩺 Layanan Umum Reguler</span>
+                                    <span class="font-extrabold text-ink block">Layanan Umum Reguler</span>
                                     <span class="text-[10px] text-muted block">Jam Buka (30%), Jarak (20%), Nakes (20%), Keramaian (20%)</span>
                                 </div>
                             </label>
@@ -618,7 +620,7 @@
                             <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white hover:bg-surface-mint/40 cursor-pointer border border-gray-200 transition-colors">
                                 <input type="radio" name="maut-scenario" value="pemda" class="text-accent focus:ring-accent">
                                 <div>
-                                    <span class="font-extrabold text-ink block">📋 Evaluasi Kebijakan Pemda</span>
+                                    <span class="font-extrabold text-ink block">Evaluasi Kebijakan Pemda</span>
                                     <span class="text-[10px] text-muted block">Kelengkapan 9 Nakes (30%), Jarak (20%), Keramaian (20%)</span>
                                 </div>
                             </label>
@@ -643,106 +645,6 @@
                     </div>
                 </div>
             </div>
-
-            {{-- SUB-PANEL 2: DASBOR ANALITIK SPASIAL DINAS KESEHATAN (SDSS) --}}
-            <div id="panel-dinkes" class="flex-1 flex flex-col h-full overflow-hidden hidden bg-[#f8faf9]">
-                <div class="p-4 sm:p-5 bg-white border-b border-gray-100 shrink-0 space-y-3">
-                    <div class="flex items-center justify-between gap-2">
-                        <div>
-                            <h3 class="text-sm font-extrabold text-ink">Instrumen SDSS Dinas Kesehatan</h3>
-                            <p class="text-[11px] text-muted">Permenkes No. 43/2019 &amp; Beban Wilayah</p>
-                        </div>
-                        <div class="flex items-center gap-1.5">
-                            <span class="rounded-full bg-surface-mint text-primary-dark px-2.5 py-0.5 text-[10px] font-extrabold">
-                                Kota Bogor
-                            </span>
-                            <button type="button" id="btn-close-dinkes-mobile" aria-label="Tutup Panel Dinkes"
-                                    class="lg:hidden inline-flex size-8 items-center justify-center rounded-full bg-gray-100 text-ink hover:bg-gray-200 transition-colors cursor-pointer">
-                                <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-                    </div>
-
-                    {{-- Kartu Indikator Ringkas --}}
-                    <div class="grid grid-cols-2 gap-2.5 text-xs">
-                        <div class="p-3 rounded-xl bg-surface-mint/70 border border-primary/15">
-                            <span class="text-[10px] font-semibold text-muted block">Total Faskes</span>
-                            <span class="text-base font-extrabold text-primary-dark">{{ $citySummary['total_puskesmas'] }} Unit</span>
-                            <span class="text-[10px] text-primary block mt-0.5">IGD 24 Jam: <strong>{{ $citySummary['total_igd'] }}</strong></span>
-                        </div>
-                        <div class="p-3 rounded-xl bg-gray-50 border border-gray-200/80">
-                            <span class="text-[10px] font-semibold text-muted block">Kepatuhan 9 Nakes</span>
-                            <span class="text-base font-extrabold text-ink">{{ $citySummary['avg_nakes_compliance'] }}%</span>
-                            <span class="text-[10px] text-muted block mt-0.5">Rawat Inap: <strong>{{ $citySummary['total_inap'] }}</strong></span>
-                        </div>
-                    </div>
-
-                    {{-- Kontrol Layer Analitik Spasial --}}
-                    <div class="pt-2 border-t border-gray-100 space-y-2 text-xs">
-                        <span class="font-extrabold text-ink block text-[11px] uppercase tracking-wider">Layer Spasial:</span>
-
-                        <label class="flex items-center justify-between p-2.5 rounded-xl bg-gray-50 border border-gray-200/70 cursor-pointer">
-                            <span class="text-xs font-bold text-ink">Buffer Layanan (1,5 km)</span>
-                            <input type="checkbox" id="layer-buffer-15" class="rounded text-primary focus:ring-primary size-4">
-                        </label>
-
-                        <label class="flex items-center justify-between p-2.5 rounded-xl bg-gray-50 border border-gray-200/70 cursor-pointer">
-                            <span class="text-xs font-bold text-ink">Buffer Standar (3,0 km)</span>
-                            <input type="checkbox" id="layer-buffer-30" checked class="rounded text-primary focus:ring-primary size-4">
-                        </label>
-
-                        <label class="flex items-center justify-between p-2.5 rounded-xl bg-gray-50 border border-gray-200/70 cursor-pointer">
-                            <span class="text-xs font-bold text-ink">Beban Kerja (PSW-Index)</span>
-                            <input type="checkbox" id="layer-psw-index" class="rounded text-primary focus:ring-primary size-4">
-                        </label>
-                    </div>
-
-                    {{-- Tombol Ekspor Data CSV --}}
-                    <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button type="button" id="btn-export-csv" class="h-9 rounded-xl bg-white border border-gray-200 text-ink text-xs font-extrabold hover:bg-gray-50 transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
-                            <svg class="size-3.5 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                            <span>Unduh CSV</span>
-                        </button>
-                        <button type="button" onclick="window.print()" class="h-9 rounded-xl bg-ink text-white text-xs font-extrabold hover:bg-primary transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
-                            <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
-                            <span>Cetak Laporan</span>
-                        </button>
-                    </div>
-                </div>
-
-                {{-- Tabel Rasio Kependudukan & Beban per Kecamatan --}}
-                <div class="flex-1 overflow-y-auto p-5 space-y-4 no-scrollbar">
-                    <div>
-                        <h4 class="text-[11px] font-extrabold text-ink uppercase tracking-wider mb-2">Rasio Penduduk (Permenkes 43/2019)</h4>
-                        <div class="rounded-xl bg-white border border-gray-200/80 overflow-hidden text-xs">
-                            <table class="w-full text-left">
-                                <thead class="bg-gray-50 border-b border-gray-200/80 text-[10px] text-muted uppercase">
-                                    <tr>
-                                        <th class="p-2.5">Kecamatan</th>
-                                        <th class="p-2.5">Populasi</th>
-                                        <th class="p-2.5">Unit</th>
-                                        <th class="p-2.5">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100">
-                                    @foreach ($districtStats as $ds)
-                                        <tr class="hover:bg-gray-50/50">
-                                            <td class="p-2.5 font-bold text-ink">{{ $ds['name'] }}</td>
-                                            <td class="p-2.5 text-muted">{{ number_format($ds['population'], 0, ',', '.') }}</td>
-                                            <td class="p-2.5 font-extrabold text-primary">{{ $ds['puskesmas_count'] }}/{{ $ds['target_count'] }}</td>
-                                            <td class="p-2.5">
-                                                <span class="inline-block px-2 py-0.5 rounded-full text-[10px] font-extrabold {{ $ds['ratio_status'] === 'Memenuhi' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800' }}">
-                                                    {{ $ds['ratio_status'] }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </aside>
     </main>
 
@@ -762,15 +664,15 @@
             <div class="p-5 overflow-y-auto space-y-4 text-xs no-scrollbar">
                 <div class="rounded-2xl bg-gray-50 p-3.5 space-y-1.5">
                     <div class="flex items-start gap-2">
-                        <span class="text-muted shrink-0">📍 Alamat:</span>
+                        <span class="text-muted shrink-0">Alamat:</span>
                         <span id="modal-address" class="font-bold text-ink">Jl. Kesehatan No. 1, Kota Bogor</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-muted shrink-0">📞 Kontak:</span>
+                        <span class="text-muted shrink-0">Kontak:</span>
                         <span id="modal-phone" class="font-bold text-ink">(0251) 8332943</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-muted shrink-0">⏰ Jam Buka:</span>
+                        <span class="text-muted shrink-0">Jam Layanan:</span>
                         <span id="modal-hours" class="font-bold text-ink">Buka 08.00 – 16.00</span>
                     </div>
                 </div>
@@ -816,8 +718,5 @@
     {{-- Pass PHP Data to JS via JSON script tag --}}
     <script id="puskesmas-data" type="application/json">
         {!! json_encode($puskesmas) !!}
-    </script>
-    <script id="district-data" type="application/json">
-        {!! json_encode($districtStats) !!}
     </script>
 </x-layout>

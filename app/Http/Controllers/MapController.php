@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 class MapController extends Controller
 {
     /**
-     * Tampilkan halaman Web Map & Spatial Decision Support System (SDSS) PuskesMap.
+     * Tampilkan halaman Peta Interaktif Puskesmas Kota Bogor untuk Publik.
      */
     public function index(): View
     {
