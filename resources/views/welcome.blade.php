@@ -96,20 +96,6 @@
 @endphp
 
 <x-layout>
-    {{-- ================= FLOATING QUICK-ACTION SIDE DOCK (Terinspirasi Referensi UI) ================= --}}
-    <aside aria-label="Pintasan Cepat" class="fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3">
-        <a href="{{ route('peta') }}"
-           class="group flex size-[68px] flex-col items-center justify-center rounded-full bg-primary text-white shadow-[0_12px_28px_rgba(0,121,121,0.32)] transition-all hover:scale-105 hover:bg-primary-dark">
-            <svg class="size-5 mb-0.5 transition-transform group-hover:-translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-            <span class="text-[10px] font-extrabold tracking-tight leading-none">Peta GIS</span>
-        </a>
-        <a href="#peta"
-           class="group flex size-[68px] flex-col items-center justify-center rounded-full bg-white text-primary-dark border border-primary/20 shadow-[0_12px_28px_rgba(11,92,92,0.14)] transition-all hover:scale-105 hover:bg-surface-mint">
-            <svg class="size-5 mb-0.5 text-accent transition-transform group-hover:-translate-y-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
-            <span class="text-[10px] font-extrabold tracking-tight leading-none">Sekilas</span>
-        </a>
-    </aside>
-
     {{-- ================= HERO SECTION ================= --}}
     <header id="beranda" class="relative bg-white">
         {{-- Floating Pill Navbar (Dikeluarkan dari clip-path agar dropdown HP tidak pernah terpotong!) --}}
@@ -156,8 +142,25 @@
 
         <div class="relative h-[380px] sm:h-auto sm:aspect-[1170/760] sm:min-h-[520px] w-full overflow-hidden [clip-path:ellipse(140%_100%_at_50%_0%)] sm:[clip-path:ellipse(92%_100%_at_50%_0%)]">
             {{-- Ilustrasi Utama Kota Bogor --}}
-            <img src="{{ asset('images/main-hero.svg') }}" alt="Ilustrasi Kota Bogor"
-                 class="absolute left-1/2 -translate-x-1/2 w-[155%] sm:left-[-11.54%] sm:translate-x-0 top-0 h-[112%] sm:h-[115%] sm:w-[123.08%] max-w-none object-cover object-top">
+            <div id="hero-lottie" role="img" aria-label="Ilustrasi Kota Bogor"
+                 data-src="{{ asset('images/main-hero.json') }}"
+                 class="absolute left-1/2 -translate-x-1/2 w-[155%] sm:left-[-11.54%] sm:translate-x-0 top-0 h-[112%] sm:h-[115%] sm:w-[123.08%] max-w-none"></div>
+            <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie_svg.min.js"></script>
+            <script>
+                (function () {
+                    var el = document.getElementById('hero-lottie');
+                    if (!el || !window.lottie) { return; }
+                    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    window.lottie.loadAnimation({
+                        container: el,
+                        renderer: 'svg',
+                        loop: true,
+                        autoplay: !reduceMotion,
+                        path: el.dataset.src,
+                        rendererSettings: { preserveAspectRatio: 'xMidYMin slice' }
+                    });
+                })();
+            </script>
 
             {{-- Floating Decorative Badges & Judul Hero di Area Langit/Awan --}}
             <div class="absolute inset-x-0 top-[21%] sm:top-[19%] lg:top-[20%] z-10 flex flex-col items-center px-4 text-center">

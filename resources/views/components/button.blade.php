@@ -5,12 +5,12 @@
 ])
 
 @php
-    $base = 'inline-flex items-center justify-center rounded-full font-semibold transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+    $base = 'inline-flex items-center justify-center font-semibold transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
 
     $variants = [
-        'primary' => 'h-10 px-6 text-xs bg-primary text-white hover:bg-primary-dark',
-        'outline' => 'h-10 px-6 text-xs border-[1.5px] border-primary text-primary bg-white hover:bg-surface-mint',
-        'accent' => 'h-11 px-8 text-base rounded-sm bg-accent-strong text-white hover:bg-accent',
+        'primary' => 'h-10 px-6 text-xs rounded-full bg-primary text-white hover:bg-primary-dark',
+        'outline' => 'h-10 px-6 text-xs rounded-full border-[1.5px] border-primary text-primary bg-white hover:bg-surface-mint',
+        'accent' => 'h-12 px-8 text-lg font-medium rounded-sm bg-primary text-white hover:bg-primary-dark shadow-xs',
     ];
 
     $classes = $base.' '.($variants[$variant] ?? $variants['primary']);
