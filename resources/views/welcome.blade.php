@@ -258,7 +258,7 @@
 <x-layout>
     {{-- ================= HERO SECTION ================= --}}
     <header id="beranda" class="relative bg-white">
-        {{-- Floating Pill Navbar Desktop (Fixed di Atas, Shrink-on-Scroll ke Logo Blur Pill) --}}
+        {{-- Floating Pill Navbar Desktop (Fixed di Atas, Smooth & Ringan) --}}
         <nav id="main-navbar"
              class="hidden md:flex fixed left-1/2 top-5 z-50 w-[calc(100%-2rem)] max-w-[1040px] -translate-x-1/2 flex-col items-center pointer-events-none"
              aria-label="Navigasi utama desktop">
@@ -275,15 +275,15 @@
                 <div class="nav-actions flex items-center gap-5 py-1.5 overflow-hidden">
                     <ul id="nav-links-list" class="relative flex items-center gap-1 text-[15px] font-bold text-body">
                         <span id="nav-hover-pill" aria-hidden="true"
-                              class="pointer-events-none absolute left-0 top-1/2 h-9 rounded-full bg-surface-mint border border-primary/15 shadow-[0_2px_10px_rgba(0,121,121,0.10)] opacity-0 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]"></span>
+                              class="pointer-events-none absolute left-0 top-1/2 h-9 rounded-full bg-surface-mint border border-primary/15 shadow-[0_2px_10px_rgba(0,121,121,0.10)] opacity-0 transition-[transform,width,opacity] duration-250 ease-out will-change-transform"></span>
                         @foreach ($navLinks as $link)
                             <li>
                                 <a href="{{ $link['href'] }}" data-nav-link
-                                   class="nav-link group relative z-10 inline-flex items-center px-4 py-2 rounded-full transition-all duration-300 ease-out hover:text-primary-dark hover:-translate-y-0.5 active:scale-95">
+                                   class="nav-link group relative z-10 inline-flex items-center px-4 py-2 rounded-full transition-[color,transform] duration-200 ease-out hover:text-primary-dark hover:-translate-y-0.5 active:scale-95">
                                     <span class="relative">
                                         {{ $link['label'] }}
                                         <span aria-hidden="true"
-                                              class="nav-link-bar absolute -bottom-1 left-0 h-[2.5px] w-full origin-center scale-x-0 rounded-full bg-gradient-to-r from-primary to-accent transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-x-100"></span>
+                                              class="nav-link-bar absolute -bottom-1 left-0 h-[2.5px] w-full origin-center scale-x-0 rounded-full bg-gradient-to-r from-primary to-accent transition-transform duration-250 ease-out group-hover:scale-x-100"></span>
                                     </span>
                                 </a>
                             </li>
@@ -291,7 +291,7 @@
                     </ul>
 
                     <a href="{{ route('peta') }}"
-                       class="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-accent px-6 text-[15px] font-bold text-white shadow-xs transition-all duration-300 hover:bg-accent-strong hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(227,116,52,0.34)] active:scale-95">
+                       class="inline-flex h-11 shrink-0 items-center justify-center rounded-full bg-accent px-6 text-[15px] font-bold text-white shadow-xs transition-[background-color,transform,box-shadow] duration-200 hover:bg-accent-strong hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(227,116,52,0.34)] active:scale-95">
                         <span>Peta</span>
                     </a>
                 </div>

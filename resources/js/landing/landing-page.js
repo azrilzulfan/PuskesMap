@@ -23,8 +23,6 @@ export function initLandingPage() {
     });
 
     if (navbar) {
-        const navBrand = navbar.querySelector('.nav-brand');
-        const navActions = navbar.querySelector('.nav-actions');
         const navLinksList = document.getElementById('nav-links-list');
         const hoverPill = document.getElementById('nav-hover-pill');
         const navLinks = Array.from(navbar.querySelectorAll('[data-nav-link]'));
@@ -34,9 +32,37 @@ export function initLandingPage() {
         let activeLink = null;
         let activeMobileDockLink = mobileDockLinks[0] || null;
         let dockClickLockUntil = 0;
-        let manualExpanded = false;
-        let expandedAtScrollY = 0;
+        let isScrolled = false;
         let navTicking = false;
+
+        // Cache sections to prevent layout thrashing (getBoundingClientRect) on every scroll frame
+        const desktopSections = navLinks
+            .map((link) => {
+                const href = link.getAttribute('href');
+                if (!href || !href.startsWith('#')) return null;
+                const section = document.querySelector(href);
+                return section ? { link, section, top: 0 } : null;
+            })
+            .filter(Boolean);
+
+        const mobileSections = mobileDockLinks
+            .map((dockLink) => {
+                const href = dockLink.getAttribute('data-mobile-dock-link');
+                if (!href || !href.startsWith('#')) return null;
+                const section = document.querySelector(href);
+                return section ? { dockLink, section, top: 0 } : null;
+            })
+            .filter(Boolean);
+
+        const recalculateSectionOffsets = () => {
+            const currentScroll = window.scrollY;
+            desktopSections.forEach((item) => {
+                item.top = item.section.getBoundingClientRect().top + currentScroll;
+            });
+            mobileSections.forEach((item) => {
+                item.top = item.section.getBoundingClientRect().top + currentScroll;
+            });
+        };
 
         const positionMobileDockNotch = (target) => {
             if (!mobileDockBar || !target || mobileDockBar.offsetWidth === 0) return;
@@ -84,99 +110,58 @@ export function initLandingPage() {
         };
 
         const syncScrollSpy = () => {
+            const isDesktop = window.innerWidth >= 768;
             const scrollRef = window.scrollY + 180;
-            let matched = null;
-            let matchedTop = -Infinity;
 
-            navLinks.forEach((link) => {
-                const href = link.getAttribute('href');
-                if (!href || !href.startsWith('#')) return;
-                const section = document.querySelector(href);
-                if (!section) return;
-                const top = section.getBoundingClientRect().top + window.scrollY;
-                if (scrollRef >= top && top > matchedTop) {
-                    matchedTop = top;
-                    matched = link;
-                }
-            });
+            if (isDesktop && desktopSections.length) {
+                let matched = null;
+                let matchedTop = -Infinity;
 
-            activeLink = matched;
-            navLinks.forEach((link) => link.classList.toggle('is-active', link === activeLink));
-            if (!hoveredLink) {
-                moveHoverPill(activeLink);
-            }
-
-            if (mobileDockLinks.length && performance.now() >= dockClickLockUntil) {
-                let matchedDock = mobileDockLinks[0];
-                let dockMatchedTop = -Infinity;
-                mobileDockLinks.forEach((dockLink) => {
-                    const href = dockLink.getAttribute('data-mobile-dock-link');
-                    if (!href) return;
-                    const section = document.querySelector(href);
-                    if (!section) return;
-                    const top = section.getBoundingClientRect().top + window.scrollY;
-                    if (scrollRef >= top && top > dockMatchedTop) {
-                        dockMatchedTop = top;
-                        matchedDock = dockLink;
+                for (let i = 0; i < desktopSections.length; i++) {
+                    const item = desktopSections[i];
+                    if (scrollRef >= item.top && item.top > matchedTop) {
+                        matchedTop = item.top;
+                        matched = item.link;
                     }
-                });
-                activateMobileDock(matchedDock);
-            } else if (activeMobileDockLink) {
-                positionMobileDockNotch(activeMobileDockLink);
+                }
+
+                if (matched !== activeLink) {
+                    activeLink = matched;
+                    navLinks.forEach((link) => link.classList.toggle('is-active', link === activeLink));
+                    if (!hoveredLink) {
+                        moveHoverPill(activeLink);
+                    }
+                }
+            } else if (!isDesktop && mobileSections.length && performance.now() >= dockClickLockUntil) {
+                let matchedDock = mobileSections[0]?.dockLink || mobileDockLinks[0];
+                let dockMatchedTop = -Infinity;
+
+                for (let i = 0; i < mobileSections.length; i++) {
+                    const item = mobileSections[i];
+                    if (scrollRef >= item.top && item.top > dockMatchedTop) {
+                        dockMatchedTop = item.top;
+                        matchedDock = item.dockLink;
+                    }
+                }
+
+                if (matchedDock && matchedDock !== activeMobileDockLink) {
+                    activateMobileDock(matchedDock);
+                }
             }
         };
 
         const updateNavbarState = () => {
             navTicking = false;
             const scrollY = window.scrollY;
+            const scrolled = scrollY > 30;
 
-            if (scrollY <= 80) {
-                manualExpanded = false;
-            } else if (manualExpanded && Math.abs(scrollY - expandedAtScrollY) > 60) {
-                manualExpanded = false;
+            if (scrolled !== isScrolled) {
+                isScrolled = scrolled;
+                navbar.classList.toggle('is-scrolled', isScrolled);
             }
 
-            const scrolled = scrollY > 80 && !manualExpanded;
-            navbar.classList.toggle('is-scrolled', scrolled);
-
-            if (scrolled && navToggle?.getAttribute('aria-expanded') === 'true') {
-                navToggle.setAttribute('aria-expanded', 'false');
-                navMenu?.classList.add('hidden');
-            }
             syncScrollSpy();
         };
-
-        navBrand?.addEventListener('click', (event) => {
-            if (navbar.classList.contains('is-scrolled')) {
-                event.preventDefault();
-                manualExpanded = true;
-                expandedAtScrollY = window.scrollY;
-                navbar.classList.remove('is-scrolled');
-                window.requestAnimationFrame(() => moveHoverPill(hoveredLink || activeLink));
-            } else {
-                manualExpanded = false;
-            }
-        });
-
-        navActions?.addEventListener('transitionend', (event) => {
-            if (event.propertyName === 'max-width' && !navbar.classList.contains('is-scrolled')) {
-                moveHoverPill(hoveredLink || activeLink);
-            }
-        });
-
-        document.addEventListener('click', (event) => {
-            if (manualExpanded && !navbar.contains(event.target)) {
-                manualExpanded = false;
-                updateNavbarState();
-            }
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && manualExpanded) {
-                manualExpanded = false;
-                updateNavbarState();
-            }
-        });
 
         navLinks.forEach((link) => {
             link.addEventListener('mouseenter', () => {
@@ -188,7 +173,6 @@ export function initLandingPage() {
                 moveHoverPill(link);
             });
             link.addEventListener('click', () => {
-                manualExpanded = false;
                 activeLink = link;
                 navLinks.forEach((l) => l.classList.toggle('is-active', l === link));
                 moveHoverPill(link);
@@ -208,10 +192,21 @@ export function initLandingPage() {
         }, { passive: true });
 
         window.addEventListener('resize', () => {
-            moveHoverPill(hoveredLink || activeLink);
-            positionMobileDockNotch(activeMobileDockLink);
+            recalculateSectionOffsets();
+            if (window.innerWidth >= 768) {
+                moveHoverPill(hoveredLink || activeLink);
+            } else {
+                positionMobileDockNotch(activeMobileDockLink);
+            }
         }, { passive: true });
+
+        // Initial measurement
+        recalculateSectionOffsets();
         updateNavbarState();
+        window.addEventListener('load', () => {
+            recalculateSectionOffsets();
+            syncScrollSpy();
+        });
     }
 
     document.querySelectorAll('[data-marquee]').forEach((marquee) => {
