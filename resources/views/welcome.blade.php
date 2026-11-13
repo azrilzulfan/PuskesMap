@@ -413,12 +413,21 @@
                 </p>
             </div>
         </div>
+    </header>
 
-        {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA DENGAN PALET PUSKESMAP) ================= --}}
-        <div id="wilayah" class="relative z-20 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8 pt-4 pb-6 lg:pt-8 lg:pb-8">
+    {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA DENGAN PALET PUSKESMAP) ================= --}}
+    <section id="wilayah" class="relative z-20 w-full bg-white overflow-hidden pt-4 pb-10 sm:pt-6 sm:pb-14 lg:pt-6 lg:pb-16">
+        {{-- Canvas Partikel Interaktif Khusus Wilayah (Hanya di background putih) --}}
+        <canvas id="wilayah-particles"
+                data-cursor-particles
+                data-particle-theme="light"
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-0 z-0 h-full w-full"></canvas>
+
+        <div class="relative z-10 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
             <div class="grid items-center gap-0 lg:grid-cols-[1.05fr_1fr]">
                 {{-- Kartu "Wilayah" di Kiri (Diperpanjang ke Kanan Sampai ke Belakang Peta) --}}
-                <div data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-10 sm:pb-14 lg:py-16 lg:pl-12 lg:pr-[430px] lg:-mr-[410px] shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
+                <div id="wilayah-card" data-particle-exclude data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-10 sm:pb-14 lg:py-16 lg:pl-12 lg:pr-[430px] lg:-mr-[410px] shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
                     <div class="lg:max-w-[460px]">
                         <h2 class="text-[32px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-tight leading-[1.14] text-primary-dark">
                             Wilayah
@@ -438,7 +447,7 @@
                 </div>
 
                 {{-- Peta Vektor Kota Bogor (Palet Mint-Teal-Sage) Menimpa Kartu --}}
-                <div data-reveal="right" data-reveal-delay="150" class="relative z-20 -mt-7 sm:-mt-10 lg:-mt-32 lg:-ml-8 flex flex-col items-center px-1 sm:px-0">
+                <div id="wilayah-map" data-particle-exclude data-reveal="right" data-reveal-delay="150" class="relative z-20 -mt-7 sm:-mt-10 lg:-mt-32 lg:-ml-8 flex flex-col items-center px-1 sm:px-0">
                     <x-bogor-map class="mx-auto w-full max-w-[460px] sm:max-w-[510px]" />
 
                     <span class="mt-1 lg:hidden inline-flex items-center gap-1.5 rounded-full bg-surface-mint px-3.5 py-1 text-[11px] font-bold text-primary-dark">
@@ -455,10 +464,10 @@
                 </div>
             </div>
         </div>
-    </header>
+    </section>
 
     {{-- ================= SECTION FITUR PUSKESMAP (FULL 1 LAYAR PUTIH + BUBBLE ELEMEN SVG + PARTIKEL KURSOR) ================= --}}
-    <section id="fitur" class="relative bg-white min-h-[82svh] lg:min-h-[88svh] flex items-center justify-center pt-4 pb-12 sm:pt-6 sm:pb-16 lg:pt-8 lg:pb-16 overflow-hidden">
+    <section id="fitur" class="relative bg-white min-h-[84svh] lg:min-h-[90svh] flex flex-col justify-between pt-6 sm:pt-10 lg:pt-12 overflow-hidden">
         {{-- Canvas Partikel Interaktif (Bergerak acak otomatis & menghampiri kursor saat diarahkan) --}}
         <canvas id="fitur-particles"
                 data-cursor-particles
@@ -466,7 +475,7 @@
                 aria-hidden="true"
                 class="pointer-events-none absolute inset-0 z-0 h-full w-full"></canvas>
 
-        <div class="relative z-10 mx-auto w-full max-w-[1180px] min-h-[500px] lg:min-h-[580px] px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-8 sm:gap-10 lg:gap-0">
+        <div class="relative z-10 mx-auto my-auto w-full max-w-[1180px] min-h-[480px] lg:min-h-[560px] px-4 sm:px-6 lg:px-8 flex flex-col items-center justify-center gap-8 sm:gap-10 lg:gap-0 pb-4 sm:pb-6">
             {{-- Judul Utama 2 Baris Konsisten dengan Header Section Lain --}}
             <div data-reveal="up" class="order-2 relative z-10 text-center max-w-3xl px-2">
                 <h2 class="text-[32px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-tight leading-[1.14] text-ink">
@@ -537,19 +546,19 @@
                 </div>
             @endforeach
         </div>
-    </section>
 
-    {{-- ================= SECTION PUSKESMAS TERPADU (WAVE + HEADING + HEALTH PATTERN + MARQUEE INTERAKTIF KE KIRI) ================= --}}
-    <section id="cari" class="relative bg-gradient-to-b from-[#138282] via-primary to-primary-dark text-white overflow-hidden">
-        {{-- Top Organic Wave Divider --}}
-        <div class="relative z-10 w-full overflow-hidden leading-none pointer-events-none" aria-hidden="true">
+        {{-- Organic Wave Divider Menuju Section Faskes / Kecamatan --}}
+        <div class="relative z-10 -mb-px w-full overflow-hidden leading-none pointer-events-none" aria-hidden="true">
             <svg class="relative block w-full h-[42px] sm:h-[86px]" viewBox="0 0 1440 100" preserveAspectRatio="none">
-                <path d="M0,15 C320,105 680,-25 1120,65 C1280,95 1380,80 1440,55 L1440,0 L0,0 Z" fill="#ffffff"></path>
+                <path d="M0,15 C320,105 680,-25 1120,65 C1280,95 1380,80 1440,55 L1440,100 L0,100 Z" fill="#138282"></path>
             </svg>
         </div>
+    </section>
 
+    {{-- ================= SECTION PUSKESMAS TERPADU (HEADING + HEALTH PATTERN + MARQUEE INTERAKTIF KE KIRI) ================= --}}
+    <section id="cari" class="relative bg-gradient-to-b from-[#138282] via-primary to-primary-dark text-white overflow-hidden">
         {{-- Heading Section di Dalam Area Hijau/Teal agar Terlihat 1 Section --}}
-        <div class="relative z-10 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-8 sm:pb-10 text-center">
+        <div class="relative z-10 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-8 sm:pb-10 text-center">
             <h2 data-reveal="up" data-reveal-delay="80" class="text-[32px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-tight leading-[1.14] text-white">
                 Jangan Bingung Cari Faskes! <span class="text-card-peach drop-shadow-[0_1px_1px_rgba(0,0,0,0.2)]">PUSKESMAP</span>
             </h2>
