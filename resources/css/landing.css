@@ -1,37 +1,36 @@
 /* Gaya Khusus Halaman Landing Page (welcome.blade.php) */
-#main-navbar {
-  will-change: transform;
-  transform: translate3d(-50%, 0, 0);
-}
-
 .nav-pill {
   max-width: 1040px;
-  will-change: height, padding, box-shadow, transform;
-  transform: translateZ(0);
+  overflow: hidden;
   transition:
-    height 0.28s cubic-bezier(0.22, 1, 0.36, 1),
-    padding 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+    max-width 0.42s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.38s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.38s cubic-bezier(0.22, 1, 0.36, 1),
     background-color 0.25s ease,
     border-color 0.25s ease,
     box-shadow 0.25s ease,
-    transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.nav-brand-logo {
-  transition: transform 0.25s ease;
+.nav-brand {
+  transition: gap 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .nav-brand-text {
-  transition: font-size 0.25s ease;
+  max-width: 140px;
+  overflow: hidden;
+  transition:
+    max-width 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease,
+    transform 0.25s ease;
 }
 
-.nav-actions a[href*="peta"] {
+.nav-actions {
+  max-width: 640px;
   transition:
-    height 0.25s ease,
-    padding 0.25s ease,
-    background-color 0.2s ease,
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
+    max-width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease,
+    transform 0.25s ease;
 }
 
 .nav-link.is-active {
@@ -42,30 +41,47 @@
   transform: scaleX(1);
 }
 
-/* Scrolled state desktop: Tetap tampil rapi sebagai pill navbar utuh & ramping (ringan, 60fps tanpa reflow/jank) */
+/* Scrolled state desktop: Shrink-on-Scroll ke Logo Circle Pill yang Halus & Ringan (60fps) */
 #main-navbar.is-scrolled .nav-pill {
-  height: 56px;
-  padding-left: 1.5rem;
-  padding-right: 0.85rem;
-  background-color: rgba(255, 255, 255, 0.96);
+  max-width: 50px;
+  height: 50px;
+  padding-inline: 11px;
+  background-color: rgba(255, 255, 255, 0.90);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-color: rgba(0, 121, 121, 0.14);
-  box-shadow: 0 10px 28px -4px rgba(0, 121, 121, 0.12), 0 2px 8px -2px rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 121, 121, 0.16);
+  box-shadow: 0 10px 28px -4px rgba(0, 121, 121, 0.16), 0 2px 8px -2px rgba(0, 0, 0, 0.05);
 }
 
-#main-navbar.is-scrolled .nav-brand-logo {
-  transform: scale(0.92);
+@media (min-width: 640px) {
+  #main-navbar.is-scrolled .nav-pill {
+    max-width: 60px;
+    height: 60px;
+    padding-inline: 12px;
+  }
+}
+
+#main-navbar.is-scrolled .nav-pill:hover {
+  background-color: rgba(255, 255, 255, 0.96);
+  transform: scale(1.05);
+  box-shadow: 0 14px 34px rgba(0, 121, 121, 0.22);
+}
+
+#main-navbar.is-scrolled .nav-brand {
+  gap: 0;
 }
 
 #main-navbar.is-scrolled .nav-brand-text {
-  font-size: 1.125rem;
+  max-width: 0;
+  opacity: 0;
+  transform: translateX(-8px);
 }
 
-#main-navbar.is-scrolled .nav-actions a[href*="peta"] {
-  height: 2.35rem;
-  padding-inline: 1.25rem;
-  font-size: 0.875rem;
+#main-navbar.is-scrolled .nav-actions {
+  max-width: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(12px) scale(0.92);
 }
 
 #main-navbar.is-scrolled #nav-menu {
