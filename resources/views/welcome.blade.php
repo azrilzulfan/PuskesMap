@@ -257,7 +257,7 @@
 
 <x-layout>
     {{-- ================= HERO SECTION ================= --}}
-    <header id="beranda" class="relative z-20 bg-white">
+    <header id="beranda" class="relative bg-white">
         {{-- Floating Pill Navbar Desktop (Fixed di Atas, Smooth & Ringan) --}}
         <nav id="main-navbar"
              class="hidden md:flex fixed left-1/2 top-5 z-50 w-[calc(100%-2rem)] max-w-[1040px] -translate-x-1/2 flex-col items-center pointer-events-none"
@@ -413,21 +413,11 @@
                 </p>
             </div>
         </div>
-    </header>
-
-    {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA DENGAN PALET PUSKESMAP) ================= --}}
-    <section id="wilayah" class="relative z-10 w-full bg-white overflow-hidden -mt-16 sm:-mt-24 lg:-mt-36 pt-16 sm:pt-24 lg:pt-36 pb-10 sm:pb-14 lg:pb-16">
-        {{-- Canvas Partikel Interaktif Khusus Wilayah (Hanya di background putih) --}}
-        <canvas id="wilayah-particles"
-                data-cursor-particles
-                data-particle-theme="light"
-                aria-hidden="true"
-                class="pointer-events-none absolute inset-0 z-0 h-full w-full"></canvas>
-
-        <div class="relative z-10 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8">
+        {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA DENGAN PALET PUSKESMAP) ================= --}}
+        <div id="wilayah" class="relative z-20 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8 pt-4 pb-6 lg:pt-8 lg:pb-8">
             <div class="grid items-center gap-0 lg:grid-cols-[1.05fr_1fr]">
                 {{-- Kartu "Wilayah" di Kiri (Diperpanjang ke Kanan Sampai ke Belakang Peta) --}}
-                <div id="wilayah-card" data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-10 sm:pb-14 lg:py-16 lg:pl-12 lg:pr-[430px] lg:-mr-[410px] shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
+                <div data-reveal="left" class="relative z-10 rounded-[24px] bg-surface-sky p-6 pb-11 sm:p-10 sm:pb-14 lg:py-16 lg:pl-12 lg:pr-[430px] lg:-mr-[410px] shadow-[0_16px_40px_rgba(0,121,121,0.12)] border border-white/60">
                     <div class="lg:max-w-[460px]">
                         <h2 class="text-[32px] sm:text-[44px] lg:text-[52px] font-extrabold tracking-tight leading-[1.14] text-primary-dark">
                             Wilayah
@@ -447,7 +437,7 @@
                 </div>
 
                 {{-- Peta Vektor Kota Bogor (Palet Mint-Teal-Sage) Menimpa Kartu --}}
-                <div id="wilayah-map" data-reveal="right" data-reveal-delay="150" class="relative z-20 -mt-7 sm:-mt-10 lg:-mt-32 lg:-ml-8 flex flex-col items-center px-1 sm:px-0">
+                <div data-reveal="right" data-reveal-delay="150" class="relative z-20 -mt-7 sm:-mt-10 lg:-mt-32 lg:-ml-8 flex flex-col items-center px-1 sm:px-0">
                     <x-bogor-map class="mx-auto w-full max-w-[460px] sm:max-w-[510px]" />
 
                     <span class="mt-1 lg:hidden inline-flex items-center gap-1.5 rounded-full bg-surface-mint px-3.5 py-1 text-[11px] font-bold text-primary-dark">
@@ -464,7 +454,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </header>
 
     {{-- ================= SECTION FITUR PUSKESMAP (FULL 1 LAYAR PUTIH + BUBBLE ELEMEN SVG + PARTIKEL KURSOR) ================= --}}
     <section id="fitur" class="relative bg-white min-h-[84svh] lg:min-h-[90svh] flex flex-col justify-between pt-6 sm:pt-10 lg:pt-12 overflow-hidden">
