@@ -38,9 +38,10 @@
                     </button>
                 </div>
 
-                {{-- Toggle Sidebar Daftar di Tablet/Mobile --}}
-                <button type="button" id="btn-toggle-sidebar" aria-label="Buka Daftar Puskesmas"
-                        class="hidden sm:flex lg:hidden size-9 items-center justify-center rounded-xl bg-surface-mint text-primary-dark hover:bg-primary hover:text-white transition-colors cursor-pointer">
+                {{-- Toggle Sidebar Daftar & Rekomendasi --}}
+                <button type="button" id="btn-toggle-sidebar" aria-label="Buka atau Tutup Daftar Puskesmas" aria-expanded="false"
+                        title="Buka / Tutup Panel Daftar & Rekomendasi"
+                        class="hidden sm:flex size-9 items-center justify-center rounded-xl bg-surface-mint text-primary-dark hover:bg-primary hover:text-white transition-colors cursor-pointer">
                     <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h10"/></svg>
                 </button>
 
@@ -61,7 +62,7 @@
                     <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/>
                 </svg>
                 <input type="text" id="sidebar-search"
-                       placeholder="Cari puskesmas, kelurahan, atau kecamatan..."
+                       placeholder="Cari puskesmas atau kecamatan..."
                        class="w-full h-9 sm:h-10 rounded-xl bg-gray-100/90 hover:bg-gray-100 focus:bg-white pl-9 sm:pl-10 pr-8 text-xs sm:text-sm font-bold text-ink placeholder:text-muted/70 placeholder:font-medium focus:ring-2 focus:ring-primary/25 focus:outline-none border border-transparent focus:border-primary/30 transition-all">
                 <button type="button" id="btn-clear-search" aria-label="Hapus pencarian"
                         class="hidden absolute right-2.5 size-5 rounded-full bg-gray-200 hover:bg-gray-300 text-muted hover:text-ink flex items-center justify-center text-xs cursor-pointer">
@@ -69,9 +70,9 @@
                 </button>
             </div>
 
-            {{-- Tombol Buka Drawer Filter & Radius di HP --}}
-            <button type="button" id="btn-open-left-filter"
-                    class="lg:hidden shrink-0 inline-flex h-9 items-center gap-1.5 rounded-xl bg-ink text-white px-3 text-xs font-extrabold shadow-2xs cursor-pointer">
+            {{-- Tombol Buka / Tutup Panel Filter & Radius --}}
+            <button type="button" id="btn-open-left-filter" aria-expanded="false" title="Buka / Tutup Panel Filter & Radius"
+                    class="shrink-0 inline-flex h-9 sm:h-10 items-center gap-1.5 rounded-xl bg-ink hover:bg-primary-dark text-white px-3 sm:px-3.5 text-xs font-extrabold shadow-2xs transition-colors cursor-pointer">
                 <svg class="size-3.5 text-accent" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg>
                 <span>Filter</span>
             </button>

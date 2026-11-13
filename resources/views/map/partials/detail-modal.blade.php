@@ -22,31 +22,31 @@
                         <span id="modal-phone" class="font-bold text-ink">(0251) 8332943</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <span class="text-muted shrink-0">Jam Layanan:</span>
+                        <span class="text-muted shrink-0">Jam:</span>
                         <span id="modal-hours" class="font-bold text-ink">Buka 08.00 – 16.00</span>
                     </div>
                 </div>
 
                 <div>
-                    <h4 class="font-extrabold text-ink text-[11px] uppercase tracking-wider mb-2">Kesiapan Fasilitas Layanan</h4>
+                    <h4 class="font-extrabold text-ink text-[11px] uppercase tracking-wider mb-2">Fasilitas</h4>
                     <div id="modal-tags" class="flex flex-wrap gap-1.5"></div>
                 </div>
 
                 <div class="rounded-2xl border border-gray-200 p-3.5 sm:p-4 space-y-2 bg-white">
                     <div class="flex flex-wrap items-center justify-between gap-1.5">
-                        <h4 class="font-extrabold text-ink text-xs">Kelengkapan 9 Profesi Nakes (Permenkes 43/2019)</h4>
-                        <span id="modal-nakes-badge" class="rounded-full bg-surface-mint text-primary-dark px-2.5 py-0.5 text-[10px] font-extrabold">100% Terpenuhi</span>
+                        <h4 class="font-extrabold text-ink text-xs">9 Profesi Nakes</h4>
+                        <span id="modal-nakes-badge" class="rounded-full bg-surface-mint text-primary-dark px-2.5 py-0.5 text-[10px] font-extrabold">100% Lengkap</span>
                     </div>
                     <div id="modal-nakes-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-[11px]"></div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-2.5 text-center">
                     <div class="p-3.5 rounded-2xl bg-surface-mint/60 border border-primary/15">
-                        <span class="text-xs text-muted block">Posyandu Binaan</span>
+                        <span class="text-xs text-muted block">Posyandu</span>
                         <span id="modal-posyandu" class="text-lg font-extrabold text-primary-dark block mt-0.5">32</span>
                     </div>
                     <div class="p-3.5 rounded-2xl bg-surface-mint/60 border border-primary/15">
-                        <span class="text-xs text-muted block">Sekolah Binaan UKS</span>
+                        <span class="text-xs text-muted block">Sekolah UKS</span>
                         <span id="modal-school" class="text-lg font-extrabold text-primary-dark block mt-0.5">24</span>
                     </div>
                 </div>
@@ -55,11 +55,11 @@
             <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 sm:flex sm:items-center sm:justify-between gap-2.5 shrink-0">
                 <a id="modal-official-link" href="https://kotabogor.go.id" target="_blank" rel="noopener noreferrer"
                    class="h-10 px-3 sm:px-4 rounded-full border border-gray-300 text-ink hover:bg-white text-[11px] sm:text-xs font-extrabold transition-colors inline-flex items-center justify-center gap-1.5">
-                    <span>Portal Resmi</span>
+                    <span>Portal</span>
                 </a>
                 <a id="modal-route-link" href="#" target="_blank" rel="noopener noreferrer"
                    class="h-10 px-3 sm:px-5 rounded-full bg-primary text-white hover:bg-primary-dark text-[11px] sm:text-xs font-extrabold transition-colors inline-flex items-center justify-center gap-1.5 shadow-sm">
-                    <span>Rute Maps &rarr;</span>
+                    <span>Rute &rarr;</span>
                 </a>
             </div>
         </div>

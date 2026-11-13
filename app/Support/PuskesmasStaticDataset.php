@@ -2,6 +2,9 @@
 
 namespace App\Support;
 
+/**
+ * @deprecated Digantikan oleh query PostgreSQL/PostGIS melalui SpatialAnalysisService dan MapPayloadPresenter.
+ */
 class PuskesmasStaticDataset
 {
     // Mengembalikan daftar data statis Puskesmas sebelum terhubung ke PostGIS
