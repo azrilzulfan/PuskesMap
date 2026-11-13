@@ -710,20 +710,6 @@ export function initLandingPage() {
         });
     });
 
-    // Interaksi Tab Footer Baru (Referensi Chaumes-en-Retz)
-    const footerTabs = document.querySelectorAll('[data-footer-tab]');
-    footerTabs.forEach((tab) => {
-        tab.addEventListener('click', () => {
-            footerTabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
-            const addrEl = document.getElementById('footer-tab-address');
-            const phoneEl = document.getElementById('footer-tab-phone');
-            const hoursEl = document.getElementById('footer-tab-hours');
-            if (addrEl && tab.dataset.tabAddress) addrEl.textContent = tab.dataset.tabAddress;
-            if (phoneEl && tab.dataset.tabPhone) phoneEl.textContent = tab.dataset.tabPhone;
-            if (hoursEl && tab.dataset.tabHours) hoursEl.textContent = tab.dataset.tabHours;
-        });
-    });
-
     // Peta Jalan Interaktif pada Section "Sekilas di Peta" di Landing Page
     const landingMapEl = document.getElementById('landing-leaflet-map');
     if (landingMapEl) {
