@@ -1,0 +1,28 @@
+tabel,kolom,status,sumber
+kecamatan,kode_kecamatan,dari_file_kamu,ADMINISTRASI_KOTABOGOR_KECAMATAN.csv (CC_3)
+kecamatan,nama_kecamatan,dari_file_kamu,"Ejaan ""Tanah Sereal"" (GADM) disamakan dengan ""Tanah Sareal"" (Dinkes/BPS)"
+kecamatan,geom,dari_file_kamu,Poligon GADM; urutan koordinat dibalik jadi (long lat); 6 poligon valid; luas selisih -4.4% s/d +2.8% dari luas resmi
+kecamatan,jumlah_penduduk,resmi,Profil Kesehatan Kota Bogor Tahun 2025 Tabel 1 (total 1.156.543 jiwa)
+kecamatan,luas_wilayah_km2,resmi,Profil Kesehatan Kota Bogor 2023 Bab I (sumber BPS)
+puskesmas,kode_puskesmas / nama / geom / x_long / y_lat,dari_file_kamu,PUSKESMAS_PT.csv (kolom geom terbalik; X_LONG/Y_LAT benar); ke-25 titik terbukti di kecamatan yang benar
+puskesmas,alamat,resmi,https://kotabogor.go.id/detail/perangkat-daerah ; Kedung Badak dari file kamu (situs Pemkot menyalin alamat Gang Kelor); alamat Mekar Wangi di file kamu menyalin Kayu Manis jadi diganti alamat resmi
+puskesmas,website_url,resmi,REST API Bogor Smart Health Dinkes Kota Bogor 2026 (https://dinkes.kotabogor.go.id/puskesmas-<slug> HTTP 200 OK; 25/25 aktif menggantikan subdomain lama pkm*.kotabogor.go.id yang NXDOMAIN)
+puskesmas,kategori_layanan,resmi,Profil Kesehatan Kota Bogor Tahun 2025 Tabel 4 & Tabel 96 (0 puskesmas rawat inap; 25/25 Non Rawat Inap Terakreditasi Paripurna)
+puskesmas,jumlah_posyandu,resmi,Profil Kesehatan Kota Bogor Tahun 2025 Tabel 12 (data riil per wilayah kerja puskesmas; total kota 1.000 Posyandu Aktif)
+puskesmas,jumlah_sekolah,resmi,Profil Kesehatan Kota Bogor Tahun 2025 Tabel 47 (data riil SD/MI + SMP/MTs + SMA/MA binaan per puskesmas; total kota 707 sekolah)
+puskesmas,skor_psw,dihitung,Diisi oleh sql/05_hitung_psw.sql / WorkloadService; memakai populasi resmi 2025 serta posyandu & sekolah riil 2025 dan rata-rata kunjungan pasien baru 2025
+operasional,status_igd_24jam,resmi,6 puskesmas UGD 24 jam: Bogor Tengah Bogor Timur Bogor Utara Tanah Sareal Pasir Mulya Cipaku (dikonfirmasi ulang via REST API Dinkes Kota Bogor 2026)
+operasional,jam_buka / jam_tutup,resmi_dengan_catatan,REST API Dinkes Kota Bogor 2026: jam poli reguler Senin-Kamis 07:30-14:00 WIB (atau 08:00-14:00 WIB untuk Cipaku Pulo Armyn Kedung Badak); dipisah dari status_igd_24jam agar kriteria MAUT tidak terduplikasi
+operasional,kontak_darurat,resmi,REST API Bogor Smart Health Dinkes Kota Bogor 2026 (25/25 nomor telepon resmi terisi dan dikoreksi termasuk Pasir Mulya 0251-8638926)
+operasional,rawat_inap,resmi,Profil Kesehatan Kota Bogor Tahun 2025 Tabel 4 (0 puskesmas rawat inap)
+tenaga_medis,dokter_umum..atlm,dari_file_kamu,PKM_Nakes_Kurang_Lengkap.csv (snapshot Dinkes update 2 Jan 2026); 6 puskesmas Kurang Lengkap dipertahankan untuk demonstrasi deteksi kesenjangan SDM
+tenaga_medis,persentase_kelengkapan,dihitung,Profesi yang ada dibagi 9; cocok dengan % di file untuk ke-25 puskesmas
+tenaga_medis,kategori_jumlah_nakes,aturan_buatan,Lengkap jika 9 dari 9 profesi ada selain itu Kurang Lengkap
+kunjungan_pasien,total_pasien_bulanan,estimasi_dari_resmi,Profil Kesehatan Kota Bogor Tahun 2025 Tabel 5 (Kunjungan Pasien Baru Rawat Jalan 2025 per puskesmas total 174.861/tahun) dibagi rata 12 bulan (ROUND(tahunan/12)) karena sumber resmi tidak merilis rincian bulanan
+kunjungan_pasien,tahun,resmi,2025 (mengikuti tahun data Tabel 5 Profil Kesehatan Kota Bogor Tahun 2025)
+kunjungan_pasien,kapasitas_maksimal_bulanan,aturan_buatan,850 pasien baru/bulan (dikalibrasi terhadap skala pasien baru Tabel 5 2025 sehingga menghasilkan sebaran 4 Padat 12 Sedang 9 Rendah)
+kunjungan_pasien,persentase_keramaian / status_kepadatan,dihitung,total dibagi kapasitas; <60 Rendah; 60-85 Sedang; >85 Padat
+jangkauan_jalan,semua,dari_file_kamu,JANGKAUAN_PUSKESMAS__RUMAHSAKIT.csv: 37 poligon; baris kosong (FID .38) dibuang; kolom FID dan fid ganda dibuang; poligon menutup tiap kecamatan tanpa tumpang-tindih; jangkauan_faskes dan jangkauan_jalan dalam meter
+jalan_utama.geojson,semua,dari_file_kamu,jaringan_jalan_bogor.gpkg (OSM): 21184 ruas -> 958 ruas lima kelas (motorway trunk primary secondary tertiary) -> 941 setelah dipotong batas kota; 179 ruas _link tidak dipakai
+users,semua,sengaja_kosong,Dibuat lewat seeder Laravel dengan password yang kamu tentukan sendiri
+audit_log,semua,sengaja_kosong,Terisi otomatis saat aplikasi dipakai

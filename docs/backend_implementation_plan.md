@@ -1,6 +1,9 @@
 # Rencana Implementasi Backend — PuskesMap Kota Bogor (SDSS)
 
-Dokumen ini merupakan rancangan teknis implementasi backend **PuskesMap Kota Bogor** (_Spatial Decision Support System_ / SDSS) berbasis **Laravel 13** (PHP `>= 8.3`, runtime PHP `8.5`) dan **PostgreSQL 16 + PostGIS 3.4** dengan acuan utama **Software Architecture Document (SAD) (revisi 12)**, **Software Requirements Specification (SRS) (revisi 12)**, serta dataset kanonik di `docs/Dataset/`.
+Dokumen ini merupakan rancangan teknis implementasi backend **PuskesMap Kota Bogor** (_Spatial Decision Support System_ / SDSS) berbasis **Laravel 13** (PHP `>= 8.3`, runtime PHP `8.5`) dan **PostgreSQL 16 + PostGIS 3.4** dengan acuan utama **Software Architecture Document (SAD) (revisi 12)**, **Software Requirements Specification (SRS) (revisi 12)**, spesifikasi di `docs/specs/`, skema SQL di `docs/sql/`, serta dataset resmi 2025–2026 di `database/seeders/csv/`.
+
+> [!NOTE]
+> **Pembaruan Konsolidasi Team Lead (13 Nov 2026):** Seluruh angka resmi telah diselaraskan ke dataset 2025–2026 (`kapasitas_maksimal_bulanan = 850`, `jam_tutup = 14:00:00`), `search_path=public,extensions` untuk Supabase, GeoJSON `Cache::rememberForever` + `ST_AsGeoJSON(..., 6)`, serta pembatasan skenario `pemda` hanya untuk `pemerintah`/`admin`. Untuk pembagian area tim dan aturan terbaru lihat [`docs/TEAM_GUIDE.md`](./TEAM_GUIDE.md).
 
 ---
 
@@ -8,7 +11,7 @@ Dokumen ini merupakan rancangan teknis implementasi backend **PuskesMap Kota Bog
 
 Berdasarkan kondisi codebase saat ini (prototipe `/peta` yang membaca `App\Support\PuskesmasStaticDataset`, tiga kelas _stub_ pada `app/Services/`, autentikasi belum terhubung, dan `.env` / `phpunit.xml` masih memakai `mysql` & `sqlite`) serta keputusan Anda pada klarifikasi arsitektur, rencana ini mencakup:
 
-1. **Database Spasial Native (PostgreSQL 16 + PostGIS 3.4):** Memindahkan target `.env` dan `phpunit.xml` ke PostgreSQL + PostGIS (dengan _driver guard_ yang aman pada migrasi), memodelkan seluruh **8 tabel domain** sesuai SAD Tabel 5.1–5.8 & `docs/Dataset/01_schema.sql`, serta mengisi data kanonik dari `docs/Dataset/*.csv` (`6` kecamatan, `25` puskesmas, `25` operasional, `25` tenaga medis, `300` kunjungan pasien tahun 2025, `37` zona jangkauan jalan).
+1. **Database Spasial Native (PostgreSQL 16 + PostGIS 3.4):** Memindahkan target `.env` dan `phpunit.xml` ke PostgreSQL + PostGIS (dengan _driver guard_ yang aman pada migrasi), memodelkan seluruh **8 tabel domain** sesuai SAD Tabel 5.1–5.8 & `docs/sql/01_schema.sql`, serta mengisi data kanonik dari `database/seeders/csv/*.csv` (`6` kecamatan, `25` puskesmas, `25` operasional, `25` tenaga medis, `300` kunjungan pasien tahun 2025, `37` zona jangkauan jalan).
 2. **Engine Analitik & SDSS Backend (`app/Services/`):** Mengimplementasikan `SpatialAnalysisService` (PostGIS `ST_Distance`, `ST_DWithin`, `ST_Buffer`, `ST_Contains`, `ST_Difference`, `ST_Area`), `RecommendationService` (MAUT 5 kriteria untuk skenario `darurat`, `reguler`, `pemda`), `WorkloadService` (PSW-Index + spektrum `Tinggi`/`Ideal`/`Rendah`), `AuditLogService`, dan `ReportExportService`.
 3. **Auth, RBAC & Keamanan (`NFR-01`–`NFR-06`):** Login/Logout berbasis session database (`lifetime = 120` menit), _rate limiting_, pengecekan `is_active`, serta middleware `CheckRole` yang mengembalikan **HTTP 403** bagi role yang tidak berwenang.
 4. **7 Endpoint `/api/v1/*`, Analitik Dinkes + Ekspor CSV/PDF (`FR-21`), & CRUD Admin:** Mendukung API publik & terproteksi, pemasangan **`barryvdh/laravel-dompdf`** untuk ekspor PDF server-side selain stream CSV, manajemen data master dengan validasi poligon Kota Bogor + recalculation `skor_psw` otomatis + `audit_log`, dan paginasi `10–25` baris (`NFR-09`).
@@ -103,7 +106,7 @@ sequenceDiagram
 >
 > 1. **Instance PostgreSQL 16 + PostGIS 3.4:** Saat pemeriksaan lingkungan, ekstensi PHP `pdo_pgsql` sudah aktif, namun utilitas CLI `psql` tidak tersedia di `PATH`, `.env` menunjuk ke `mysql`, dan `phpunit.xml` menunjuk ke `sqlite :memory:`. Pastikan database PostgreSQL + PostGIS untuk dev (mis. `puskesmap`) dan testing terpisah (mis. `puskesmap_test`) tersedia beserta ekstensi `postgis`, serta kredensial `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`.
 > 2. **Instalasi Paket PDF (`FR-21`):** Sesuai persetujuan pada langkah klarifikasi, fase implementasi akan menjalankan `composer require barryvdh/laravel-dompdf --no-interaction` (mengubah `composer.json` dan `composer.lock`).
-> 3. **Rekonsiliasi Data Prototipe vs Dataset Resmi:** `PuskesmasStaticDataset` memiliki perbedaan data dibanding `docs/Dataset/` (mis. `Puskesmas Tanah Sareal` pada prototipe memakai jam `08.00–16.00` dan istilah keramaian `Sepi|Sedang|Ramai`, sedangkan `docs/Dataset/operasional.csv` & `kunjungan_pasien.csv` memakai `07:30:00–15:00:00`, kapasitas baku `5603`, serta label `Rendah|Sedang|Padat`). `MapController` akan membaca data resmi PostgreSQL dan menyediakan _mapping_ kompatibel agar UI `/peta` tetap berjalan mulus tanpa mengubah JS prototipe.
+> 3. **Rekonsiliasi Data Prototipe vs Dataset Resmi 2025–2026:** `PuskesmasStaticDataset` memiliki perbedaan data dibanding `database/seeders/csv/` (mis. jam poli reguler `07:30:00–14:00:00`, kapasitas baku `850`, serta label `Rendah|Sedang|Padat`). `MapController` membaca data resmi PostgreSQL dan menyediakan _mapping_ kompatibel sampai perombakan UI OneMap (`T-02`).
 
 ---
 
@@ -130,7 +133,7 @@ Memusatkan konstanta domain sesuai aturan `config.md` agar tidak tersebar sebaga
     - `pemda`: `['nakes' => 0.30, 'distance' => 0.20, 'crowd' => 0.20, 'igd' => 0.15, 'hours' => 0.15]`
 - `psw.weights`: `['pop' => 0.40, 'edu' => 0.20, 'pos' => 0.20, 'kur' => 0.20]`
 - `psw.thresholds`: `['high' => 0.70, 'ideal' => 0.40]`
-- `capacity.default_monthly`: `5603`, ambang kepadatan `60.0` (`Rendah`) dan `85.0` (`Sedang`/`Padat`)
+- `capacity.default_monthly`: `850`, ambang kepadatan `60.0` (`Rendah`) dan `85.0` (`Sedang`/`Padat`)
 - `equity.population_per_facility`: `30000`
 - `coverage.allowed_buffers_km`: `[1.5, 3.0]`
 - `pagination.default_per_page`: `15` (dalam batas `10–25` per `NFR-09`)
@@ -179,9 +182,9 @@ Urutan kronologis sesuai ketergantungan _foreign key_ (seluruh statement DDL khu
 | 2   | `..._add_role_and_is_active_to_users_table.php` | `users`            | Kolom `role VARCHAR(20) DEFAULT 'pemerintah'`, `is_active BOOLEAN DEFAULT true`, CHECK `role IN ('admin','pemerintah')`                                                                                                                                                                                                                                           |
 | 3   | `..._create_kecamatan_table.php`                | `kecamatan`        | `kode_kecamatan` UK, `nama_kecamatan`, `geom GEOMETRY(MultiPolygon, 4326)` + `idx_kecamatan_geom GIST`, `jumlah_penduduk`, `luas_wilayah_km2`                                                                                                                                                                                                                     |
 | 4   | `..._create_puskesmas_table.php`                | `puskesmas`        | `kecamatan_id` FK (`ON DELETE RESTRICT`), `kode_puskesmas` UK, `nama_puskesmas`, `alamat`, `geom GEOMETRY(Point, 4326)` + `idx_puskesmas_geom GIST` + `idx_puskesmas_geog GIST((geom::geography))`, `x_long`, `y_lat`, `website_url`, `kategori_layanan` (default `'Non Rawat Inap'`), `jumlah_posyandu`, `jumlah_sekolah`, `skor_psw DECIMAL(5,2)`, `timestamps` |
-| 5   | `..._create_operasional_table.php`              | `operasional`      | `puskesmas_id` FK UK (`ON DELETE CASCADE`), `status_igd_24jam` BOOL(false), `jam_buka` TIME(`07:30:00`), `jam_tutup` TIME(`15:00:00`), `kontak_darurat`, `rawat_inap` BOOL(false)                                                                                                                                                                                 |
+| 5   | `..._create_operasional_table.php`              | `operasional`      | `puskesmas_id` FK UK (`ON DELETE CASCADE`), `status_igd_24jam` BOOL(false), `jam_buka` TIME(`07:30:00`), `jam_tutup` TIME(`14:00:00`), `kontak_darurat`, `rawat_inap` BOOL(false)                                                                                                                                                                                 |
 | 6   | `..._create_tenaga_medis_table.php`             | `tenaga_medis`     | `puskesmas_id` FK UK (`ON DELETE CASCADE`), 9 profesi integer (`dokter_umum`, `dokter_gigi`, `bidan`, `perawat`, `farmasi`, `gizi`, `kesling`, `kesmas`, `atlm`), `persentase_kelengkapan` DOUBLE PRECISION, `kategori_jumlah_nakes`                                                                                                                              |
-| 7   | `..._create_kunjungan_pasien_table.php`         | `kunjungan_pasien` | `puskesmas_id` FK (`ON DELETE CASCADE`), `bulan (1..12)`, `tahun`, `total_pasien_bulanan`, `kapasitas_maksimal_bulanan (5603)`, `persentase_keramaian`, `status_kepadatan`, `UNIQUE(puskesmas_id, tahun, bulan)`                                                                                                                                                  |
+| 7   | `..._create_kunjungan_pasien_table.php`         | `kunjungan_pasien` | `puskesmas_id` FK (`ON DELETE CASCADE`), `bulan (1..12)`, `tahun`, `total_pasien_bulanan`, `kapasitas_maksimal_bulanan (850)`, `persentase_keramaian`, `status_kepadatan`, `UNIQUE(puskesmas_id, tahun, bulan)`                                                                                                                                                  |
 | 8   | `..._create_jangkauan_jalan_table.php`          | `jangkauan_jalan`  | `kecamatan_id` FK (`ON DELETE CASCADE`), `kategori_jangkauan`, `jangkauan_faskes`, `jangkauan_jalan`, `geom GEOMETRY(MultiPolygon, 4326)` + `idx_jangkauan_geom GIST`                                                                                                                                                                                             |
 | 9   | `..._create_audit_log_table.php`                | `audit_log`        | `user_id` FK (`ON DELETE RESTRICT`), `aksi` (`INSERT                                                                                                                                                                                                                                                                                                              | UPDATE | DELETE | DEACTIVATE`), `tabel_target`, `target_id`, `deskripsi_perubahan`, `ip_address VARCHAR(45)`, `created_at`+ indeks`(tabel_target, target_id)`&`created_at` |
 
@@ -204,9 +207,9 @@ Urutan kronologis sesuai ketergantungan _foreign key_ (seluruh statement DDL khu
 - `[MODIFY] database/factories/UserFactory.php`: tambah state `admin()`, `pemerintah()`, dan `inactive()`.
 - `[NEW]` `KecamatanFactory`, `PuskesmasFactory`, `OperasionalFactory`, `TenagaMedisFactory`, `KunjunganPasienFactory`, `JangkauanJalanFactory` (untuk tes unit/fitur yang ringkas menggunakan poligon/titik WKT valid di wilayah Bogor tanpa perlu memuat seluruh CSV multi-megabyte di tiap test case).
 - `[NEW] database/seeders/DatasetBogorSeeder.php`:
-    - Membaca langsung dari `docs/Dataset/*.csv` (`kecamatan.csv`, `puskesmas.csv`, `operasional.csv`, `tenaga_medis.csv`, `kunjungan_pasien.csv`, `jangkauan_jalan.csv`) secara berurutan dan idempoten dalam `DB::transaction()`.
+    - Membaca langsung dari `database/seeders/csv/*.csv` (`kecamatan.csv`, `puskesmas.csv`, `operasional.csv`, `tenaga_medis.csv`, `kunjungan_pasien.csv`, `jangkauan_jalan.csv`) secara berurutan dan idempoten dalam `DB::transaction()`.
     - Menyisipkan `geom` via `ST_GeomFromText(?, 4326)` dan memastikan seluruh `geom` valid (`ST_IsValid`).
-    - Memanggil `WorkloadService::recalculateAndPersistScores()` setelah insert selesai untuk mengisi `puskesmas.skor_psw` (yang memang kosong pada `puskesmas.csv`, setara `docs/Dataset/05_hitung_psw.sql`).
+    - Memanggil `WorkloadService::recalculateAndPersistScores()` setelah insert selesai untuk mengisi `puskesmas.skor_psw` (yang memang kosong pada `puskesmas.csv`, setara `docs/sql/05_hitung_psw.sql`).
 - `[NEW] database/seeders/UserSeeder.php`: menyediakan akun default dev terverifikasi (`admin` & `pemerintah` Dinas Kesehatan dengan `Hash::make` cost 12) dan `[MODIFY] database/seeders/DatabaseSeeder.php` memanggil keduanya secara terurut.
 
 ---
@@ -253,7 +256,7 @@ Mengimplementasikan algoritma **MAUT 5 Kriteria** sesuai SRS Tabel 3.3–3.4 dan
 
 #### [MODIFY] `app/Services/WorkloadService.php`
 
-Mengimplementasikan **PSW-Index** sesuai `docs/Dataset/05_hitung_psw.sql` dan SAD Tabel 10.2–10.3:
+Mengimplementasikan **PSW-Index** sesuai `docs/sql/05_hitung_psw.sql` dan SAD Tabel 10.2–10.3:
 
 - `calculatePSWIndex(?int $tahun = null, ?int $bulan = null): Collection`:
     - Mengambil data tiap puskesmas beserta `jumlah_penduduk` kecamatannya, jumlah puskesmas dalam kecamatan yang sama (`puskesmas_per_kec`), `jumlah_sekolah`, `jumlah_posyandu`, dan `persentase_keramaian` (dari bulan/tahun terpilih atau periode terbaru jika null).
@@ -356,7 +359,7 @@ Mengimplementasikan **PSW-Index** sesuai `docs/Dataset/05_hitung_psw.sql` dan SA
 ## Urutan Tahapan Eksekusi (_Phasing_)
 
 1. **Fase 1 — Infrastruktur & Paket:** Konfigurasi PostgreSQL + PostGIS di `.env` & `phpunit.xml`, `composer require barryvdh/laravel-dompdf`, buat `config/sdss.php`, `app/Enums/*`, update `AppServiceProvider`, buat `CheckRole` & update `bootstrap/app.php`.
-2. **Fase 2 — Skema Database & ETL Seeder:** Buat 9 migrasi, 8 model Eloquent, factories, `DatasetBogorSeeder` (import CSV `docs/Dataset/`), dan `UserSeeder`; jalankan `php artisan migrate:fresh --seed`.
+2. **Fase 2 — Skema Database & ETL Seeder:** Buat 9 migrasi, 8 model Eloquent, factories, `DatasetBogorSeeder` (import CSV `database/seeders/csv/`), dan `UserSeeder`; jalankan `php artisan migrate:fresh --seed`.
 3. **Fase 3 — Domain Services (SDSS Engine):** Implementasikan `SpatialAnalysisService`, `RecommendationService`, `WorkloadService`, `AuditLogService`, dan `ReportExportService`, termasuk sinkronisasi awal `skor_psw`.
 4. **Fase 4 — Auth & Public API v1 + `MapController`:** Implementasikan `AuthController`, Form Requests, Resources, `Api\V1\PuskesmasController`, `Api\V1\RecommendationController`, perbarui `MapController` & `auth/login.blade.php`.
 5. **Fase 5 — Analitik Dinkes, Ekspor & Admin CRUD:** Implementasikan `Api\V1\AnalysisController`, `AnalyticsController` + CSV/PDF export, `Admin\*` controllers + Blade views.
@@ -368,7 +371,7 @@ Mengimplementasikan **PSW-Index** sesuai `docs/Dataset/05_hitung_psw.sql` dan SA
 
 ### 1. Validasi Skema Spasial & ETL Dataset (`PostgreSQL + PostGIS`)
 
-Setelah menjalankan `php artisan migrate:fresh --seed`, lakukan pemeriksaan SQL mengacu `docs/Dataset/04_validasi.sql` & `05_hitung_psw.sql`:
+Setelah menjalankan `php artisan migrate:fresh --seed`, lakukan pemeriksaan SQL mengacu `docs/sql/04_validasi.sql` & `05_hitung_psw.sql`:
 
 - Verifikasi jumlah baris eksak per tabel: `kecamatan = 6`, `puskesmas = 25`, `operasional = 25`, `tenaga_medis = 25`, `kunjungan_pasien = 300`, `jangkauan_jalan = 37`.
 - Verifikasi integritas geometri: `ST_IsValid(geom) = TRUE` untuk seluruh poligon & titik, SRID `4326`, dan seluruh `25` titik puskesmas lolos `ST_Contains(kecamatan.geom, puskesmas.geom)`.
