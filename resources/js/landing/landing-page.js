@@ -457,6 +457,20 @@ export function initLandingPage() {
         let cursorX = 0;
         let cursorY = 0;
         let rafId = null;
+        let excludedZones = [];
+
+        const updateExcludedZones = () => {
+            const containerRect = container.getBoundingClientRect();
+            excludedZones = Array.from(container.querySelectorAll('[data-particle-exclude]')).map((el) => {
+                const r = el.getBoundingClientRect();
+                return {
+                    left: r.left - containerRect.left,
+                    top: r.top - containerRect.top,
+                    right: r.right - containerRect.left,
+                    bottom: r.bottom - containerRect.top,
+                };
+            });
+        };
 
         const sampleColor = (angleNorm) => {
             const scaled = ((angleNorm % 1) + 1) % 1 * palette.length;
@@ -524,6 +538,7 @@ export function initLandingPage() {
             }
 
             particles = nextParticles;
+            updateExcludedZones();
             startLoop();
         };
 
@@ -552,6 +567,22 @@ export function initLandingPage() {
 
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
+
+                // Sembunyikan partikel jika berada di dalam zona terlarang (kotak biru & peta wilayah)
+                if (excludedZones.length > 0) {
+                    let isExcluded = false;
+                    for (let j = 0; j < excludedZones.length; j++) {
+                        const zone = excludedZones[j];
+                        if (p.x >= (zone.left - 4) && p.x <= (zone.right + 4) && p.y >= (zone.top - 4) && p.y <= (zone.bottom + 4)) {
+                            isExcluded = true;
+                            break;
+                        }
+                    }
+                    if (isExcluded) {
+                        continue;
+                    }
+                }
+
                 const dxHome = cursorX - p.hx;
                 const dyHome = cursorY - p.hy;
                 const hDist = Math.hypot(dxHome, dyHome);
@@ -623,6 +654,11 @@ export function initLandingPage() {
             if (event.pointerType && event.pointerType !== 'mouse' && event.pointerType !== 'pen') {
                 return;
             }
+            if (event.target.closest('[data-particle-exclude]')) {
+                isPointerActive = false;
+                startLoop();
+                return;
+            }
             const rect = container.getBoundingClientRect();
             targetX = event.clientX - rect.left;
             targetY = event.clientY - rect.top;
@@ -630,7 +666,10 @@ export function initLandingPage() {
             startLoop();
         };
 
-        container.addEventListener('pointerenter', updatePointer, { passive: true });
+        container.addEventListener('pointerenter', (event) => {
+            updateExcludedZones();
+            updatePointer(event);
+        }, { passive: true });
         container.addEventListener('pointermove', updatePointer, { passive: true });
         container.addEventListener('pointerleave', () => {
             isPointerActive = false;
