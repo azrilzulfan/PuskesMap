@@ -32,8 +32,8 @@ class OperasionalFactory extends Factory
     {
         return $this->state(fn (array $attributes): array => [
             'status_igd_24jam' => true,
-            'jam_buka' => '00:00:00',
-            'jam_tutup' => '23:59:59',
+            'jam_buka' => '07:30:00',
+            'jam_tutup' => '14:00:00',
         ]);
     }
 }

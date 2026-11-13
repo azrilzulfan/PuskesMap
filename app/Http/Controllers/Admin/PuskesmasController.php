@@ -90,8 +90,8 @@ class PuskesmasController extends Controller
             Operasional::create([
                 'puskesmas_id' => $puskesmas->id,
                 'status_igd_24jam' => $isIgd,
-                'jam_buka' => $validated['jam_buka'] ?? ($isIgd ? '00:00:00' : '07:30:00'),
-                'jam_tutup' => $validated['jam_tutup'] ?? ($isIgd ? '23:59:59' : '14:00:00'),
+                'jam_buka' => $validated['jam_buka'] ?? '07:30:00',
+                'jam_tutup' => $validated['jam_tutup'] ?? '14:00:00',
                 'kontak_darurat' => $validated['kontak_darurat'] ?? null,
                 'rawat_inap' => (bool) ($validated['rawat_inap'] ?? false),
             ]);

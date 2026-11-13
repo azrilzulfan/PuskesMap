@@ -23,8 +23,11 @@ class RecommendationController extends Controller
         $lat = (float) $validated['lat'];
         $lng = (float) $validated['lng'];
         $scenario = MautScenario::from((string) $validated['scenario']);
+        $radius = isset($validated['radius']) ? (int) $validated['radius'] : null;
 
-        $facilities = $this->spatialAnalysis->getNearestFacilities($lat, $lng, null);
+        $facilities = $radius !== null
+            ? $this->spatialAnalysis->getFacilitiesInBuffer($lat, $lng, (float) $radius)['facilities']
+            : $this->spatialAnalysis->getNearestFacilities($lat, $lng, null);
         $ranked = $this->recommendationService->rankFacilities($facilities, $scenario);
 
         $recommendations = $ranked->values()->map(function (array $item, int $index) use ($request): array {
@@ -44,6 +47,7 @@ class RecommendationController extends Controller
             'scenario' => $scenario->value,
             'scenario_label' => $scenario->label(),
             'weights' => $scenario->weights(),
+            'radius_meters' => $radius,
             'reference_point' => [
                 'lat' => $lat,
                 'lng' => $lng,

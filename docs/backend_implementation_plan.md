@@ -3,18 +3,18 @@
 Dokumen ini merupakan rancangan teknis implementasi backend **PuskesMap Kota Bogor** (_Spatial Decision Support System_ / SDSS) berbasis **Laravel 13** (PHP `>= 8.3`, runtime PHP `8.5`) dan **PostgreSQL 16 + PostGIS 3.4** dengan acuan utama **Software Architecture Document (SAD) (revisi 12)**, **Software Requirements Specification (SRS) (revisi 12)**, spesifikasi di `docs/specs/`, skema SQL di `docs/sql/`, serta dataset resmi 2025–2026 di `database/seeders/csv/`.
 
 > [!NOTE]
-> **Pembaruan Konsolidasi Team Lead (13 Nov 2026):** Seluruh angka resmi telah diselaraskan ke dataset 2025–2026 (`kapasitas_maksimal_bulanan = 850`, `jam_tutup = 14:00:00`), `search_path=public,extensions` untuk Supabase, GeoJSON `Cache::rememberForever` + `ST_AsGeoJSON(..., 6)`, serta pembatasan skenario `pemda` hanya untuk `pemerintah`/`admin`. Untuk pembagian area tim dan aturan terbaru lihat [`docs/TEAM_GUIDE.md`](./TEAM_GUIDE.md).
+> **Pembaruan Konsolidasi Team Lead (13 Nov 2026 — Status: Implementasi `T-01` Selesai):** Fase 1–5 backend (`DatasetBogorSeeder`, `App\Services\*`, Auth/RBAC, `/api/v1/*`, `/analitik`, `/admin/*`, serta konfigurasi `pgsql` di `.env.example` & `phpunit.xml`) telah diimplementasikan menggantikan `PuskesmasStaticDataset` pada `MapController`. Seluruh angka resmi telah diselaraskan ke dataset 2025–2026 (`kapasitas_maksimal_bulanan = 850`, `jam_tutup = 14:00:00`), `search_path=public,extensions` untuk Supabase, GeoJSON `Cache::rememberForever` + `ST_AsGeoJSON(..., 6)`, serta pembatasan skenario `pemda` hanya untuk `pemerintah`/`admin`. Untuk pembagian area tim dan aturan terbaru lihat [`docs/TEAM_GUIDE.md`](./TEAM_GUIDE.md).
 
 ---
 
 ## Ringkasan Tujuan & Keputusan Arsitektur
 
-Berdasarkan kondisi codebase saat ini (prototipe `/peta` yang membaca `App\Support\PuskesmasStaticDataset`, tiga kelas _stub_ pada `app/Services/`, autentikasi belum terhubung, dan `.env` / `phpunit.xml` masih memakai `mysql` & `sqlite`) serta keputusan Anda pada klarifikasi arsitektur, rencana ini mencakup:
+Dokumen ini mendokumentasikan arsitektur target beserta keputusan desain backend `T-01` yang telah diterapkan:
 
 1. **Database Spasial Native (PostgreSQL 16 + PostGIS 3.4):** Memindahkan target `.env` dan `phpunit.xml` ke PostgreSQL + PostGIS (dengan _driver guard_ yang aman pada migrasi), memodelkan seluruh **8 tabel domain** sesuai SAD Tabel 5.1–5.8 & `docs/sql/01_schema.sql`, serta mengisi data kanonik dari `database/seeders/csv/*.csv` (`6` kecamatan, `25` puskesmas, `25` operasional, `25` tenaga medis, `300` kunjungan pasien tahun 2025, `37` zona jangkauan jalan).
 2. **Engine Analitik & SDSS Backend (`app/Services/`):** Mengimplementasikan `SpatialAnalysisService` (PostGIS `ST_Distance`, `ST_DWithin`, `ST_Buffer`, `ST_Contains`, `ST_Difference`, `ST_Area`), `RecommendationService` (MAUT 5 kriteria untuk skenario `darurat`, `reguler`, `pemda`), `WorkloadService` (PSW-Index + spektrum `Tinggi`/`Ideal`/`Rendah`), `AuditLogService`, dan `ReportExportService`.
 3. **Auth, RBAC & Keamanan (`NFR-01`–`NFR-06`):** Login/Logout berbasis session database (`lifetime = 120` menit), _rate limiting_, pengecekan `is_active`, serta middleware `CheckRole` yang mengembalikan **HTTP 403** bagi role yang tidak berwenang.
-4. **7 Endpoint `/api/v1/*`, Analitik Dinkes + Ekspor CSV/PDF (`FR-21`), & CRUD Admin:** Mendukung API publik & terproteksi, pemasangan **`barryvdh/laravel-dompdf`** untuk ekspor PDF server-side selain stream CSV, manajemen data master dengan validasi poligon Kota Bogor + recalculation `skor_psw` otomatis + `audit_log`, dan paginasi `10–25` baris (`NFR-09`).
+4. **9 Endpoint `/api/v1/*`, Analitik Dinkes + Ekspor CSV/PDF (`FR-21`), & CRUD Admin:** Mendukung API publik & terproteksi (`/api/v1/puskesmas*`, `/rekomendasi`, `/analisis/*`), pemasangan **`barryvdh/laravel-dompdf`** untuk ekspor PDF server-side selain stream CSV, manajemen data master dengan validasi poligon Kota Bogor + recalculation `skor_psw` otomatis + `audit_log`, dan paginasi `10–25` baris (`NFR-09`).
 5. **Transisi `MapController` & `/login` ke Database:** Memperbarui `MapController::index` dan `AuthController` agar bersumber dari PostgreSQL/Eloquent sambil menjaga struktur JSON `#puskesmas-data` tetap kompatibel dengan `resources/js/map/sdss-map.js` dan menjaga halaman publik `/peta` bebas dari komponen Dinkes (memastikan `Tests\Feature\MapPageTest` tetap lulus).
 
 ---
@@ -99,14 +99,14 @@ sequenceDiagram
 
 ---
 
-## Prasyarat & Persetujuan Pengguna (`User Review Required`)
+## Prasyarat Lingkungan (`T-01` — Terpenuhi pada Baseline Saat Ini)
 
-> [!IMPORTANT]
-> Sebelum mengeksekusi fase implementasi, item lingkungan dan dependensi berikut membutuhkan kesiapan dari pihak pengguna/mesin lokal:
+> [!NOTE]
+> Catatan prasyarat berikut telah diterapkan pada codebase `T-01`:
 >
-> 1. **Instance PostgreSQL 16 + PostGIS 3.4:** Saat pemeriksaan lingkungan, ekstensi PHP `pdo_pgsql` sudah aktif, namun utilitas CLI `psql` tidak tersedia di `PATH`, `.env` menunjuk ke `mysql`, dan `phpunit.xml` menunjuk ke `sqlite :memory:`. Pastikan database PostgreSQL + PostGIS untuk dev (mis. `puskesmap`) dan testing terpisah (mis. `puskesmap_test`) tersedia beserta ekstensi `postgis`, serta kredensial `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD`.
-> 2. **Instalasi Paket PDF (`FR-21`):** Sesuai persetujuan pada langkah klarifikasi, fase implementasi akan menjalankan `composer require barryvdh/laravel-dompdf --no-interaction` (mengubah `composer.json` dan `composer.lock`).
-> 3. **Rekonsiliasi Data Prototipe vs Dataset Resmi 2025–2026:** `PuskesmasStaticDataset` memiliki perbedaan data dibanding `database/seeders/csv/` (mis. jam poli reguler `07:30:00–14:00:00`, kapasitas baku `850`, serta label `Rendah|Sedang|Padat`). `MapController` membaca data resmi PostgreSQL dan menyediakan _mapping_ kompatibel sampai perombakan UI OneMap (`T-02`).
+> 1. **Instance PostgreSQL 16 + PostGIS 3.4:** `phpunit.xml` telah dikonfigurasi ke `DB_CONNECTION=pgsql` dan `DB_DATABASE=puskesmap_test`. Jika pengembang menjalankan test secara darurat dengan `DB_CONNECTION=sqlite DB_DATABASE=:memory:`, dua query native PostGIS (`ST_Buffer` & `ST_AsText`) memang gagal karena SQLite tidak memiliki ekstensi PostGIS.
+> 2. **Instalasi Paket PDF (`FR-21`):** `barryvdh/laravel-dompdf` sudah terpasang di `composer.json` dan `composer.lock`.
+> 3. **Rekonsiliasi Data Prototipe vs Dataset Resmi 2025–2026:** `MapController` sudah membaca data resmi PostgreSQL via `database/seeders/csv/` (jam poli reguler `07:30:00–14:00:00`, kapasitas baku `850`, serta label `Rendah|Sedang|Padat` dengan mapping sementara ke tampilan peta sampai perombakan UI OneMap `T-02`).
 
 ---
 
@@ -189,14 +189,14 @@ Urutan kronologis sesuai ketergantungan _foreign key_ (seluruh statement DDL khu
 | 9   | `..._create_audit_log_table.php`                | `audit_log`        | `user_id` FK (`ON DELETE RESTRICT`), `aksi` (`INSERT                                                                                                                                                                                                                                                                                                              | UPDATE | DELETE | DEACTIVATE`), `tabel_target`, `target_id`, `deskripsi_perubahan`, `ip_address VARCHAR(45)`, `created_at`+ indeks`(tabel_target, target_id)`&`created_at` |
 
 > [!NOTE]
-> `01_schema.sql` belum menyertakan `users.is_active`, `timestamps` pada `puskesmas`/`users`, indeks fungsional `idx_puskesmas_geog`, serta klausa eksplisit `ON DELETE RESTRICT` pada `puskesmas.kecamatan_id`. Rancangan migrasi ini menerapkan _superset_ sesuai SAD Tabel 5.1–5.8.
+> `docs/sql/01_schema.sql` dan migrasi Laravel telah diselaraskan mencakup `users.is_active`, `timestamps` pada `puskesmas`/`users`, indeks fungsional `idx_puskesmas_geog`, serta klausa eksplisit `ON DELETE RESTRICT` pada `puskesmas.kecamatan_id`.
 
 #### [NEW] / [MODIFY] Eloquent Models (`app/Models/`) — 8 Model
 
 - `[MODIFY] app/Models/User.php`: tambah `'role'`, `'is_active'` ke `#[Fillable]`, cast `'role' => UserRole::class` dan `'is_active' => 'boolean'`, helper `isAdmin(): bool`, `isPemerintah(): bool`, relasi `auditLogs(): HasMany`.
 - `[NEW] app/Models/Kecamatan.php`: `$table = 'kecamatan'`, `$timestamps = false`, relasi `puskesmas(): HasMany`, `jangkauanJalan(): HasMany`.
 - `[NEW] app/Models/Puskesmas.php`: `$table = 'puskesmas'`, relasi `kecamatan(): BelongsTo`, `operasional(): HasOne`, `tenagaMedis(): HasOne`, `kunjunganPasien(): HasMany`, serta dynamic subquery relationship `scopeWithLatestKunjungan()` + `latestKunjungan(): BelongsTo` (mengambil `id` terbaru berdasarkan `orderByDesc('tahun')->orderByDesc('bulan')` dalam satu query tanpa N+1).
-- `[NEW] app/Models/Operasional.php`: `$table = 'operasional'`, `$timestamps = false`, helper `durationHours(): float` (menghitung durasi operasional; bila `status_igd_24jam` aktif tetap menyediakan opsi durasi jam buka–tutup atau `24.0` sesuai aturan skoring — lihat Komponen 3).
+- `[NEW] app/Models/Operasional.php`: `$table = 'operasional'`, `$timestamps = false`, helper `durationHours(): float` (selalu menghitung selisih jam poli reguler `jam_buka`–`jam_tutup`, termasuk pada Puskesmas IGD 24 jam, agar kriteria MAUT `hours` tidak menggandakan bobot kriteria `igd`) serta `isOpenAt(): bool`.
 - `[NEW] app/Models/TenagaMedis.php`: `$table = 'tenaga_medis'`, `$timestamps = false`, helper `countProfessionsPresent(): int`, `totalPersonnel(): int`, dan `recomputeCompleteness(): void` (mengisi `persentase_kelengkapan = round((profesi_terisi / 9) * 100, 1)` & `kategori_jumlah_nakes`).
 - `[NEW] app/Models/KunjunganPasien.php`: `$table = 'kunjungan_pasien'`, `$timestamps = false`, cast `status_kepadatan => CrowdStatus::class`, helper `recomputeDensity(): void`.
 - `[NEW] app/Models/JangkauanJalan.php`: `$table = 'jangkauan_jalan'`, `$timestamps = false`, relasi `kecamatan(): BelongsTo`.
@@ -244,7 +244,7 @@ Mengimplementasikan algoritma **MAUT 5 Kriteria** sesuai SRS Tabel 3.3–3.4 dan
     - Menghitung nilai mentah 5 atribut per Puskesmas:
         1. `distance`: jarak meter -> km (_Cost_)
         2. `igd`: `status_igd_24jam ? 1.0 : 0.0` (_Benefit biner_)
-        3. `hours`: durasi jam layanan per hari dalam jam (_Benefit_) — catatan: bila `status_igd_24jam === true` diperlakukan `24.0` jam atau memakai selisih `jam_tutup - jam_buka` jika seluruhnya seragam, konsisten memakai satu rumus yang jelas (`status_igd_24jam ? 24.0 : diffHours(jam_buka, jam_tutup)`).
+        3. `hours`: durasi jam poli reguler per hari dalam jam (_Benefit_) — selalu dihitung dari selisih `jam_tutup - jam_buka` via `Operasional::durationHours()` (meskipun `status_igd_24jam === true`) agar tidak menggandakan kriteria ke-2 (`igd`).
         4. `nakes`: `tenagaMedis.persentase_kelengkapan` (`0–100`) (_Benefit_)
         5. `crowd`: `latestKunjungan.persentase_keramaian` (_Cost_)
     - Normalisasi Min-Max lintas kandidat:

@@ -171,4 +171,25 @@ test('recommendation endpoint enforces kota bogor polygon boundary and computes 
         ])
         ->assertOk()
         ->assertJsonPath('scenario', 'pemda');
+
+    $outsideRadiusFacility = Puskesmas::factory()->create([
+        'kecamatan_id' => $kec->id,
+        'nama_puskesmas' => 'Puskesmas Luar Radius',
+        'x_long' => 106.8450,
+        'y_lat' => -6.6450,
+    ]);
+    Operasional::factory()->igd24Jam()->create(['puskesmas_id' => $outsideRadiusFacility->id]);
+    TenagaMedis::factory()->create(['puskesmas_id' => $outsideRadiusFacility->id]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $outsideRadiusFacility->id, 'total_pasien_bulanan' => 500]);
+
+    $filteredResponse = $this->postJson(route('api.v1.rekomendasi'), [
+        'lat' => -6.5950,
+        'lng' => 106.7950,
+        'scenario' => 'reguler',
+        'radius' => 1000,
+    ]);
+
+    $filteredResponse->assertOk()
+        ->assertJsonPath('radius_meters', 1000)
+        ->assertJsonCount(2, 'recommendations');
 });

@@ -1,15 +1,15 @@
 # DESIGN_SPEC.md
 
 File ini adalah cetak biru tampilan (UI) dan pengalaman pengguna (UX) yang menjelaskan **SEPERTI APA** bentuk visual produk (penggabungan ringkas dari Brand Guideline, Style Guide, Wireframe, dan UX Spec).
-*(Untuk urusan fitur & aturan bisnis lihat [`specs/product/PRODUCT_SPEC.md`](./PRODUCT_SPEC.md), dan untuk urusan teknis/database lihat [`specs/tech/TECH_SPEC.md`](./TECH_SPEC.md)).*
+*(Untuk urusan fitur & aturan bisnis lihat [`PRODUCT_SPEC.md`](./PRODUCT_SPEC.md), dan untuk urusan teknis/database lihat [`TECH_SPEC.md`](./TECH_SPEC.md)).*
 
 ---
 
 ## Metadata
 
 - Nama Produk: PuskesMap — Sistem Pendukung Keputusan Spasial (WebGIS) Puskesmas Kota Bogor
-- Status Spec: Disetujui
-- Terakhir diperbarui: 2026-11-11
+- Status Spec: Disetujui & Disinkronkan ke Rute Repo (`T-01` -> `T-02`)
+- Terakhir diperbarui: 2026-11-13
 - File Bahan / Referensi:
   - [`UI_RULES.md`](./UI_RULES.md) (Aturan Wajib Tingkat 1A, 1B, 2, dan 3)
   - [`Logo.jpeg`](./Logo.jpeg) (Identitas Visual Resmi PuskesMap)
@@ -89,16 +89,17 @@ File ini adalah cetak biru tampilan (UI) dan pengalaman pengguna (UX) yang menje
   - ***Toolbar* Peta Kanan (Gaya OneMap):** Dikelompokkan secara vertikal di tepi kanan peta untuk: (a) Pemilih *Basemap* (**`OSM Standar`** vs **`Grey Lite / CartoDB Positron`**) & *Toggle Layer GIS*, (b) Tombol **Lokasi Saya (GPS)**, serta (c) Kontrol **Zoom `+` / `-`**.
 
 ### Daftar 5 Layar / Mode Utama (*Key Screens*)
-1. **Layar 1 — Peta Eksplorasi & Filter Publik (`/` — Mode *Eksplorasi*):**
+1. **Layar 1 — Peta Eksplorasi & Filter Publik (`/peta` — Mode *Eksplorasi*):**
+   - *(Catatan: Rute `/` dipakai untuk Landing Page pengantar; kanvas peta utama SDSS berada pada `/peta`.)*
    - Kotak pencarian nama Puskesmas, alamat, atau kecamatan (*debounce* `300 ms` — `FR-03`) menyatu di bagian atas *drawer* kiri, diikuti filter cepat (*Semua / Sedang Buka*, *UGD 24 Jam*, *SDM Lengkap*, pilihan Kecamatan — `FR-04`) dan daftar kartu ringkas 25 Puskesmas.
    - Mengklik salah satu kartu Puskesmas di daftar kiri langsung menggerakkan kamera peta (`map.flyTo()`) ke pin Puskesmas tersebut dan membuka *popup* ringkasnya.
-2. **Layar 2 — Kalkulator Rekomendasi Radius & Top-3 MAUT (`/` — Mode *Rekomendasi Radius*):**
-   - Di dalam *drawer* kiri, pengguna menentukan titik lokasi (tombol GPS atau klik peta — `FR-05`), memilih radius (`1 km`, `3 km`, atau `5 km` — `FR-06`), dan memilih skenario bobot (`Darurat`, `Reguler`, atau `Evaluasi Pemda` bagi akun login — `FR-07`).
+2. **Layar 2 — Kalkulator Rekomendasi Radius & Top-3 MAUT (`/peta` — Mode *Rekomendasi Radius*):**
+   - Di dalam *drawer* kiri, pengguna menentukan titik lokasi (tombol GPS atau klik peta — `FR-05`), memilih radius (`1 km`, `3 km`, atau `5 km` — `FR-06`), dan memilih skenario bobot (`Darurat`, `Reguler`, atau `Evaluasi Pemda` bagi akun login `pemerintah`/`admin` — `FR-07`).
    - Menampilkan lingkaran radius berwarna `--gis-user-pin` di peta, menampilkan 3 kartu peringkat teratas (`#1`, `#2`, `#3`) lengkap dengan jarak (`km`), skor akhir MAUT, status buka/UGD, dan rincian kontribusi 5 kriteria, serta **otomatis menggerakkan fokus peta (`flyTo`) dan menyorot penanda Puskesmas peringkat `#1` (`FR-08`)**.
-3. **Layar 3 — Dasbor Analitik Kewilayahan & Beban Wilayah PSW (`/analitik/psw` — Role `pemerintah` & `admin`):**
+3. **Layar 3 — Dasbor Analitik Kewilayahan & Beban Wilayah PSW (`/analitik` — Role `pemerintah` & `admin`):**
    - Menyediakan kontrol layer analitik Dinkes (Peta Choropleth Rasio Kecamatan `1:30.000` [`FR-10`], Spektrum PSW [`FR-24`], 37 Zona Jangkauan Jalan & 941 Ruas Jalan Utama [`FR-23`], serta Buffer Cakupan Layanan `1,5 km` atau `3,0 km` beserta luas *blank spot* dalam $\text{km}^2$ [`FR-09`]).
    - Menampilkan kartu ringkasan statistik fasilitas kota (`FR-11`), tabel peringkat 25 Puskesmas berdasarkan `skor_psw`, grafik perbandingan `Chart.js`, dan tombol aksi **"Unduh CSV"** serta **"Unduh PDF"** (`FR-21`).
-4. **Layar 4 — Halaman / Panel Detail Profil Puskesmas (`/puskesmas/{kode_puskesmas}`):**
+4. **Layar 4 — Halaman / Panel Detail Profil Puskesmas (`/puskesmas/{kode_puskesmas}` — *Rencana Fase UI `T-02`*):**
    - Menampilkan informasi lengkap Puskesmas: status layanan saat ini (Buka/Tutup WIB & UGD 24 Jam), alamat, koordinat, nomor telepon/WhatsApp resmi, tautan eksternal aktif `https://dinkes.kotabogor.go.id/<slug>` (`FR-13`), beban binaan UKM (Posyandu & Sekolah 2025 — `FR-02`), matriks ketersediaan 9 profesi Nakes beserta persentase pemenuhannya (`FR-12`), serta indikator estimasi keramaian & grafik tren kunjungan pasien baru 12 bulan (`Chart.js` — `FR-22`).
 5. **Layar 5 — Halaman Login & Dashboard Manajemen Data Master (`/login` & `/admin/*` — Role `admin`):**
    - Form login bersih (`max-width: 400px`, dukungan penuh *password manager* & tombol *Tampilkan Sandi* — `FR-14`, `FR-15`).
@@ -111,7 +112,7 @@ File ini adalah cetak biru tampilan (UI) dan pengalaman pengguna (UX) yang menje
 - **Wajib Menggunakan Komponen & Ikon Buatan Manusia:**
   - **Dilarang** membuat gambar ilustrasi/stiker atau menggambar path SVG kustom karangan AI.
   - Seluruh ikon wajib diambil dari pustaka resmi **`Lucide Icons`** (`mallardduck/blade-lucide-icons` / `lucide`), dengan ukuran konsisten (`16px` atau `20px`) dan ketebalan garis seragam (`stroke-width: 1.75`).
-  - Komponen interaktif dibangun dari pola komponen HTML/Tailwind teruji (**Preline UI / Flowbite** + **Alpine.js**) yang dirapikan ke dalam *Laravel Blade Components* (`<x-button>`, `<x-input>`, `<x-select>`, `<x-badge>`, `<x-drawer>`, `<x-modal>`).
+  - Komponen interaktif dibangun dari pola komponen HTML/Tailwind teruji (**Preline UI / Flowbite** + **Alpine.js**) yang dirapikan ke dalam *Laravel Blade Components* di `resources/views/components/ui/` (`<x-ui.button>`, `<x-ui.input>`, `<x-ui.select>`, `<x-ui.badge>`, `<x-ui.drawer>`, `<x-ui.modal>`).
 - **Ukuran Target Sentuh, Sudut, & Jarak (Sesuai [`UI_RULES.md`](./UI_RULES.md#L23-L63)):**
   - Tinggi minimal seluruh tombol, input, dan select adalah **`44px`** (`min-h-11`), dengan jarak antar target klik minimal **`8px`**.
   - *Border radius* konsisten: **`6px`** untuk kontrol (tombol, input, select, badge) dan **`12px`** untuk elemen melayang (*drawer*, modal, popup peta).

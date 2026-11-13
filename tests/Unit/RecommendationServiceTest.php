@@ -88,3 +88,13 @@ test('reguler and pemda scenarios include all complete candidates and rank by ex
     expect($regulerRanked->first()['facility']->nama_puskesmas)->toBe('Puskesmas B');
     expect($regulerRanked->first()['score'])->toBe(0.6);
 });
+
+test('igd 24 jam facility still evaluates regular polyclinic durationHours without duplicating igd weight', function () {
+    $op = new Operasional([
+        'status_igd_24jam' => true,
+        'jam_buka' => '07:30:00',
+        'jam_tutup' => '14:00:00',
+    ]);
+
+    expect($op->durationHours())->toBe(6.5);
+});

@@ -30,6 +30,7 @@ class RecommendationRequest extends FormRequest
             'lat' => ['required', 'numeric', 'between:-90,90'],
             'lng' => ['required', 'numeric', 'between:-180,180'],
             'scenario' => ['required', Rule::enum(MautScenario::class)],
+            'radius' => ['nullable', 'integer', 'in:1000,3000,5000'],
         ];
     }
 

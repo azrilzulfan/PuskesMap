@@ -49,10 +49,6 @@ class Operasional extends Model
 
     public function durationHours(): float
     {
-        if ($this->status_igd_24jam) {
-            return 24.0;
-        }
-
         $open = CarbonImmutable::parse((string) $this->jam_buka);
         $close = CarbonImmutable::parse((string) $this->jam_tutup);
 

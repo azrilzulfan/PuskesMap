@@ -14,7 +14,7 @@ class UserSeeder extends Seeder
             ['email' => 'admin@puskesmap.bogor.go.id'],
             [
                 'name' => 'Administrator PuskesMap',
-                'password' => 'AdminBogor2025!',
+                'password' => (string) env('PUSKESMAP_ADMIN_PASSWORD', 'AdminBogor2025!'),
                 'role' => UserRole::Admin,
                 'is_active' => true,
                 'email_verified_at' => now(),
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             ['email' => 'dinkes@puskesmap.bogor.go.id'],
             [
                 'name' => 'Analis Dinas Kesehatan Kota Bogor',
-                'password' => 'DinkesBogor2025!',
+                'password' => (string) env('PUSKESMAP_DINKES_PASSWORD', 'DinkesBogor2025!'),
                 'role' => UserRole::Pemerintah,
                 'is_active' => true,
                 'email_verified_at' => now(),
