@@ -1,6 +1,6 @@
-        {{-- Kolom 3: Daftar Puskesmas & Rekomendasi MAUT --}}
+        {{-- Kolom 3: Daftar Puskesmas & Rekomendasi MAUT (Tersembunyi Default, Muncul Saat Dibutuhkan) --}}
         <aside id="map-sidebar"
-               class="fixed lg:relative inset-y-0 right-0 translate-x-full lg:translate-x-0 w-full sm:w-[360px] xl:w-[390px] shrink-0 h-full flex flex-col bg-white border-l border-gray-100 z-30 shadow-2xl lg:shadow-none transition-transform duration-300 ease-in-out">
+               class="fixed lg:relative inset-y-0 right-0 translate-x-full lg:translate-x-0 lg:hidden w-full sm:w-[360px] xl:w-[390px] shrink-0 h-full flex flex-col bg-white border-l border-gray-100 z-30 shadow-2xl lg:shadow-none transition-transform duration-300 ease-in-out">
 
             {{-- SUB-PANEL 1: DAFTAR FASKES & REKOMENDASI MAUT --}}
             <div id="panel-public" class="flex-1 flex flex-col h-full overflow-hidden">
@@ -14,14 +14,14 @@
                     <div class="flex items-center gap-2">
                         <select id="select-sort" aria-label="Urutkan Puskesmas"
                                 class="bg-transparent text-xs font-extrabold text-ink focus:outline-none cursor-pointer">
-                            <option value="distance">Terdekat dulu</option>
-                            <option value="nakes">Nakes Lengkap</option>
-                            <option value="igd">Prioritas IGD 24 Jam</option>
+                            <option value="distance">Terdekat</option>
+                            <option value="nakes">Nakes</option>
+                            <option value="igd">IGD 24 Jam</option>
                         </select>
 
-                        {{-- Tombol Tutup Drawer di Mobile --}}
+                        {{-- Tombol Tutup Panel Daftar --}}
                         <button type="button" id="btn-close-sidebar-mobile" aria-label="Tutup Daftar"
-                                class="lg:hidden flex size-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-ink transition-colors cursor-pointer">
+                                class="flex size-8 items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-ink transition-colors cursor-pointer">
                             <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
                     </div>
@@ -97,7 +97,7 @@
                                     </div>
 
                                     <div class="relative z-10 flex items-center justify-between text-[10px] font-bold text-ink/75">
-                                        <span>{{ $item['address'] }}</span>
+                                        <span class="truncate">{{ $item['address'] }}</span>
                                     </div>
                                 </div>
 
@@ -134,8 +134,8 @@
                             <div class="size-12 rounded-full bg-surface-mint mx-auto flex items-center justify-center text-primary">
                                 <svg class="size-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                             </div>
-                            <h4 class="mt-3 text-sm font-extrabold text-ink">Puskesmas tidak ditemukan</h4>
-                            <p class="text-xs text-muted mt-1">Coba ubah kata kunci atau ganti filter layanan di sebelah kiri.</p>
+                            <h4 class="mt-3 text-sm font-extrabold text-ink">Tidak ditemukan</h4>
+                            <p class="text-xs text-muted mt-1">Ubah kata kunci atau filter.</p>
                         </div>
                     </div>
                 </div>
@@ -150,12 +150,12 @@
                                 </div>
                                 <div>
                                     <h3 class="text-sm font-extrabold text-ink">Rekomendasi Puskesmas</h3>
-                                    <p class="text-[11px] text-muted">Urutan terbaik dari lokasi Anda saat ini</p>
+                                    <p class="text-[11px] text-muted">Terbaik dari titik acuan</p>
                                 </div>
                             </div>
                             <button type="button" onclick="document.getElementById('subtab-btn-faskes')?.click()"
                                     class="text-[11px] font-bold text-primary hover:underline cursor-pointer">
-                                Semua Faskes
+                                Semua
                             </button>
                         </div>
 
@@ -164,31 +164,31 @@
                             <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-surface-mint/60 hover:bg-surface-mint cursor-pointer border border-primary/20 transition-colors">
                                 <input type="radio" name="maut-scenario" value="darurat" checked class="text-accent focus:ring-accent">
                                 <div>
-                                    <span class="font-extrabold text-ink block">Kedaruratan Medis</span>
-                                    <span class="text-[10px] text-muted block">Jarak (40%), IGD 24 Jam (30%), Nakes (15%), Jam (15%)</span>
+                                    <span class="font-extrabold text-ink block">Kedaruratan</span>
+                                    <span class="text-[10px] text-muted block">Jarak 40% &middot; IGD 30% &middot; Nakes 15% &middot; Jam 15%</span>
                                 </div>
                             </label>
 
                             <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white hover:bg-surface-mint/40 cursor-pointer border border-gray-200 transition-colors">
                                 <input type="radio" name="maut-scenario" value="reguler" class="text-accent focus:ring-accent">
                                 <div>
-                                    <span class="font-extrabold text-ink block">Layanan Umum Reguler</span>
-                                    <span class="text-[10px] text-muted block">Jam Buka (30%), Jarak (20%), Nakes (20%), Keramaian (20%)</span>
+                                    <span class="font-extrabold text-ink block">Layanan Reguler</span>
+                                    <span class="text-[10px] text-muted block">Jam 30% &middot; Jarak 20% &middot; Nakes 20% &middot; Antrean 20%</span>
                                 </div>
                             </label>
 
                             <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white hover:bg-surface-mint/40 cursor-pointer border border-gray-200 transition-colors">
                                 <input type="radio" name="maut-scenario" value="pemda" class="text-accent focus:ring-accent">
                                 <div>
-                                    <span class="font-extrabold text-ink block">Evaluasi Kebijakan Pemda</span>
-                                    <span class="text-[10px] text-muted block">Kelengkapan 9 Nakes (30%), Jarak (20%), Keramaian (20%)</span>
+                                    <span class="font-extrabold text-ink block">Evaluasi Pemda</span>
+                                    <span class="text-[10px] text-muted block">Nakes 30% &middot; Jarak 20% &middot; Antrean 20%</span>
                                 </div>
                             </label>
                         </div>
 
                         <button type="button" id="btn-run-maut"
                                 class="w-full h-10 rounded-xl bg-ink hover:bg-primary text-white text-xs font-extrabold transition-all shadow-xs flex items-center justify-center gap-2 cursor-pointer">
-                            <span>Hitung Rekomendasi Terbaik</span>
+                            <span>Cari Terbaik</span>
                             <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
                         </button>
                     </div>
@@ -196,8 +196,8 @@
                     {{-- Hasil Rekomendasi Top 3 MAUT --}}
                     <div id="maut-results" class="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar">
                         <div class="text-xs font-extrabold text-ink flex items-center justify-between pb-1">
-                            <span>Top 3 Puskesmas Terdekat</span>
-                            <span class="text-[10px] text-muted font-semibold">Dari Lokasi Anda</span>
+                            <span>Top 3 Rekomendasi</span>
+                            <span class="text-[10px] text-muted font-semibold">MAUT</span>
                         </div>
                         <div id="maut-cards-container" class="space-y-3">
                             {{-- Diisi secara dinamis oleh JavaScript MAUT --}}

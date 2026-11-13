@@ -27,6 +27,12 @@
                 </div>
 
                 {{-- Form Login --}}
+                @if (session('status'))
+                    <div class="mt-6 rounded-md border border-primary/30 bg-surface-mint px-4 py-3 text-xs font-semibold text-primary-dark">
+                        {{ session('status') }}
+                    </div>
+                @endif
+
                 <form action="{{ route('login') }}" method="POST" class="mt-8 space-y-5 sm:mt-10 sm:space-y-6">
                     @csrf
 

@@ -7,25 +7,25 @@
                 {{-- Banner Instruksi Mode Pilih Titik di Peta (US-05 / FR-05) --}}
                 <div id="pick-point-banner" class="hidden absolute top-3 sm:top-16 inset-x-3 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-30">
                     <div class="rounded-2xl sm:rounded-full bg-accent text-white px-4 sm:px-5 py-2 text-[11px] sm:text-xs font-extrabold shadow-float flex items-center justify-between sm:justify-center gap-2 animate-bounce">
-                        <span>Ketuk peta untuk menetapkan titik lokasi acuan</span>
+                        <span>Ketuk peta untuk titik acuan</span>
                         <button type="button" id="btn-cancel-pick" class="ml-1 rounded-full bg-white/20 hover:bg-white/30 px-2.5 py-0.5 text-[10px] shrink-0 cursor-pointer">Batal</button>
                     </div>
                 </div>
 
-                {{-- Tombol Perluas Peta --}}
-                <button type="button" id="btn-expand-map" title="Perluas / Kembalikan Ukuran Peta" aria-label="Perluas Peta"
+                {{-- Tombol Tampilkan / Sembunyikan Semua Panel --}}
+                <button type="button" id="btn-expand-map" title="Tampilkan Panel Filter & Daftar" aria-label="Tampilkan atau Sembunyikan Panel"
                         class="hidden lg:flex absolute right-4 top-4 z-20 size-10 items-center justify-center rounded-xl bg-white text-ink shadow-float border border-gray-100 hover:bg-ink hover:text-white transition-colors cursor-pointer">
                     <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l6.75 6.75m0 0h-6m6 0v-6M20.25 10.5L13.5 3.75m0 0h6m-6 0v6"/></svg>
                 </button>
 
-                {{-- Floating Puskesmas Info Card Overlay --}}
+                {{-- Floating Puskesmas Info Card Overlay (tersembunyi sampai puskesmas dipilih) --}}
                 <aside id="map-floating-card" aria-label="Ringkasan Puskesmas Terpilih"
-                       class="hidden sm:block absolute inset-x-3 bottom-16 sm:inset-x-auto sm:bottom-auto sm:right-4 sm:top-16 z-20 sm:w-[270px] rounded-2xl bg-white/95 backdrop-blur-md p-3.5 shadow-[0_20px_50px_rgba(15,23,42,0.18)] border border-gray-100 transition-all duration-200">
+                       class="hidden absolute inset-x-3 bottom-16 sm:inset-x-auto sm:bottom-auto sm:right-4 sm:top-16 z-20 sm:w-[270px] rounded-2xl bg-white/95 backdrop-blur-md p-3.5 shadow-[0_20px_50px_rgba(15,23,42,0.18)] border border-gray-100 transition-all duration-200">
                     {{-- Header Visual Mini --}}
                     <div class="hidden sm:flex relative h-24 w-full rounded-xl bg-gradient-to-br from-surface-mint via-card-mint to-surface-sky overflow-hidden p-2.5 flex-col justify-between mb-3">
                         <div class="flex items-center justify-between z-10">
                             <span id="float-card-badge" class="inline-block rounded-full bg-white/90 px-2.5 py-0.5 text-[10px] font-extrabold text-primary-dark shadow-2xs">
-                                Sorotan Puskesmas
+                                Terpilih
                             </span>
                             <button type="button" id="btn-close-float-card" aria-label="Tutup kartu"
                                     class="size-6 rounded-full bg-white/90 hover:bg-white text-ink flex items-center justify-center text-[11px] font-bold shadow-2xs cursor-pointer">
@@ -72,11 +72,11 @@
                     <div class="mt-2.5 sm:mt-3 grid grid-cols-2 gap-2">
                         <button type="button" id="float-card-detail-btn"
                                 class="h-8.5 rounded-xl bg-gray-100 hover:bg-ink hover:text-white text-ink text-[11px] font-extrabold transition-colors flex items-center justify-center cursor-pointer">
-                            Lihat detail
+                            Detail
                         </button>
                         <a id="float-card-route-btn" href="https://www.google.com/maps/dir/?api=1&destination=-6.5612,106.7915" target="_blank" rel="noopener noreferrer"
                            class="h-8.5 rounded-xl bg-primary text-white hover:bg-primary-dark text-[11px] font-extrabold transition-colors flex items-center justify-center">
-                            Rute Maps
+                            Rute
                         </a>
                     </div>
                 </aside>
@@ -115,7 +115,7 @@
                     <span class="flex size-5 items-center justify-center rounded-md bg-accent text-white shadow-2xs">
                         <svg class="size-3" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
                     </span>
-                    <span>Titik Referensi: <strong id="ref-coord-badge" class="text-primary">Pusat Kota Bogor</strong></span>
+                    <span>Acuan: <strong id="ref-coord-badge" class="text-primary">Pusat Kota Bogor</strong></span>
                 </div>
 
                 {{-- Bilah Aksi Bawah Mobile --}}
