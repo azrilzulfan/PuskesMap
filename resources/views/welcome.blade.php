@@ -664,7 +664,7 @@
             </div>
 
             {{-- Container Peta Jalan Interaktif (Stacked Bersih di HP agar Peta 100% Terbuka, Floating Overlay di Desktop!) --}}
-            <div data-reveal="zoom" class="relative mt-8 sm:mt-10 flex flex-col sm:block sm:h-[560px] rounded-3xl border-2 border-primary/20 bg-white sm:bg-[#f3f6f4] shadow-[0_24px_60px_rgba(0,121,121,0.14)] overflow-hidden">
+            <div data-reveal="zoom" class="relative mt-4 sm:mt-5 flex flex-col sm:block sm:h-[560px] rounded-3xl border-2 border-primary/20 bg-white sm:bg-[#f3f6f4] shadow-[0_24px_60px_rgba(0,121,121,0.14)] overflow-hidden">
                 {{-- Kartu Info Puskesmas (Sorotan Peta): Header Ringkas di HP, Floating Card Kiri Atas di Desktop --}}
                 <div id="map-info-card" class="relative sm:absolute sm:left-5 sm:top-5 z-20 w-full sm:w-[275px] sm:rounded-2xl bg-white sm:bg-white/95 sm:backdrop-blur-md p-4 sm:shadow-float border-b sm:border border-gray-100 transition-all duration-200">
                     <div class="flex items-center justify-between mb-1">
@@ -741,12 +741,12 @@
 
         <div class="relative z-10 mx-auto w-full max-w-[1040px] px-4 sm:px-6 lg:px-8">
             <div data-reveal-stagger="90" class="flex flex-col items-center text-center">
-                {{-- 1. Logo dan Tulisan PuskesMap --}}
-                <a href="#beranda" class="inline-flex items-center gap-3 group transition-transform duration-200 hover:scale-105">
-                    <div class="flex size-11 sm:size-12 items-center justify-center rounded-2xl border border-white/20 bg-white/10 shadow-sm backdrop-blur-xs">
-                        <img src="{{ asset('images/logo-sm.png') }}" alt="Logo PuskesMap" class="h-6 sm:h-7 w-auto brightness-110">
-                    </div>
-                    <span class="text-2xl sm:text-[28px] font-extrabold tracking-tight text-white leading-none">
+                {{-- 1. Logo dan Tulisan PuskesMap (Langsung Logo Diperbesar Tanpa Border Box) --}}
+                <a href="#beranda" class="inline-flex items-center gap-3 sm:gap-3.5 group transition-transform duration-200 hover:scale-105">
+                    <img src="{{ asset('images/logo-sm.png') }}"
+                         alt="Logo PuskesMap"
+                         class="h-10 sm:h-12 w-auto object-contain brightness-110 drop-shadow-sm transition-transform duration-200 group-hover:scale-105">
+                    <span class="text-3xl sm:text-[34px] font-extrabold tracking-tight text-white leading-none">
                         PuskesMap
                     </span>
                 </a>
