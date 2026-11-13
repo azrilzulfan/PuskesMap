@@ -2,9 +2,41 @@
 @import './map.css';
 @import './landing.css';
 
+:root {
+  color-scheme: light;
+
+  /* 1. Palet Utama Antarmuka SDSS (DESIGN_SPEC.md & UI_RULES.md) */
+  --base: #FFFFFF;
+  --surface: #F4F7F6;
+  --text: #111C24;
+  --text-muted: #4E5D6C;
+  --border: #E1E7EC;
+  --border-control: #7B8A97;
+  --border-control-hover: #5C6B78;
+  --accent: #0A6663;
+  --accent-hover: #074E4C;
+  --accent-tint: #EAF4F3;
+
+  /* 2. Warna Status Semantik (Solid, Tanpa Opacity/RGBA) */
+  --error: #B42318;
+  --error-tint: #FDECEC;
+  --success: #157347;
+  --success-tint: #EAF5EF;
+  --warning: #B54708;
+  --warning-tint: #FEF3E6;
+  --shadow: 0 4px 16px rgba(20, 23, 31, 0.12);
+
+  /* 3. Token Khusus Visualisasi Peta & Grafik GIS */
+  --gis-user-pin: #067DCF;
+  --gis-psw-high: #DC2626;
+  --gis-psw-ideal: #16A34A;
+  --gis-psw-low: #2563EB;
+}
+
 @theme {
   --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
 
+  /* Token Landing Page (Kayla & Kaila — dipertahankan agar welcome.blade.php tetap utuh) */
   --color-primary: #007979;
   --color-primary-dark: #0b5c5c;
   --color-accent: #e37434;
@@ -52,12 +84,46 @@
   body {
     font-family: var(--font-sans);
     color: var(--color-ink);
-    background-color: #fff;
+    background-color: var(--base);
   }
 
   :focus-visible {
     outline: 2px solid var(--color-primary);
     outline-offset: 2px;
+  }
+
+  /* Aturan Dasar Khusus Antarmuka SDSS (UI_RULES.md & DESIGN_SPEC.md) */
+  body.sdss-shell {
+    color: var(--text);
+    background-color: var(--base);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  body.sdss-shell h1,
+  body.sdss-shell h2,
+  body.sdss-shell h3 {
+    text-wrap: balance;
+    letter-spacing: -0.015em;
+  }
+
+  body.sdss-shell p {
+    text-wrap: pretty;
+  }
+
+  body.sdss-shell :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.sdss-shell *,
+  body.sdss-shell *::before,
+  body.sdss-shell *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
   }
 }
 
@@ -67,4 +133,13 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+@utility tabular-nums-cell {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+[x-cloak] {
+  display: none !important;
 }
