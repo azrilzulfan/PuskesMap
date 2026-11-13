@@ -457,20 +457,6 @@ export function initLandingPage() {
         let cursorX = 0;
         let cursorY = 0;
         let rafId = null;
-        let excludedZones = [];
-
-        const updateExcludedZones = () => {
-            const containerRect = container.getBoundingClientRect();
-            excludedZones = Array.from(container.querySelectorAll('[data-particle-exclude]')).map((el) => {
-                const r = el.getBoundingClientRect();
-                return {
-                    left: r.left - containerRect.left,
-                    top: r.top - containerRect.top,
-                    right: r.right - containerRect.left,
-                    bottom: r.bottom - containerRect.top,
-                };
-            });
-        };
 
         const sampleColor = (angleNorm) => {
             const scaled = ((angleNorm % 1) + 1) % 1 * palette.length;
@@ -538,7 +524,6 @@ export function initLandingPage() {
             }
 
             particles = nextParticles;
-            updateExcludedZones();
             startLoop();
         };
 
@@ -567,22 +552,6 @@ export function initLandingPage() {
 
             for (let i = 0; i < particles.length; i++) {
                 const p = particles[i];
-
-                // Sembunyikan partikel jika berada di dalam zona terlarang (kotak biru & peta wilayah)
-                if (excludedZones.length > 0) {
-                    let isExcluded = false;
-                    for (let j = 0; j < excludedZones.length; j++) {
-                        const zone = excludedZones[j];
-                        if (p.x >= (zone.left - 4) && p.x <= (zone.right + 4) && p.y >= (zone.top - 4) && p.y <= (zone.bottom + 4)) {
-                            isExcluded = true;
-                            break;
-                        }
-                    }
-                    if (isExcluded) {
-                        continue;
-                    }
-                }
-
                 const dxHome = cursorX - p.hx;
                 const dyHome = cursorY - p.hy;
                 const hDist = Math.hypot(dxHome, dyHome);
@@ -666,10 +635,7 @@ export function initLandingPage() {
             startLoop();
         };
 
-        container.addEventListener('pointerenter', (event) => {
-            updateExcludedZones();
-            updatePointer(event);
-        }, { passive: true });
+        container.addEventListener('pointerenter', updatePointer, { passive: true });
         container.addEventListener('pointermove', updatePointer, { passive: true });
         container.addEventListener('pointerleave', () => {
             isPointerActive = false;
@@ -741,20 +707,6 @@ export function initLandingPage() {
     document.querySelectorAll('[data-mode-btn]').forEach((button) => {
         button.addEventListener('click', () => {
             document.querySelectorAll('[data-mode-btn]').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
-        });
-    });
-
-    // Interaksi Tab Footer Baru (Referensi Chaumes-en-Retz)
-    const footerTabs = document.querySelectorAll('[data-footer-tab]');
-    footerTabs.forEach((tab) => {
-        tab.addEventListener('click', () => {
-            footerTabs.forEach((t) => t.setAttribute('aria-selected', String(t === tab)));
-            const addrEl = document.getElementById('footer-tab-address');
-            const phoneEl = document.getElementById('footer-tab-phone');
-            const hoursEl = document.getElementById('footer-tab-hours');
-            if (addrEl && tab.dataset.tabAddress) addrEl.textContent = tab.dataset.tabAddress;
-            if (phoneEl && tab.dataset.tabPhone) phoneEl.textContent = tab.dataset.tabPhone;
-            if (hoursEl && tab.dataset.tabHours) hoursEl.textContent = tab.dataset.tabHours;
         });
     });
 
