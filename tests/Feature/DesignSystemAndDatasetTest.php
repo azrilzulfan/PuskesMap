@@ -70,4 +70,6 @@ test('komponen blade dasar sdss merender atribut aksesibilitas dan ikon lucide d
         ->toContain('role="dialog"')
         ->toContain('aria-modal="true"')
         ->toContain('Detail Puskesmas');
+
+    expect(config('sdss.capacity.default_monthly'))->toBe(850);
 });

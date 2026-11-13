@@ -53,7 +53,7 @@ class KunjunganPasien extends Model
 
     public function recomputeMetrics(): void
     {
-        $capacity = max(1, (int) ($this->kapasitas_maksimal_bulanan ?: config('sdss.capacity.default_monthly', 5603)));
+        $capacity = max(1, (int) ($this->kapasitas_maksimal_bulanan ?: config('sdss.capacity.default_monthly', 850)));
         $percentage = round(((int) $this->total_pasien_bulanan / $capacity) * 100, 2);
 
         $this->kapasitas_maksimal_bulanan = $capacity;

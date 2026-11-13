@@ -13,6 +13,7 @@ use App\Models\Puskesmas;
 use App\Models\TenagaMedis;
 use App\Models\User;
 use App\Services\AuditLogService;
+use App\Services\SpatialAnalysisService;
 use App\Services\WorkloadService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -23,6 +24,7 @@ class OperationalMetricsController extends Controller
     public function __construct(
         private readonly WorkloadService $workloadService,
         private readonly AuditLogService $auditLogService,
+        private readonly SpatialAnalysisService $spatialAnalysis,
     ) {}
 
     public function edit(Puskesmas $puskesmas): View
@@ -58,6 +60,8 @@ class OperationalMetricsController extends Controller
             );
         });
 
+        $this->spatialAnalysis->flushSpatialCache();
+
         return redirect()
             ->route('admin.operasional.edit', $puskesmas)
             ->with('status', "Status operasional {$puskesmas->nama_puskesmas} berhasil diperbarui.");
@@ -85,6 +89,8 @@ class OperationalMetricsController extends Controller
             );
         });
 
+        $this->spatialAnalysis->flushSpatialCache();
+
         return redirect()
             ->route('admin.operasional.edit', $puskesmas)
             ->with('status', "Data tenaga medis {$puskesmas->nama_puskesmas} berhasil diperbarui.");
@@ -103,7 +109,7 @@ class OperationalMetricsController extends Controller
         return view('admin.operasional.kunjungan', [
             'puskesmas' => $puskesmas,
             'records' => $records,
-            'defaultCapacity' => (int) config('sdss.capacity.default_monthly', 5603),
+            'defaultCapacity' => (int) config('sdss.capacity.default_monthly', 850),
         ]);
     }
 
@@ -126,7 +132,7 @@ class OperationalMetricsController extends Controller
             $isNew = ! $kunjungan->exists;
             $kunjungan->total_pasien_bulanan = (int) $validated['total_pasien_bulanan'];
             $kunjungan->kapasitas_maksimal_bulanan = (int) ($validated['kapasitas_maksimal_bulanan']
-                ?? ($kunjungan->kapasitas_maksimal_bulanan ?: config('sdss.capacity.default_monthly', 5603)));
+                ?? ($kunjungan->kapasitas_maksimal_bulanan ?: config('sdss.capacity.default_monthly', 850)));
             $kunjungan->recomputeMetrics();
             $kunjungan->save();
 
@@ -143,6 +149,8 @@ class OperationalMetricsController extends Controller
 
             return $kunjungan;
         });
+
+        $this->spatialAnalysis->flushSpatialCache();
 
         return redirect()
             ->route('admin.kunjungan.index', $puskesmas)

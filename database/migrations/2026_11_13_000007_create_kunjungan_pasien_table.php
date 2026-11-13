@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('bulan');
             $table->unsignedSmallInteger('tahun');
             $table->unsignedInteger('total_pasien_bulanan')->default(0);
-            $table->unsignedInteger('kapasitas_maksimal_bulanan')->default(5603);
+            $table->unsignedInteger('kapasitas_maksimal_bulanan')->default(850);
             $table->double('persentase_keramaian')->default(0);
             $table->string('status_kepadatan', 30)->default(CrowdStatus::Rendah->value);
 

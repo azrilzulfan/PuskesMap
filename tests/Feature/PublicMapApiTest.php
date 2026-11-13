@@ -6,6 +6,7 @@ use App\Models\KunjunganPasien;
 use App\Models\Operasional;
 use App\Models\Puskesmas;
 use App\Models\TenagaMedis;
+use App\Models\User;
 
 test('public geojson api lists and filters puskesmas with related records', function () {
     $kecA = Kecamatan::factory()->withPolygon()->create(['nama_kecamatan' => 'Bogor Tengah']);
@@ -153,4 +154,21 @@ test('recommendation endpoint enforces kota bogor polygon boundary and computes 
         ->assertJsonPath('scenario', 'darurat')
         ->assertJsonPath('recommendations.0.rank', 1)
         ->assertJsonPath('recommendations.0.facility.nama_puskesmas', 'Puskesmas Darurat Utama');
+
+    $this->postJson(route('api.v1.rekomendasi'), [
+        'lat' => -6.5950,
+        'lng' => 106.7950,
+        'scenario' => 'pemda',
+    ])->assertForbidden();
+
+    $dinkesUser = User::factory()->pemerintah()->create();
+
+    $this->actingAs($dinkesUser)
+        ->postJson(route('api.v1.rekomendasi'), [
+            'lat' => -6.5950,
+            'lng' => 106.7950,
+            'scenario' => 'pemda',
+        ])
+        ->assertOk()
+        ->assertJsonPath('scenario', 'pemda');
 });

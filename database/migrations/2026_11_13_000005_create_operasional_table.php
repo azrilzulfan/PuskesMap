@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('puskesmas_id')->unique()->constrained('puskesmas')->cascadeOnDelete();
             $table->boolean('status_igd_24jam')->default(false);
             $table->time('jam_buka')->default('07:30:00');
-            $table->time('jam_tutup')->default('15:00:00');
+            $table->time('jam_tutup')->default('14:00:00');
             $table->string('kontak_darurat', 50)->nullable();
             $table->boolean('rawat_inap')->default(false);
         });

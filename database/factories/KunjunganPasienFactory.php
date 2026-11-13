@@ -19,8 +19,8 @@ class KunjunganPasienFactory extends Factory
      */
     public function definition(): array
     {
-        $total = fake()->numberBetween(1800, 5200);
-        $capacity = (int) config('sdss.capacity.default_monthly', 5603);
+        $total = fake()->numberBetween(300, 950);
+        $capacity = (int) config('sdss.capacity.default_monthly', 850);
         $percentage = round(($total / $capacity) * 100, 1);
 
         return [

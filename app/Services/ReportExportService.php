@@ -125,7 +125,7 @@ class ReportExportService
                 'kategori_layanan' => $facility->kategori_layanan->value,
                 'igd_24jam' => (bool) ($facility->operasional?->status_igd_24jam ?? false),
                 'jam_buka' => (string) ($facility->operasional?->jam_buka ?? '07:30:00'),
-                'jam_tutup' => (string) ($facility->operasional?->jam_tutup ?? '15:00:00'),
+                'jam_tutup' => (string) ($facility->operasional?->jam_tutup ?? '14:00:00'),
                 'persentase_kelengkapan' => (float) ($facility->tenagaMedis?->persentase_kelengkapan ?? 0.0),
                 'kategori_jumlah_nakes' => $facility->tenagaMedis?->kategori_jumlah_nakes?->value ?? '-',
                 'jumlah_posyandu' => $facility->jumlah_posyandu,

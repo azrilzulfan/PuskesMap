@@ -8,6 +8,7 @@ use App\Models\Kecamatan;
 use App\Models\Puskesmas;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class SpatialAnalysisService
@@ -192,6 +193,18 @@ class SpatialAnalysisService
      */
     public function calculateServiceArea(float $bufferKm = 1.5): array
     {
+        $cacheKey = 'sdss:coverage:' . number_format($bufferKm, 1, '.', '');
+
+        return Cache::rememberForever($cacheKey, function () use ($bufferKm): array {
+            return $this->computeServiceArea($bufferKm);
+        });
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function computeServiceArea(float $bufferKm): array
+    {
         $radiusMeters = $bufferKm * 1000.0;
 
         if (DB::connection()->getDriverName() !== 'pgsql') {
@@ -231,8 +244,8 @@ class SpatialAnalysisService
                 ROUND((ST_Area(kota.g) / 1e6)::numeric, 2) AS luas_kota_km2,
                 ROUND((COALESCE(ST_Area(terlayani.g), 0) / 1e6)::numeric, 2) AS luas_terlayani_km2,
                 ROUND((COALESCE(ST_Area(blankspot.g), 0) / 1e6)::numeric, 2) AS blankspot_km2,
-                ST_AsGeoJSON(ST_Transform(terlayani.g, 4326)) AS covered_geojson,
-                ST_AsGeoJSON(ST_Transform(blankspot.g, 4326)) AS blankspot_geojson
+                ST_AsGeoJSON(ST_Transform(terlayani.g, 4326), 6) AS covered_geojson,
+                ST_AsGeoJSON(ST_Transform(blankspot.g, 4326), 6) AS blankspot_geojson
              FROM kota, terlayani, blankspot',
             [$radiusMeters],
         );
@@ -333,6 +346,24 @@ class SpatialAnalysisService
      */
     public function analyzeRoadAccessibility(?int $kecamatanId = null): array
     {
+        $cacheKey = $kecamatanId !== null
+            ? "sdss:road_access:kec:{$kecamatanId}"
+            : 'sdss:road_access:all';
+
+        return Cache::rememberForever($cacheKey, function () use ($kecamatanId): array {
+            return $this->computeRoadAccessibility($kecamatanId);
+        });
+    }
+
+    /**
+     * @return array{
+     *     type: string,
+     *     features: array<int, array<string, mixed>>,
+     *     summary: array<int, array{kategori_jangkauan: string, total_zones: int, total_area_km2: float}>
+     * }
+     */
+    private function computeRoadAccessibility(?int $kecamatanId = null): array
+    {
         $query = JangkauanJalan::query()
             ->join('kecamatan', 'kecamatan.id', '=', 'jangkauan_jalan.kecamatan_id')
             ->select([
@@ -347,7 +378,7 @@ class SpatialAnalysisService
             ->orderBy('jangkauan_jalan.id');
 
         if (DB::connection()->getDriverName() === 'pgsql') {
-            $query->selectRaw('ST_AsGeoJSON(jangkauan_jalan.geom) AS geojson')
+            $query->selectRaw('ST_AsGeoJSON(jangkauan_jalan.geom, 6) AS geojson')
                 ->selectRaw('ROUND((COALESCE(ST_Area(jangkauan_jalan.geom::geography), 0) / 1e6)::numeric, 3) AS area_km2');
         }
 
@@ -476,6 +507,23 @@ class SpatialAnalysisService
             ],
             'districts' => $items,
         ];
+    }
+
+    /**
+     * Flush cached spatial GeoJSON payloads after master or boundary mutations.
+     */
+    public function flushSpatialCache(): void
+    {
+        foreach (config('sdss.coverage.allowed_buffers_km', [1.5, 3.0]) as $bufferKm) {
+            Cache::forget('sdss:coverage:' . number_format((float) $bufferKm, 1, '.', ''));
+        }
+
+        Cache::forget('sdss:road_access:all');
+        Cache::forget('sdss:kecamatan:boundaries');
+
+        foreach (Kecamatan::query()->pluck('id') as $kecamatanId) {
+            Cache::forget("sdss:road_access:kec:{$kecamatanId}");
+        }
     }
 
     /**

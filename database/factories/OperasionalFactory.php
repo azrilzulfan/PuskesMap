@@ -22,7 +22,7 @@ class OperasionalFactory extends Factory
             'puskesmas_id' => Puskesmas::factory(),
             'status_igd_24jam' => false,
             'jam_buka' => '07:30:00',
-            'jam_tutup' => '15:00:00',
+            'jam_tutup' => '14:00:00',
             'kontak_darurat' => '0251-8320000',
             'rawat_inap' => false,
         ];

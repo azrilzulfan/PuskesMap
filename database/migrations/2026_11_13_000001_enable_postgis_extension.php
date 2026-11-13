@@ -12,7 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         if (Schema::getConnection()->getDriverName() === 'pgsql') {
-            DB::statement('CREATE EXTENSION IF NOT EXISTS postgis');
+            $exists = DB::selectOne("SELECT 1 FROM pg_extension WHERE extname = 'postgis'");
+
+            if ($exists === null) {
+                DB::statement('CREATE SCHEMA IF NOT EXISTS extensions');
+                DB::statement('CREATE EXTENSION IF NOT EXISTS postgis WITH SCHEMA extensions');
+            }
         }
     }
 

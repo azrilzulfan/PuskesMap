@@ -14,6 +14,7 @@ use App\Models\Puskesmas;
 use App\Models\TenagaMedis;
 use App\Models\User;
 use App\Services\AuditLogService;
+use App\Services\SpatialAnalysisService;
 use App\Services\WorkloadService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -25,6 +26,7 @@ class PuskesmasController extends Controller
     public function __construct(
         private readonly WorkloadService $workloadService,
         private readonly AuditLogService $auditLogService,
+        private readonly SpatialAnalysisService $spatialAnalysis,
     ) {}
 
     public function index(Request $request): View
@@ -89,7 +91,7 @@ class PuskesmasController extends Controller
                 'puskesmas_id' => $puskesmas->id,
                 'status_igd_24jam' => $isIgd,
                 'jam_buka' => $validated['jam_buka'] ?? ($isIgd ? '00:00:00' : '07:30:00'),
-                'jam_tutup' => $validated['jam_tutup'] ?? ($isIgd ? '23:59:59' : '15:00:00'),
+                'jam_tutup' => $validated['jam_tutup'] ?? ($isIgd ? '23:59:59' : '14:00:00'),
                 'kontak_darurat' => $validated['kontak_darurat'] ?? null,
                 'rawat_inap' => (bool) ($validated['rawat_inap'] ?? false),
             ]);
@@ -113,6 +115,8 @@ class PuskesmasController extends Controller
 
             return $puskesmas;
         });
+
+        $this->spatialAnalysis->flushSpatialCache();
 
         return redirect()
             ->route('admin.puskesmas.index')
@@ -151,6 +155,8 @@ class PuskesmasController extends Controller
             $this->workloadService->recalculateAndPersistScores();
         });
 
+        $this->spatialAnalysis->flushSpatialCache();
+
         return redirect()
             ->route('admin.puskesmas.index')
             ->with('status', "Data Puskesmas {$puskesmas->nama_puskesmas} berhasil diperbarui.");
@@ -177,6 +183,8 @@ class PuskesmasController extends Controller
             $puskesmas->delete();
             $this->workloadService->recalculateAndPersistScores();
         });
+
+        $this->spatialAnalysis->flushSpatialCache();
 
         return redirect()
             ->route('admin.puskesmas.index')

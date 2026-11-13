@@ -42,7 +42,7 @@ return [
     ],
 
     'capacity' => [
-        'default_monthly' => 5603,
+        'default_monthly' => 850,
         'low_threshold' => 60.0,
         'medium_threshold' => 85.0,
     ],

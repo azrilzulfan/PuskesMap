@@ -12,6 +12,12 @@ class RecommendationRequest extends FormRequest
 {
     public function authorize(): bool
     {
+        if ($this->input('scenario') === MautScenario::Pemda->value) {
+            $user = $this->user();
+
+            return $user !== null && $user->is_active && $user->hasAnyRole('pemerintah', 'admin');
+        }
+
         return true;
     }
 

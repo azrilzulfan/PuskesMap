@@ -8,6 +8,7 @@ use App\Models\KunjunganPasien;
 use App\Models\Operasional;
 use App\Models\Puskesmas;
 use App\Models\TenagaMedis;
+use App\Services\SpatialAnalysisService;
 use App\Services\WorkloadService;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,10 +18,11 @@ class DatasetBogorSeeder extends Seeder
 {
     public function __construct(
         private readonly WorkloadService $workloadService,
+        private readonly SpatialAnalysisService $spatialAnalysis,
     ) {}
 
     /**
-     * Import canonical geospatial & operational datasets from docs/Dataset/*.csv.
+     * Import canonical geospatial & operational datasets from database/seeders/csv/*.csv.
      */
     public function run(): void
     {
@@ -36,6 +38,7 @@ class DatasetBogorSeeder extends Seeder
         });
 
         $this->workloadService->recalculateAndPersistScores();
+        $this->spatialAnalysis->flushSpatialCache();
     }
 
     /**
@@ -239,7 +242,7 @@ class DatasetBogorSeeder extends Seeder
      */
     private function readCsv(string $filename): array
     {
-        $path = base_path('docs/Dataset/'.$filename);
+        $path = database_path('seeders/csv/'.$filename);
 
         if (! is_file($path)) {
             throw new RuntimeException("Dataset file not found: {$path}");
