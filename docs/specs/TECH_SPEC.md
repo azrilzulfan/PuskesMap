@@ -14,7 +14,7 @@ File ini adalah cetak biru teknis yang menjelaskan **BAGAIMANA** produk dibangun
   - [`00_PANDUAN.md`](../sql/00_PANDUAN.md), [`01_schema.sql`](../sql/01_schema.sql), [`04_validasi.sql`](../sql/04_validasi.sql), [`05_hitung_psw.sql`](../sql/05_hitung_psw.sql)
   - `DatasetBogorSeeder.php`, `UserSeeder.php`, & [`provenance.csv`](../sql/provenance.csv)
   - Folder [`database/seeders/csv/`](../../database/seeders/csv) & [`public/geojson/`](../../public/geojson)
-  - Arsip historis referensi awal: `Software Architecture Document (SAD) (revisi 12).pdf`, `scouting_data_puskesmas.md`
+  - Arsip historis referensi awal: [`Software Architecture Document (SAD) (revisi 12).pdf`](../archive/Software%20Architecture%20Document%20%28SAD%29%20%28revisi%2012%29.pdf)
 
 ---
 

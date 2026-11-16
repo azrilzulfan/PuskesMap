@@ -13,7 +13,6 @@ File ini adalah cetak biru tampilan (UI) dan pengalaman pengguna (UX) yang menje
 - File Bahan / Referensi:
   - [`UI_RULES.md`](./UI_RULES.md) (Aturan Wajib Tingkat 1A, 1B, 2, dan 3)
   - [`Logo.jpeg`](./Logo.jpeg) (Identitas Visual Resmi PuskesMap)
-  - `Activity_Rekomendasi_PuskesMap_v2.png` & `Activity_Analitik_PSW_PuskesMap_v2.png`
   - Referensi Pola UX WebGIS Pemerintahan: **OneMap Singapore (`https://www.onemap.gov.sg/`)**
 
 ---

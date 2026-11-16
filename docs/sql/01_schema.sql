@@ -51,7 +51,7 @@ CREATE TABLE operasional (
   rawat_inap        BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- Tabel ketersediaan sembilan profesi tenaga kesehatan wajib sesuai Permenkes No. 43 Tahun 2019 dengan relasi 1:1 (Tabel 5.4)
+-- Tabel ketersediaan sembilan profesi tenaga kesehatan inti (Permenkes No. 43/2019 & No. 19/2024) dengan relasi 1:1 (Tabel 5.4)
 CREATE TABLE tenaga_medis (
   id                      BIGSERIAL PRIMARY KEY,
   puskesmas_id            BIGINT NOT NULL UNIQUE REFERENCES puskesmas(id) ON DELETE CASCADE,
@@ -86,8 +86,8 @@ CREATE TABLE jangkauan_jalan (
   id                  BIGSERIAL PRIMARY KEY,
   kecamatan_id        BIGINT NOT NULL REFERENCES kecamatan(id) ON DELETE CASCADE,
   kategori_jangkauan  VARCHAR(50)  NOT NULL,
-  jangkauan_faskes    VARCHAR(100) NOT NULL,
-  jangkauan_jalan     VARCHAR(100) NOT NULL,
+  jangkauan_faskes    INTEGER NOT NULL,
+  jangkauan_jalan     INTEGER NOT NULL,
   geom                GEOMETRY(MultiPolygon, 4326) NOT NULL
 );
 
@@ -111,10 +111,10 @@ CREATE TABLE users (
 -- Tabel riwayat log audit untuk mencatat setiap mutasi data master oleh administrator (Tabel 5.8)
 CREATE TABLE audit_log (
   id                   BIGSERIAL PRIMARY KEY,
-  user_id              BIGINT NOT NULL REFERENCES users(id),
+  user_id              BIGINT NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
   aksi                 VARCHAR(50)  NOT NULL,
   tabel_target         VARCHAR(100) NOT NULL,
-  target_id            BIGINT,
+  target_id            BIGINT NOT NULL,
   deskripsi_perubahan  TEXT,
   ip_address           VARCHAR(45),
   created_at           TIMESTAMP DEFAULT CURRENT_TIMESTAMP

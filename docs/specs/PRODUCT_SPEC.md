@@ -1,19 +1,18 @@
 # PRODUCT_SPEC.md
 
 File ini adalah cetak biru produk yang menjelaskan **APA** yang dibuat dan **KENAPA** produk ini dibutuhkan (penggabungan ringkas dari BRD, PRD, Use Case, dan User Flow).
-*(Untuk urusan tampilan visual lihat [`specs/design/DESIGN_SPEC.md`](./DESIGN_SPEC.md), dan untuk urusan teknis/database lihat [`specs/tech/TECH_SPEC.md`](./TECH_SPEC.md)).*
+*(Untuk urusan tampilan visual lihat [`DESIGN_SPEC.md`](./DESIGN_SPEC.md), dan untuk urusan teknis/database lihat [`TECH_SPEC.md`](./TECH_SPEC.md)).*
 
 ---
 
 ## Metadata
 
 - Nama Produk: PuskesMap — Sistem Pendukung Keputusan Spasial (WebGIS) Pemetaan Layanan dan Prioritas Puskesmas Kota Bogor
-- Status Spec: Disetujui
-- Terakhir diperbarui: 2026-11-11
+- Status Spec: Disetujui & Disinkronkan ke Implementasi (`T-01`)
+- Terakhir diperbarui: 2026-11-16
 - File Bahan / Referensi:
-  - `Software Requirements Specification (SRS) (revisi 12).pdf`
-  - `Use_Case_PuskesMap_v2.png`
-  - `scouting_data_puskesmas.md` (Rekapitulasi Hasil Scouting Data Resmi Dinkes Kota Bogor 2025–2026)
+  - Dataset resmi 2025–2026 di [`database/seeders/csv/`](../../database/seeders/csv) dan [`docs/sql/provenance.csv`](../sql/provenance.csv)
+  - Arsip historis awal: [`Software Requirements Specification (SRS) (revisi 12).pdf`](../archive/Software%20Requirements%20Specification%20%28SRS%29%20%28revisi%2012%29.pdf)
 
 ---
 
@@ -59,7 +58,7 @@ File ini adalah cetak biru produk yang menjelaskan **APA** yang dibuat dan **KEN
 ### Fitur Utama (In-Scope / Wajib Ada)
 1. **Modul Peta Interaktif & Eksplorasi Publik (`FR-01`, `FR-03`, `FR-04`):** Peta dasar Kota Bogor (dengan pilihan basemap *OSM Standar* dan *Grey Lite*), pin kustom pembeda Puskesmas Reguler vs UGD 24 Jam, pencarian *real-time* (*debounce* `300 ms`), dan filter multi-kriteria.
 2. **Modul Pencarian Radius Geodetik & Rekomendasi Top-3 MAUT (`FR-05` s/d `FR-08`):** Penentuan titik pengguna (GPS/Pin Manual), filter jarak `ST_DWithin` (`1 km`, `3 km`, atau `5 km`), normalisasi Min-Max 5 kriteria, pemilihan skenario bobot, kartu peringkat `#1`, `#2`, `#3` dengan rincian kontribusi nilai, serta penyorotan otomatis Puskesmas peringkat `#1` di peta.
-3. **Modul Detail Profil Puskesmas (`FR-02`, `FR-12`, `FR-13`, `FR-22`):** Ringkasan identitas, kontak resmi, jam layanan, komposisi 9 profesi Nakes (beserta persentase pemenuhan standar Permenkes 43/2019), beban binaan UKM (Posyandu & Sekolah 2025), indikator estimasi keramaian & grafik kunjungan bulanan 12 bulan, serta tautan resmi `https://dinkes.kotabogor.go.id/<slug>`.
+3. **Modul Detail Profil Puskesmas (`FR-02`, `FR-12`, `FR-13`, `FR-22`):** Ringkasan identitas, kontak resmi, jam layanan, komposisi 9 profesi Nakes (beserta persentase pemenuhan standar Permenkes 43/2019 & 19/2024), beban binaan UKM (Posyandu & Sekolah 2025), indikator estimasi keramaian & grafik kunjungan bulanan 12 bulan, serta tautan resmi `https://dinkes.kotabogor.go.id/<slug>`.
 4. **Modul Analitik Spasial & Beban Wilayah Dinkes (`FR-09` s/d `FR-11`, `FR-21`, `FR-23`, `FR-24`):** Layer tematik rasio penduduk kecamatan, buffer cakupan layanan `1,5 km` atau `3,0 km` (*blank spot*), 37 poligon jangkauan jalan, 941 ruas jalan utama, dasbor eksekutif & peringkat `PSW-Index`, serta ekspor laporan CSV dan PDF.
 5. **Modul Manajemen Data Master, RBAC & Audit Log (`FR-14` s/d `FR-20`, `NFR-05` s/d `NFR-07`, `NFR-09`):** Autentikasi berbasis sesi (Bcrypt 12, CSRF, *timeout* 120 menit) untuk `pemerintah` dan `admin`, CRUD tervalidasi spasial (`ST_Contains`), rekalkulasi otomatis `skor_psw`, *soft-deactivation* akun (`is_active`), dan log audit mutasi data berpaginasi (`10`–`25` baris per halaman).
 
@@ -104,7 +103,7 @@ File ini adalah cetak biru produk yang menjelaskan **APA** yang dibuat dan **KEN
      - **`Evaluasi Pemda` (Khusus Login `pemerintah` & `admin`):** Jarak `0,20` | IGD 24 Jam `0,15` | Jam Operasional `0,15` | Kelengkapan Nakes `0,30` | Keramaian Pasien `0,20`.
    - **Penanganan *Edge-Case* Nilai Seragam ($\max = \min$):** Untuk mencegah pembagian dengan nol (*division by zero*), apabila seluruh kandidat dalam radius memiliki nilai mentah yang sama persis pada suatu kriteria, nilai normalisasi ditetapkan `0,0` jika nilai mentahnya `0` pada kriteria *benefit*, atau `1,0` pada kondisi lainnya.
 3. **Aturan Perhitungan Indeks Beban Spasial Wilayah (`PSW-Index` — `FR-11`, `FR-24`):**
-   - Mengikuti rumus baku [`05_hitung_psw.sql`](../sql/05_hitung_psw.sql) dan `PuskesmapDatabaseSeeder.php`:
+   - Mengikuti rumus baku [`05_hitung_psw.sql`](../sql/05_hitung_psw.sql) dan `DatasetBogorSeeder.php` (`WorkloadService`):
      $$\text{Skor PSW} = \text{round}(0,40 \cdot N_{\text{pop}} + 0,20 \cdot N_{\text{edu}} + 0,20 \cdot N_{\text{pos}} + 0,20 \cdot N_{\text{kur}}, 2)$$
      di mana $N_{\text{pop}}$ adalah penduduk kecamatan dibagi jumlah Puskesmas di kecamatan tersebut, $N_{\text{edu}}$ adalah `jumlah_sekolah` binaan (Tabel 47 Profil Kesehatan 2025), $N_{\text{pos}}$ adalah `jumlah_posyandu` aktif (Tabel 12 Profil Kesehatan 2025), dan $N_{\text{kur}}$ adalah rata-rata `total_pasien_bulanan` (Tabel 5 Profil Kesehatan 2025), masing-masing dinormalisasi Min-Max lintas 25 Puskesmas.
    - **Klasifikasi Spektrum Beban Kerja Spasial (Tabel 10.3 SAD):**

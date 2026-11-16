@@ -65,23 +65,23 @@ AI bebas memilih komposisi selama mengikuti arahan berikut.
 - Aksi yang butuh waktu menampilkan state loading (teks tombol berubah, tombol nonaktif sementara), dan hasilnya diberi tahu lewat teks.
 
 ### Implementasi
-Semua warna didefinisikan sebagai variabel CSS di satu tempat. Nilai awal di bawah sudah dicek kontrasnya (boleh diganti per proyek, tetapi harus tetap lolos Tingkat 1A):
+Semua warna didefinisikan sebagai variabel CSS di satu tempat (diselaraskan dengan palet resmi [`DESIGN_SPEC.md`](./DESIGN_SPEC.md#L28-L55) untuk SDSS PuskesMap):
 
 ```css
 :root {
   color-scheme: light;
   --base: #FFFFFF;
-  --surface: #F6F7F9;
-  --text: #14171F;                /* 17.9:1 pada base */
-  --text-muted: #5B6270;          /* 6.1:1 pada base, 5.7:1 pada surface */
-  --border: #E2E5EA;              /* dekoratif saja (baris tabel), bukan untuk input */
-  --border-control: #858D9B;      /* border input, 3.3:1 pada base, 3.1:1 pada surface */
-  --border-control-hover: #6B7280;
-  --accent: #1F4E79;              /* 8.7:1 pada base */
-  --accent-hover: #173A5C;
-  --error: #B42318;               /* 6.6:1 pada base */
-  --success: #0F766E;             /* 5.5:1 pada base */
-  --warning: #B54708;             /* 5.4:1 pada base */
+  --surface: #F4F7F6;                /* Kontras pembeda region senada Logo.jpeg */
+  --text: #111C24;                   /* 17.28:1 pada base, 16.03:1 pada surface */
+  --text-muted: #4E5D6C;             /* 6.76:1 pada base, 6.27:1 pada surface */
+  --border: #E1E7EC;                 /* dekoratif saja (baris tabel), bukan untuk input */
+  --border-control: #7B8A97;         /* border input, 3.54:1 >= 3:1 */
+  --border-control-hover: #5C6B78;   /* 5.48:1 saat hover */
+  --accent: #0A6663;                 /* Deep Medical Teal (6.79:1 pada base) */
+  --accent-hover: #074E4C;           /* 9.53:1 saat hover/aktif */
+  --error: #B42318;                  /* 6.57:1 pada base */
+  --success: #157347;                /* 5.87:1 pada base */
+  --warning: #B54708;                /* 5.43:1 pada base */
   --shadow: 0 4px 16px rgba(20, 23, 31, 0.12); /* satu-satunya rgba, hanya untuk elemen melayang */
 }
 ```

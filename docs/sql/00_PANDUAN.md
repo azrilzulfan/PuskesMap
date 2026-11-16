@@ -1,15 +1,15 @@
 # Paket Dataset Master PuskesMap (PostgreSQL 16 + PostGIS 3.4)
 
-## Isi Folder
-- `sql/` : `01_schema.sql` (8 tabel relasional PostGIS sesuai Kamus Data SAD Revisi 12 Bab V), `02_data.sql`, `03_data_jangkauan_kunjungan.sql`, `04_validasi.sql`, dan `05_hitung_psw.sql`. Jalankan secara berurutan.
-- `csv/` : Dataset bersih untuk seeder Laravel (6 berkas: `kecamatan.csv`, `puskesmas.csv`, `operasional.csv`, `tenaga_medis.csv`, `kunjungan_pasien.csv`, dan `jangkauan_jalan.csv`). Kolom `kode_kecamatan` dan `kode_puskesmas` dipakai seeder untuk menautkan `kecamatan_id` serta `puskesmas_id`. Kolom `geom_wkt` sudah berurutan standar OGC `(longitude latitude)` untuk `ST_GeomFromText(geom_wkt, 4326)`.
-- `geojson/` : `kecamatan.geojson`, `puskesmas.geojson`, dan `jalan_utama.geojson` (standar RFC 7946 `[longitude, latitude]`, 941 ruas jalan utama Kota Bogor berukuran 467 KB) untuk kanvas peta Leaflet.js.
-- `seeder/` : `PuskesmapDatabaseSeeder.php` yang membaca keenam berkas `csv/` bersih dan menghitung `skor_psw` otomatis selaras dengan `05_hitung_psw.sql`.
-- `provenance.csv` : Catatan asal-usul setiap kolom (sumber resmi, berkas mentah proyek, estimasi disagregasi, atau asumsi terukur).
+## Isi Folder & Relasi Repositori
+- `docs/sql/` : `01_schema.sql` (skema referensi 8 tabel relasional PostGIS), `04_validasi.sql` (kueri verifikasi integritas data & geometri pasca-seeding), dan `05_hitung_psw.sql` (referensi SQL perhitungan `PSW-Index`).
+- `database/seeders/csv/` : Dataset bersih untuk seeder Laravel (6 berkas: `kecamatan.csv`, `puskesmas.csv`, `operasional.csv`, `tenaga_medis.csv`, `kunjungan_pasien.csv`, dan `jangkauan_jalan.csv`). Kolom `kode_kecamatan` dan `kode_puskesmas` dipakai seeder untuk menautkan `kecamatan_id` serta `puskesmas_id`. Kolom `geom_wkt` sudah berurutan standar OGC `(longitude latitude)` untuk `ST_GeomFromText(geom_wkt, 4326)`.
+- `public/geojson/` : `kecamatan.geojson`, `puskesmas.geojson`, dan `jalan_utama.geojson` (standar RFC 7946 `[longitude, latitude]`, 941 ruas jalan utama Kota Bogor berukuran 467 KB) untuk kanvas peta Leaflet.js.
+- `database/seeders/DatasetBogorSeeder.php` & `UserSeeder.php` : Seeder resmi Laravel yang membaca keenam berkas `csv/` bersih dan menghitung `skor_psw` otomatis melalui `WorkloadService` selaras dengan `05_hitung_psw.sql`.
+- `provenance.csv` : Catatan asal-usul setiap kolom (sumber resmi, dataset awal tim, estimasi disagregasi, atau aturan terukur).
 
 ## Cara Pakai
-1. Jalankan melalui SQL murni: buat basis data kosong ber-PostGIS, lalu jalankan `01_schema.sql` sampai `05_hitung_psw.sql` secara berurutan. Periksa hasil `04_validasi.sql`: blok 1 menghasilkan `6 / 25 / 25 / 25 / 300 / 37`, sedangkan blok 2-6 dan 9-11 menghasilkan 0 baris anomali.
-2. Jalankan melalui Laravel Seeder: pastikan skema migrasi 8 tabel sudah terbentuk dan variabel lingkungan kata sandi akun awal (`PUSKESMAP_ADMIN_PASSWORD` dan `PUSKESMAP_DINKES_PASSWORD`) telah diisi pada `.env` lokal sebelum menjalankan `PuskesmapDatabaseSeeder`.
+1. **Melalui Migrasi & Seeder Laravel (Jalur Utama):** Jalankan `php artisan migrate --seed` setelah mengatur kredensial PostgreSQL/Supabase dan variabel `PUSKESMAP_ADMIN_PASSWORD` / `PUSKESMAP_DINKES_PASSWORD` pada `.env` lokal. Seeder menjalankan `DatasetBogorSeeder` dan `UserSeeder`.
+2. **Validasi & Pemeriksaan SQL di PostGIS:** Setelah seeding selesai, jalankan blok kueri pada `04_validasi.sql` di PostgreSQL/Supabase untuk memeriksa integritas. Hasil ideal: blok 1 menghasilkan `6 / 25 / 25 / 25 / 300 / 37`, sedangkan blok 2–6 dan 9–11 menghasilkan `0` baris anomali. (`01_schema.sql` dan `05_hitung_psw.sql` berfungsi sebagai referensi skema & rumus SQL murni.)
 
 ## Dua Parameter yang Dapat Disesuaikan Satu Perintah
 Tahun data kunjungan (mengacu pada Profil Kesehatan Kota Bogor Tahun 2025):

@@ -40,7 +40,7 @@ Sebelum menulis kode atau mengubah logika SDSS, baca dokumen spesifikasi aktif b
 4. [Aturan Wajib Aksesibilitas & UI (`UI_RULES.md`)](./specs/UI_RULES.md)
 5. [Skema SQL, Validasi PostGIS, & PSW (`docs/sql/`)](./sql/00_PANDUAN.md)
 
-> **Catatan Arsip Historis:** Dokumen `docs/SRS.md` serta berkas PDF Revisi 12 (`SAD` dan `SRS`) di folder `docs/` merupakan **arsip historis awal** — jangan memakai subdomain lama, angka lama (`5603`/`15:00:00`), atau referensi Permenkes 43 dari arsip tersebut jika bertentangan dengan `docs/specs/` dan `config/sdss.php`.
+> **Catatan Arsip Historis:** Dokumen di folder `docs/archive/` (`SRS.md`, PDF Revisi 12 `SAD`/`SRS`, dan `backend_implementation_plan.md`) merupakan **arsip historis awal** — jangan memakai subdomain lama, angka lama (`5603`/`15:00:00`), atau referensi Permenkes 43 tanpa pemutakhiran Permenkes 19/2024 dari arsip tersebut jika bertentangan dengan `docs/specs/` dan `config/sdss.php`.
 
 ---
 
