@@ -23,7 +23,7 @@
    - `docs/specs/DESIGN_SPEC.md`
    - `docs/specs/UI_RULES.md`
    - `docs/sql/00_PANDUAN.md`
-4. **Catatan Arsip Historis:** Folder `docs/archive/` (`SRS.md`, PDF Revisi 12 `SAD` & `SRS`, dan `backend_implementation_plan.md`) hanya berstatus **arsip historis**. Jangan memakai subdomain lama, angka lama (`5603`/`15:00:00`), rute rancangan awal, atau referensi Permenkes 43-only dari dokumen tersebut.
+4. **Catatan Arsip Historis:** Kedua berkas PDF Revisi 12 (`SAD` & `SRS`) di folder `docs/archive/` hanya berstatus **arsip laporan akademik awal**. Jangan memakai subdomain lama, angka lama (`5603`/`15:00:00`), rute rancangan awal, atau referensi Permenkes 43-only dari dokumen tersebut.
 
 ---
 
