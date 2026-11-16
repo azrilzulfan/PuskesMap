@@ -577,7 +577,7 @@
             <div data-parallax-title class="absolute inset-x-0 top-[15%] sm:top-[22%] lg:top-[19%] z-10 flex flex-col items-center px-4 text-center pointer-events-none">
                 <div data-hero-interactive class="relative inline-block pointer-events-auto select-none">
                     {{-- 1. Badge Jarum Suntik (Top-Left di Atas Lambang PuskesMap) --}}
-                    <span class="float-soft flex absolute -left-2 -top-2 sm:-left-5 sm:-top-4 md:-left-7 md:-top-5 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-accent text-white shadow-lg -rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Layanan Medis & Vaksinasi" aria-hidden="true">
+                    <span class="float-soft flex absolute -left-2.5 -top-2.5 sm:-left-5.5 sm:-top-4.5 md:-left-7.5 md:-top-5.5 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-accent text-white shadow-lg -rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Layanan Medis & Vaksinasi" aria-hidden="true">
                         <svg class="size-4.5 sm:size-5.5 md:size-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="m18 2 4 4"/>
                             <path d="m17 7 3-3"/>
@@ -589,7 +589,7 @@
                     </span>
 
                     {{-- 2. Badge Tas Medis Palang Plus (Top-Right di Atas Stetoskop) --}}
-                    <span class="float-soft-alt flex absolute -right-1.5 -top-2 sm:-right-4 sm:-top-4 md:-right-6 md:-top-5 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-rose-500 text-white shadow-lg rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Kesiapan Faskes & IGD" aria-hidden="true">
+                    <span class="float-soft-alt flex absolute -right-2 -top-2.5 sm:-right-5 sm:-top-4.5 md:-right-7 md:-top-5.5 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-map-pin text-white shadow-lg rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Kesiapan Faskes & IGD" aria-hidden="true">
                         <svg class="size-4.5 sm:size-5.5 md:size-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
                             <rect width="20" height="14" x="2" y="6" rx="2"/>
@@ -598,8 +598,8 @@
                         </svg>
                     </span>
 
-                    {{-- 3. Badge Kapsul Obat (Mid-Left di Samping Lambang PuskesMap) --}}
-                    <span class="float-soft-slow flex absolute -left-3 top-[48%] sm:-left-6 sm:top-[46%] md:-left-8 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Farmasi & Obat-obatan" aria-hidden="true">
+                    {{-- 3. Badge Kapsul Obat (Mid-Left di Samping Lambang PuskesMap - Digeser ke Kiri agar Tidak Ketimpa) --}}
+                    <span class="float-soft-slow flex absolute -left-6 top-[48%] sm:-left-10 sm:top-[46%] md:-left-12 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-crowd-low text-white shadow-lg rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Farmasi & Obat-obatan" aria-hidden="true">
                         <svg class="size-4.5 sm:size-5.5 md:size-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>
                             <path d="m8.5 8.5 7 7"/>
@@ -607,7 +607,7 @@
                     </span>
 
                     {{-- 4. Badge Detak Jantung / ECG Monitor (Mid-Right di Samping Stetoskop) --}}
-                    <span class="float-soft-reverse flex absolute -right-2.5 top-[46%] sm:-right-5 sm:top-[44%] md:-right-7 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-primary text-white shadow-lg -rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Layanan Kesehatan Masyarakat" aria-hidden="true">
+                    <span class="float-soft-reverse flex absolute -right-3.5 top-[46%] sm:-right-7 sm:top-[44%] md:-right-9 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-primary text-white shadow-lg -rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Layanan Kesehatan Masyarakat" aria-hidden="true">
                         <svg class="size-4.5 sm:size-5.5 md:size-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
                             <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>
