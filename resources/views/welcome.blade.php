@@ -573,28 +573,31 @@
                 })();
             </script>
 
-            {{-- Floating Decorative Badges & Judul Hero di Area Langit/Awan --}}
-            <div data-parallax-title class="absolute inset-x-0 top-[15%] sm:top-[19%] lg:top-[20%] z-10 flex flex-col items-center px-4 text-center">
-                <div class="relative inline-flex items-center gap-2 sm:gap-5">
+            {{-- Floating Decorative Badges & Judul Hero SVG di Area Langit/Awan --}}
+            <div data-parallax-title class="absolute inset-x-0 top-[15%] sm:top-[22%] lg:top-[19%] z-10 flex flex-col items-center px-4 text-center pointer-events-none">
+                <div data-hero-interactive class="relative inline-block pointer-events-auto group select-none">
                     {{-- Badge Dekoratif Kiri --}}
-                    <span class="float-soft flex absolute -left-7 -top-2 sm:-left-16 sm:-top-5 size-6 sm:size-12 items-center justify-center rounded-lg sm:rounded-2xl bg-primary/90 text-white shadow-lg -rotate-12 backdrop-blur-xs" aria-hidden="true">
-                        <svg class="size-3.5 sm:size-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
+                    <span class="float-soft flex absolute -left-2 -top-1.5 sm:-left-5 sm:-top-3 md:-left-7 md:-top-4 size-6 sm:size-10 md:size-11 items-center justify-center rounded-lg sm:rounded-2xl bg-primary/90 text-white shadow-lg -rotate-12 backdrop-blur-xs transition-transform duration-300 group-hover:-translate-y-1.5 group-hover:scale-110" aria-hidden="true">
+                        <svg class="size-3.5 sm:size-5 md:size-5.5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"/></svg>
                     </span>
 
-                    <img data-reveal="pop" data-reveal-delay="150" src="{{ asset('images/logo-sm.png') }}" alt="" class="h-9 w-auto sm:h-[86px] lg:h-[96px] drop-shadow-md">
-                    <h1 data-reveal="up" data-reveal-delay="300" class="text-3xl font-extrabold tracking-tight leading-none text-primary-dark sm:text-6xl lg:text-[74px] drop-shadow-xs">
-                        PuskesMap
-                    </h1>
+                    {{-- Hero Logo SVG dengan Motion Floating & Interactive Hover/Tilt --}}
+                    <div class="hero-logo-floating">
+                        <img src="{{ asset('images/Logo PUSKESMAP Hero.svg') }}"
+                             alt="PuskesMap - Peta Puskesmas Kota Bogor"
+                             width="3533"
+                             height="901"
+                             class="h-auto w-[76vw] max-w-[280px] xs:max-w-[350px] sm:max-w-[540px] md:max-w-[640px] lg:max-w-[760px] xl:max-w-[820px] drop-shadow-[0_12px_28px_rgba(0,121,121,0.2)] transition-all duration-300 ease-out group-hover:scale-[1.025] group-active:scale-[0.98] group-hover:drop-shadow-[0_18px_36px_rgba(0,121,121,0.28)]"
+                             loading="eager"
+                             fetchpriority="high"
+                             decoding="async">
+                    </div>
 
                     {{-- Badge Dekoratif Kanan --}}
-                    <span class="float-soft-alt flex absolute -right-7 -bottom-1.5 sm:-right-16 sm:-bottom-3 size-6 sm:size-12 items-center justify-center rounded-lg sm:rounded-2xl bg-accent/95 text-white shadow-lg rotate-12 backdrop-blur-xs" aria-hidden="true">
-                        <svg class="size-3.5 sm:size-6" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                    <span class="float-soft-alt flex absolute -right-1.5 -top-1 sm:-right-4 sm:-top-2 md:-right-6 md:-top-3 size-6 sm:size-10 md:size-11 items-center justify-center rounded-lg sm:rounded-2xl bg-accent/95 text-white shadow-lg rotate-12 backdrop-blur-xs transition-transform duration-300 group-hover:-translate-y-1.5 group-hover:scale-110" aria-hidden="true">
+                        <svg class="size-3.5 sm:size-5 md:size-5.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
                     </span>
                 </div>
-
-                <p data-reveal="up" data-reveal-delay="500" class="mt-2.5 sm:mt-4 max-w-[92vw] rounded-full bg-white/88 px-3.5 py-1 sm:px-7 sm:py-2 text-[11px] sm:text-lg lg:text-xl font-extrabold text-primary-dark shadow-sm backdrop-blur-md border border-white">
-                    Peta puskesmas Kota Bogor, di satu tempat
-                </p>
             </div>
         </div>
         {{-- ================= SECTION WILAYAH (OVERLAPPING / NIMPA DENGAN PALET PUSKESMAP) ================= --}}

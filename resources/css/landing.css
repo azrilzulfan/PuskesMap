@@ -252,6 +252,11 @@ html {
   animation: float-soft 5.2s ease-in-out -2s infinite;
 }
 
+.hero-logo-floating {
+  animation: heroLogoFloat 4.8s ease-in-out infinite;
+  will-change: transform;
+}
+
 @keyframes float-soft {
   0%,
   100% {
@@ -259,6 +264,19 @@ html {
   }
   50% {
     transform: translate3d(0, -9px, 0);
+  }
+}
+
+@keyframes heroLogoFloat {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  35% {
+    transform: translate3d(0, -9px, 0) rotate(-0.45deg);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0) rotate(0.35deg);
   }
 }
 
@@ -359,7 +377,8 @@ html {
 
   [data-reveal].is-revealed,
   .float-soft,
-  .float-soft-alt {
+  .float-soft-alt,
+  .hero-logo-floating {
     animation: none;
   }
 
