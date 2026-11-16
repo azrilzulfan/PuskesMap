@@ -67,6 +67,33 @@ class AnalyticsController extends Controller
         ]);
     }
 
+    public function map(Request $request): View
+    {
+        $filters = $this->validateFilters($request);
+        $kecamatanId = $filters['kecamatan_id'];
+        $bufferKm = $filters['buffer_km'];
+        $tahun = $filters['tahun'];
+
+        $districts = Kecamatan::query()->orderBy('nama_kecamatan')->get();
+        $coverage = $this->spatialAnalysis->calculateServiceArea($bufferKm);
+        $equity = $this->spatialAnalysis->getEquityAnalysis($kecamatanId);
+        $workload = $this->workloadService->getWorkloadDistribution($kecamatanId, $tahun);
+
+        return view('analytics.map', [
+            'districts' => $districts,
+            'selectedKecamatanId' => $kecamatanId,
+            'bufferKm' => $bufferKm,
+            'tahun' => $tahun,
+            'coverage' => $coverage,
+            'equity' => $equity,
+            'workload' => $workload,
+            'bogorCenter' => config('sdss.spatial.bogor_center', [
+                'lat' => -6.597147,
+                'lng' => 106.806039,
+            ]),
+        ]);
+    }
+
     public function exportCsv(Request $request): StreamedResponse
     {
         $filters = $this->validateFilters($request);

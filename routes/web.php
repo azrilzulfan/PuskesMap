@@ -30,6 +30,7 @@ Route::post('/logout', [AuthController::class, 'logout'])
 
 Route::middleware(['auth', 'role:pemerintah,admin'])->group(function (): void {
     Route::get('/analitik', [AnalyticsController::class, 'index'])->name('analitik.index');
+    Route::get('/analitik/peta', [AnalyticsController::class, 'map'])->name('analitik.peta');
     Route::get('/analitik/ekspor/csv', [AnalyticsController::class, 'exportCsv'])->name('analitik.export.csv');
     Route::get('/analitik/ekspor/pdf', [AnalyticsController::class, 'exportPdf'])->name('analitik.export.pdf');
 });

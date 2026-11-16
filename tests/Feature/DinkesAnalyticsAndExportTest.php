@@ -51,7 +51,17 @@ test('dinkes dashboard and analysis apis return postgis coverage, equity, worklo
         ->get(route('analitik.index'))
         ->assertOk()
         ->assertSee('Dasbor Analitik Spasial Dinas Kesehatan')
-        ->assertSee('Bogor Tengah');
+        ->assertSee('Bogor Tengah')
+        ->assertSee(route('analitik.peta'))
+        ->assertDontSee('href="'.route('peta').'"', false);
+
+    $this->actingAs($dinkes)
+        ->get(route('analitik.peta'))
+        ->assertOk()
+        ->assertSee('Peta Spasial Internal')
+        ->assertSee('Simulasi MAUT Internal')
+        ->assertSee(route('analitik.index'))
+        ->assertDontSee('href="'.route('peta').'"', false);
 
     $coverageResponse = $this->actingAs($dinkes)
         ->getJson(route('api.v1.analisis.coverage', ['buffer_km' => 1.5]));
