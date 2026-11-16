@@ -6,7 +6,7 @@ Dokumen ini adalah acuan resmi kolaborasi tim di dalam repositori `PuskesMap/` a
 
 ## 1. Pembagian Kepemilikan Area & Batas Wewenang
 
-### A. Tim Landing Page (`Kayla` & `Kaila`) — Area Terbatas
+### A. Tim Landing Page (`Kayla`, `Kaila`, & `Dila`) — Area Terbatas
 - **Cakupan file:**
   - `resources/views/welcome.blade.php`
   - `resources/views/components/bogor-map.blade.php`
@@ -14,7 +14,10 @@ Dokumen ini adalah acuan resmi kolaborasi tim di dalam repositori `PuskesMap/` a
   - `resources/js/landing/landing-page.js`
   - `resources/css/landing.css` dan blok `@theme` Landing Page di `resources/css/app.css`
   - `public/images/*`
-- **Aturan:** Tidak mengubah modul inti SDSS, dataset, migrasi, API, maupun layout/komponen `<x-ui.*>`.
+- **Aturan:**
+  - Tidak mengubah modul inti SDSS, dataset, migrasi, API, maupun layout/komponen `<x-ui.*>`.
+  - Seluruh data puskesmas yang ditampilkan di Landing Page (status `IGD 24 Jam` = hanya 6 puskesmas, `Rawat Inap` = 0 / tidak ditampilkan, jam tutup poli `14:00 WIB`, kelengkapan 9 nakes `100%` atau `89%`, serta kepadatan `Rendah|Sedang|Padat`) **wajib mengacu pada CSV resmi di `database/seeders/csv/`** — dilarang mengisi angka/status perkiraan manual.
+  - Aset foto di `public/images/puskesmas/` wajib terkompres ringan, hanya memasukkan foto yang benar-benar direferensikan di UI, dan memakai penamaan huruf kecil tanpa spasi agar aman di server Linux.
 
 ### B. Tim Inti SDSS (`Fajar` & `Azril`) — Pemegang Penuh Modul Inti
 Hanya **Fajar** dan **Azril** yang memegang seluruh modul inti SDSS: dataset referensi & seeder, migrasi PostGIS, Eloquent models/enums, `app/Services/*`, `app/Http/Controllers/*`, `/api/v1/*`, `/peta`, `/puskesmas/{kode_puskesmas}` *(rencana fase UI `T-02`, belum aktif di `routes/web.php`)*, `/login`, `/analitik/*`, dan `/admin/*`.

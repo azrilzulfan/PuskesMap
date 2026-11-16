@@ -843,18 +843,18 @@ function initLandingPreviewMap() {
     }).addTo(map);
 
     const previewItems = [
-        { name: 'Puskesmas Tanah Sareal', district: 'Tanah Sareal', lat: -6.5662, lng: 106.7955, distance: '1,1 km', igd: true, inap: true, nakes: '100%', crowd: 'Sedang' },
-        { name: 'Puskesmas Sempur', district: 'Bogor Tengah', lat: -6.5918, lng: 106.8016, distance: '1,2 km', igd: false, inap: false, nakes: '89%', crowd: 'Sepi' },
-        { name: 'Puskesmas Kedung Badak', district: 'Tanah Sareal', lat: -6.5574, lng: 106.8012, distance: '1,5 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang' },
-        { name: 'Puskesmas Mekarwangi', district: 'Tanah Sareal', lat: -6.5495, lng: 106.7810, distance: '2,0 km', igd: true, inap: true, nakes: '100%', crowd: 'Ramai' },
-        { name: 'Puskesmas Pasir Mulya', district: 'Bogor Barat', lat: -6.5988, lng: 106.7745, distance: '2,3 km', igd: true, inap: true, nakes: '100%', crowd: 'Sepi' },
-        { name: 'Puskesmas Semplak', district: 'Bogor Barat', lat: -6.5640, lng: 106.7620, distance: '2,5 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang' },
-        { name: 'Puskesmas Bogor Tengah', district: 'Bogor Tengah', lat: -6.5975, lng: 106.7942, distance: '1,4 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang' },
-        { name: 'Puskesmas Bogor Timur', district: 'Bogor Timur', lat: -6.6095, lng: 106.8148, distance: '2,4 km', igd: true, inap: true, nakes: '100%', crowd: 'Sedang' },
-        { name: 'Puskesmas Bogor Utara', district: 'Bogor Utara', lat: -6.5762, lng: 106.8165, distance: '2,6 km', igd: true, inap: true, nakes: '100%', crowd: 'Sedang' },
-        { name: 'Puskesmas Tegal Gundil', district: 'Bogor Utara', lat: -6.5842, lng: 106.8130, distance: '2,1 km', igd: false, inap: false, nakes: '100%', crowd: 'Sepi' },
-        { name: 'Puskesmas Bogor Selatan', district: 'Bogor Selatan', lat: -6.6195, lng: 106.7988, distance: '2,8 km', igd: true, inap: true, nakes: '100%', crowd: 'Sedang' },
-        { name: 'Puskesmas Cipaku', district: 'Bogor Selatan', lat: -6.6335, lng: 106.8110, distance: '3,2 km', igd: true, inap: false, nakes: '89%', crowd: 'Sedang' },
+        { name: 'Puskesmas Tanah Sareal', district: 'Tanah Sareal', lat: -6.575667, lng: 106.798869, distance: '1,4 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 7.5 },
+        { name: 'Puskesmas Sempur', district: 'Bogor Tengah', lat: -6.584019, lng: 106.798334, distance: '0,5 km', igd: false, inap: false, nakes: '100%', crowd: 'Padat', openHour: 7.5 },
+        { name: 'Puskesmas Kedung Badak', district: 'Tanah Sareal', lat: -6.564168, lng: 106.792838, distance: '2,8 km', igd: false, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 8.0 },
+        { name: 'Puskesmas Mekar Wangi', district: 'Tanah Sareal', lat: -6.542422, lng: 106.783958, distance: '5,4 km', igd: false, inap: false, nakes: '89%', crowd: 'Sedang', openHour: 7.5 },
+        { name: 'Puskesmas Pasir Mulya', district: 'Bogor Barat', lat: -6.597330, lng: 106.777989, distance: '2,4 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 7.5 },
+        { name: 'Puskesmas Semplak', district: 'Bogor Barat', lat: -6.561560, lng: 106.765582, distance: '4,7 km', igd: false, inap: false, nakes: '100%', crowd: 'Padat', openHour: 7.5 },
+        { name: 'Puskesmas Bogor Tengah', district: 'Bogor Tengah', lat: -6.592859, lng: 106.794501, distance: '0,6 km', igd: true, inap: false, nakes: '100%', crowd: 'Rendah', openHour: 7.5 },
+        { name: 'Puskesmas Bogor Timur', district: 'Bogor Timur', lat: -6.606886, lng: 106.811111, distance: '2,5 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 7.5 },
+        { name: 'Puskesmas Bogor Utara', district: 'Bogor Utara', lat: -6.583178, lng: 106.819652, distance: '2,5 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 7.5 },
+        { name: 'Puskesmas Tegal Gundil', district: 'Bogor Utara', lat: -6.580886, lng: 106.813277, distance: '1,9 km', igd: false, inap: false, nakes: '89%', crowd: 'Rendah', openHour: 7.5 },
+        { name: 'Puskesmas Bogor Selatan', district: 'Bogor Selatan', lat: -6.621810, lng: 106.808308, distance: '3,9 km', igd: false, inap: false, nakes: '100%', crowd: 'Rendah', openHour: 7.5 },
+        { name: 'Puskesmas Cipaku', district: 'Bogor Selatan', lat: -6.630467, lng: 106.810835, distance: '4,9 km', igd: true, inap: false, nakes: '89%', crowd: 'Sedang', openHour: 8.0 },
     ];
 
     const makeLandingPin = (isActive = false, isIgd = true, animateEnter = false) => {
@@ -893,9 +893,8 @@ function initLandingPreviewMap() {
         if (tagsEl) {
             tagsEl.innerHTML = `
                 <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">${item.distance}</span>
-                <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">Buka</span>
+                <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">Beban ${item.crowd}</span>
                 ${item.igd ? '<span class="inline-block rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] font-semibold text-accent-strong">IGD 24 jam</span>' : ''}
-                ${item.inap ? '<span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">Rawat inap</span>' : ''}
             `;
         }
         if (animate && bodyEl) {
@@ -1004,8 +1003,17 @@ function initLandingPreviewMap() {
             markerEntries.forEach((entry) => {
                 const { marker, item } = entry;
                 let show = true;
-                if (tag.includes('igd')) show = item.igd;
-                else if (tag.includes('inap')) show = item.inap;
+                if (tag.includes('igd')) {
+                    show = item.igd;
+                } else if (tag.includes('sdm') || tag.includes('lengkap')) {
+                    show = item.nakes === '100%';
+                } else if (tag.includes('buka')) {
+                    const wibNow = new Date(Date.now() + 7 * 3600 * 1000);
+                    const hourWib = wibNow.getUTCHours() + (wibNow.getUTCMinutes() / 60);
+                    const dayWib = wibNow.getUTCDay();
+                    const poliOpen = dayWib >= 1 && dayWib <= 5 && hourWib >= (item.openHour ?? 7.5) && hourWib <= 14.0;
+                    show = item.igd || poliOpen;
+                }
 
                 if (show) {
                     if (!map.hasLayer(marker)) {
