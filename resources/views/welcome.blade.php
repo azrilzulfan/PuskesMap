@@ -754,7 +754,7 @@
                                 $pastel = $cardColors[$loop->index % count($cardColors)];
                                 $hasImage = ! empty($item['image']) && file_exists(public_path($item['image']));
                             @endphp
-                            <article class="marquee-card group/card w-[290px] sm:w-[316px] shrink-0 rounded-2xl bg-white overflow-hidden shadow-[0_12px_32px_rgba(7,52,52,0.18)] border border-slate-100 flex flex-col justify-between">
+                            <article class="marquee-card group/card w-[260px] sm:w-[280px] shrink-0 rounded-2xl bg-white overflow-hidden shadow-[0_12px_32px_rgba(7,52,52,0.18)] border border-slate-100 flex flex-col justify-between">
                                 <div>
                                     {{-- Slot Foto Puskesmas (Framer Property Style) --}}
                                     <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
@@ -773,44 +773,36 @@
                                         @endif
 
                                         {{-- Badge Kecamatan (Satu-satunya Keterangan di Atas Foto Sesuai Permintaan) --}}
-                                        <span class="absolute left-3.5 top-3.5 z-10 inline-flex items-center rounded-full bg-white/95 backdrop-blur-xs px-3 py-1 text-xs font-bold text-slate-800 shadow-sm border border-black/5">
+                                        <span class="absolute left-3 top-3 z-10 inline-flex items-center rounded-full bg-white/95 backdrop-blur-xs px-2.5 py-0.5 text-[11px] font-bold text-slate-800 shadow-sm border border-black/5">
                                             Kec. {{ $item['district'] }}
                                         </span>
-
-                                        {{-- Tombol Favorit / Heart ala Framer Property Listing --}}
-                                        <button type="button" aria-label="Simpan {{ $item['name'] }}"
-                                                class="absolute right-3.5 top-3.5 z-10 flex size-8 items-center justify-center rounded-full bg-white/95 backdrop-blur-xs text-slate-600 shadow-sm transition-all duration-200 hover:text-rose-500 hover:scale-110 active:scale-95">
-                                            <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
-                                            </svg>
-                                        </button>
                                     </div>
 
                                     {{-- Body Informasi Kartu --}}
-                                    <div class="p-4 sm:p-5 flex flex-col gap-2.5">
+                                    <div class="p-3.5 sm:p-4 flex flex-col gap-2">
                                         {{-- Baris Judul & Status Layanan --}}
-                                        <div class="flex items-start justify-between gap-2">
-                                            <h3 class="text-base font-bold text-slate-900 leading-snug line-clamp-1 group-hover/card:text-primary transition-colors" title="{{ $item['name'] }}">
+                                        <div class="flex items-start justify-between gap-1.5">
+                                            <h3 class="text-[14.5px] sm:text-[15px] font-bold text-slate-900 leading-snug line-clamp-1 group-hover/card:text-primary transition-colors" title="{{ $item['name'] }}">
                                                 {{ $item['name'] }}
                                             </h3>
                                             @if ($item['igd'])
-                                                <span class="inline-flex items-center gap-1 shrink-0 rounded-full bg-rose-50 px-2 py-0.5 text-[11px] font-bold text-rose-600 border border-rose-200/60">
+                                                <span class="inline-flex items-center gap-1 shrink-0 rounded-full bg-rose-50 px-2 py-0.5 text-[10.5px] font-bold text-rose-600 border border-rose-200/60">
                                                     <span class="size-1.5 rounded-full bg-rose-500 animate-pulse"></span>
                                                     IGD 24J
                                                 </span>
                                             @elseif ($item['inap'])
-                                                <span class="inline-flex items-center shrink-0 rounded-full bg-teal-50 px-2 py-0.5 text-[11px] font-bold text-primary border border-primary/20">
+                                                <span class="inline-flex items-center shrink-0 rounded-full bg-teal-50 px-2 py-0.5 text-[10.5px] font-bold text-primary border border-primary/20">
                                                     Rawat Inap
                                                 </span>
                                             @else
-                                                <span class="inline-flex items-center shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                                                <span class="inline-flex items-center shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-600">
                                                     Rawat Jalan
                                                 </span>
                                             @endif
                                         </div>
 
                                         {{-- Baris Alamat dengan Icon Pin --}}
-                                        <div class="-mt-0.5 flex items-center gap-1.5 text-xs text-slate-500">
+                                        <div class="-mt-0.5 flex items-center gap-1 text-[11.5px] text-slate-500">
                                             <svg class="size-3.5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
@@ -819,26 +811,26 @@
                                         </div>
 
                                         {{-- Grid Spesifikasi 3 Kolom (Ala Bedrooms | Bathrooms | sq ft di Framer) --}}
-                                        <div class="grid grid-cols-3 divide-x divide-slate-100 border-t border-slate-100 pt-3 mt-1 text-center">
-                                            <div class="pr-2 text-left">
-                                                <div class="text-[13.5px] font-bold text-slate-900 leading-tight">{{ $item['nakes'] }}</div>
-                                                <div class="text-[10.5px] font-medium text-slate-400 mt-0.5">9 Nakes</div>
+                                        <div class="grid grid-cols-3 divide-x divide-slate-100 border-t border-slate-100 pt-2.5 mt-0.5 text-center">
+                                            <div class="pr-1.5 text-left">
+                                                <div class="text-[13px] font-bold text-slate-900 leading-tight">{{ $item['nakes'] }}</div>
+                                                <div class="text-[10px] font-medium text-slate-400 mt-0.5">9 Nakes</div>
                                             </div>
-                                            <div class="px-2 text-left">
-                                                <div class="text-[13.5px] font-bold text-slate-900 leading-tight truncate">{{ $item['inap'] ? 'Inap' : 'Jalan' }}</div>
-                                                <div class="text-[10.5px] font-medium text-slate-400 mt-0.5">Layanan</div>
+                                            <div class="px-1.5 text-left">
+                                                <div class="text-[13px] font-bold text-slate-900 leading-tight truncate">{{ $item['inap'] ? 'Inap' : 'Jalan' }}</div>
+                                                <div class="text-[10px] font-medium text-slate-400 mt-0.5">Layanan</div>
                                             </div>
-                                            <div class="pl-2 text-left">
-                                                <div class="text-[13.5px] font-bold {{ $item['crowd'] === 'Padat' ? 'text-amber-600' : 'text-slate-900' }} leading-tight truncate">{{ $item['crowd'] }}</div>
-                                                <div class="text-[10.5px] font-medium text-slate-400 mt-0.5">Kunjungan</div>
+                                            <div class="pl-1.5 text-left">
+                                                <div class="text-[13px] font-bold {{ $item['crowd'] === 'Padat' ? 'text-amber-600' : 'text-slate-900' }} leading-tight truncate">{{ $item['crowd'] }}</div>
+                                                <div class="text-[10px] font-medium text-slate-400 mt-0.5">Kunjungan</div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 {{-- Footer Baris Bawah (Jam Operasional & Link Lihat Peta) --}}
-                                <div class="px-4 pb-4 sm:px-5 sm:pb-5">
-                                    <div class="flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
+                                <div class="px-3.5 pb-3.5 sm:px-4 sm:pb-4">
+                                    <div class="flex items-center justify-between border-t border-slate-100 pt-2.5 text-[11.5px]">
                                         <span class="text-slate-500 font-medium flex items-center gap-1.5 truncate pr-2">
                                             <svg class="size-3.5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
