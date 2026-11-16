@@ -575,10 +575,10 @@
 
             {{-- Floating Decorative Badges & Judul Hero SVG di Area Langit/Awan --}}
             <div data-parallax-title class="absolute inset-x-0 top-[15%] sm:top-[22%] lg:top-[19%] z-10 flex flex-col items-center px-4 text-center pointer-events-none">
-                <div data-hero-interactive class="relative inline-block pointer-events-auto group select-none">
-                    {{-- 1. Badge Jarum Suntik (Top-Left di Atas Simbol PuskesMap) --}}
-                    <span class="float-soft flex absolute -left-2 -top-2 sm:-left-5 sm:-top-4 md:-left-7 md:-top-5 size-7 sm:size-10 md:size-11 items-center justify-center rounded-xl sm:rounded-2xl bg-accent text-white shadow-lg -rotate-12 backdrop-blur-xs transition-transform duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer" title="Layanan Medis & Vaksinasi" aria-hidden="true">
-                        <svg class="size-3.5 sm:size-5 md:size-5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <div data-hero-interactive class="relative inline-block pointer-events-auto select-none">
+                    {{-- 1. Badge Jarum Suntik (Top-Left di Atas Lambang PuskesMap) --}}
+                    <span class="float-soft flex absolute -left-2 -top-2 sm:-left-5 sm:-top-4 md:-left-7 md:-top-5 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-accent text-white shadow-lg -rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Layanan Medis & Vaksinasi" aria-hidden="true">
+                        <svg class="size-4.5 sm:size-5.5 md:size-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="m18 2 4 4"/>
                             <path d="m17 7 3-3"/>
                             <path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/>
@@ -589,8 +589,8 @@
                     </span>
 
                     {{-- 2. Badge Tas Medis Palang Plus (Top-Right di Atas Stetoskop) --}}
-                    <span class="float-soft-alt flex absolute -right-1.5 -top-2 sm:-right-4 sm:-top-4 md:-right-6 md:-top-5 size-7 sm:size-10 md:size-11 items-center justify-center rounded-xl sm:rounded-2xl bg-rose-500 text-white shadow-lg rotate-12 backdrop-blur-xs transition-transform duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer" title="Kesiapan Faskes & IGD" aria-hidden="true">
-                        <svg class="size-3.5 sm:size-5 md:size-5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <span class="float-soft-alt flex absolute -right-1.5 -top-2 sm:-right-4 sm:-top-4 md:-right-6 md:-top-5 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-rose-500 text-white shadow-lg rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Kesiapan Faskes & IGD" aria-hidden="true">
+                        <svg class="size-4.5 sm:size-5.5 md:size-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="M16 6V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
                             <rect width="20" height="14" x="2" y="6" rx="2"/>
                             <path d="M12 10v6"/>
@@ -598,49 +598,23 @@
                         </svg>
                     </span>
 
-                    {{-- 3. Badge Kapsul Obat (Mid-Left di Bawah Simbol PuskesMap) --}}
-                    <span class="float-soft-slow flex absolute -left-3 top-[48%] sm:-left-6 sm:top-[45%] md:-left-8 size-6 sm:size-8.5 md:size-9.5 items-center justify-center rounded-lg sm:rounded-xl bg-emerald-500 text-white shadow-md rotate-12 backdrop-blur-xs transition-transform duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer" title="Farmasi & Resep Obat" aria-hidden="true">
-                        <svg class="size-3 sm:size-4.5 md:size-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    {{-- 3. Badge Kapsul Obat (Mid-Left di Samping Lambang PuskesMap) --}}
+                    <span class="float-soft-slow flex absolute -left-3 top-[48%] sm:-left-6 sm:top-[46%] md:-left-8 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Farmasi & Obat-obatan" aria-hidden="true">
+                        <svg class="size-4.5 sm:size-5.5 md:size-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>
                             <path d="m8.5 8.5 7 7"/>
                         </svg>
                     </span>
 
-                    {{-- 4. Badge Detak Jantung / ECG Monitor (Mid-Right Dekat Stetoskop) --}}
-                    <span class="float-soft-reverse flex absolute -right-2.5 top-[44%] sm:-right-5 sm:top-[42%] md:-right-7 size-6 sm:size-8.5 md:size-9.5 items-center justify-center rounded-lg sm:rounded-xl bg-primary text-white shadow-md -rotate-6 backdrop-blur-xs transition-transform duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer" title="Pemantauan Kesehatan Warga" aria-hidden="true">
-                        <svg class="size-3 sm:size-4.5 md:size-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    {{-- 4. Badge Detak Jantung / ECG Monitor (Mid-Right di Samping Stetoskop) --}}
+                    <span class="float-soft-reverse flex absolute -right-2.5 top-[46%] sm:-right-5 sm:top-[44%] md:-right-7 size-8.5 sm:size-10.5 md:size-11.5 aspect-square items-center justify-center rounded-2xl bg-primary text-white shadow-lg -rotate-12 backdrop-blur-xs transition-all duration-300 hover:scale-115 hover:-translate-y-1 cursor-pointer" title="Layanan Kesehatan Masyarakat" aria-hidden="true">
+                        <svg class="size-4.5 sm:size-5.5 md:size-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
                             <path d="M3.22 12H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27"/>
                         </svg>
                     </span>
 
-                    {{-- 5. Badge Termometer Medis (Top-Center di Atas Teks) --}}
-                    <span class="float-soft-fast flex absolute left-[44%] -top-3 sm:left-[46%] sm:-top-5 md:-top-6 size-5.5 sm:size-7.5 md:size-8.5 items-center justify-center rounded-lg sm:rounded-xl bg-sky-500 text-white shadow-md -rotate-12 backdrop-blur-xs transition-transform duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer" title="Pemeriksaan Suhu & Diagnosa" aria-hidden="true">
-                        <svg class="size-3 sm:size-4 md:size-4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path d="M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z"/>
-                            <path d="M12 12v3"/>
-                        </svg>
-                    </span>
-
-                    {{-- 6. Badge Plester Luka (Bottom-Left Dekat Pill Subtitle) --}}
-                    <span class="float-soft-slow hidden sm:flex absolute left-[8%] -bottom-2.5 sm:left-[10%] sm:-bottom-4 md:-bottom-5 size-5.5 sm:size-7.5 md:size-8.5 items-center justify-center rounded-lg sm:rounded-xl bg-amber-500 text-white shadow-md rotate-6 backdrop-blur-xs transition-transform duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer" title="Pertolongan Pertama" aria-hidden="true">
-                        <svg class="size-3 sm:size-4 md:size-4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <rect width="18" height="18" x="3" y="3" rx="4"/>
-                            <path d="M9 12h6"/>
-                            <path d="M12 9v6"/>
-                        </svg>
-                    </span>
-
-                    {{-- 7. Badge Perisai Kesehatan Plus (Bottom-Right Dekat Pill Subtitle) --}}
-                    <span class="float-soft-fast hidden sm:flex absolute right-[8%] -bottom-2.5 sm:right-[10%] sm:-bottom-4 md:-bottom-5 size-5.5 sm:size-7.5 md:size-8.5 items-center justify-center rounded-lg sm:rounded-xl bg-teal-600 text-white shadow-md -rotate-6 backdrop-blur-xs transition-transform duration-300 hover:scale-125 hover:-translate-y-1 cursor-pointer" title="Perlindungan Faskes Terpercaya" aria-hidden="true">
-                        <svg class="size-3 sm:size-4 md:size-4.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/>
-                            <path d="M8 11h8"/>
-                            <path d="M12 7v8"/>
-                        </svg>
-                    </span>
-
-                    {{-- Hero Logo SVG dengan Motion Floating & Interactive Hover/Tilt --}}
+                    {{-- Hero Logo SVG dengan Motion Floating Tenang & Elegan --}}
                     <div class="hero-logo-floating">
                         <img src="{{ asset('images/Logo PUSKESMAP Hero.svg') }}"
                              alt="PuskesMap - Peta Puskesmas Kota Bogor"
