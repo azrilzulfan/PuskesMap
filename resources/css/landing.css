@@ -304,23 +304,14 @@ html {
 
 .marquee-card {
   transition:
-    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
-    background 0.3s ease,
-    color 0.3s ease,
-    box-shadow 0.3s ease;
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .marquee-card:hover,
 .marquee-card:focus-within {
-  background-color: #e37434;
-  color: #ffffff;
-  box-shadow: 0 22px 48px rgba(227, 116, 52, 0.42);
-  transform: translateY(-6px);
-}
-
-.marquee-card:hover .text-muted,
-.marquee-card:focus-within .text-muted {
-  color: rgba(255, 255, 255, 0.9);
+  transform: translateY(-8px);
+  box-shadow: 0 24px 50px rgba(0, 32, 32, 0.28);
 }
 
 /* ===== Subtle Micro-Animations untuk Section Sekilas di Peta ===== */

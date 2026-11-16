@@ -754,62 +754,107 @@
                                 $pastel = $cardColors[$loop->index % count($cardColors)];
                                 $hasImage = ! empty($item['image']) && file_exists(public_path($item['image']));
                             @endphp
-                            <article class="marquee-card group/card w-[258px] sm:w-[272px] shrink-0 rounded-2xl bg-white p-4 text-ink shadow-[0_16px_40px_rgba(7,52,52,0.22)] flex flex-col justify-between">
+                            <article class="marquee-card group/card w-[290px] sm:w-[316px] shrink-0 rounded-2xl bg-white overflow-hidden shadow-[0_12px_32px_rgba(7,52,52,0.18)] border border-slate-100 flex flex-col justify-between">
                                 <div>
-                                    {{-- Slot Foto / Ilustrasi Header Kartu Puskesmas --}}
-                                    <div class="relative h-[152px] w-full rounded-xl {{ $pastel }} overflow-hidden p-3.5 flex flex-col justify-between">
+                                    {{-- Slot Foto Puskesmas (Framer Property Style) --}}
+                                    <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
                                         @if ($hasImage)
                                             <img src="{{ asset($item['image']) }}"
                                                  alt="{{ $copy === 0 ? $item['name'] : '' }}"
                                                  loading="lazy"
                                                  draggable="false"
-                                                 class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover/card:scale-105">
-                                            <div class="absolute inset-0 bg-gradient-to-t from-ink/65 via-ink/15 to-ink/25" aria-hidden="true"></div>
+                                                 class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-108">
+                                        @else
+                                            <div class="flex h-full w-full items-center justify-center {{ $pastel }}">
+                                                <svg class="size-10 text-primary/70" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M12 7v4m-2-2h4"/>
+                                                </svg>
+                                            </div>
                                         @endif
 
-                                        <div class="relative z-10 flex items-center justify-between">
-                                            <span class="rounded-full bg-white/95 px-2.5 py-0.5 text-[10px] font-extrabold text-primary-dark shadow-2xs transition-colors group-hover/card:text-accent-strong">
-                                                Kec. {{ $item['district'] }}
-                                            </span>
-                                            <span class="rounded-full bg-primary-dark/90 px-2.5 py-0.5 text-[10px] font-bold text-white transition-colors group-hover/card:bg-accent-strong">
-                                                Beban {{ $item['crowd'] }}
-                                            </span>
-                                        </div>
+                                        {{-- Badge Kecamatan (Satu-satunya Keterangan di Atas Foto Sesuai Permintaan) --}}
+                                        <span class="absolute left-3.5 top-3.5 z-10 inline-flex items-center rounded-full bg-white/95 backdrop-blur-xs px-3 py-1 text-xs font-bold text-slate-800 shadow-sm border border-black/5">
+                                            Kec. {{ $item['district'] }}
+                                        </span>
 
-                                        @unless ($hasImage)
-                                            {{-- Placeholder Foto Puskesmas (Otomatis diganti foto asli saat file tersedia di public/images/puskesmas/) --}}
-                                            <div class="relative z-10 my-auto flex flex-col items-center justify-center gap-1.5">
-                                                <div class="flex size-14 items-center justify-center rounded-2xl bg-white/85 shadow-xs backdrop-blur-xs">
-                                                    <svg class="size-8 text-primary transition-colors group-hover/card:text-accent-strong" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M12 7v4m-2-2h4"/>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                        @endunless
-
-                                        <div class="relative z-10 flex items-center justify-between text-[10px] font-bold {{ $hasImage ? 'text-white' : 'text-primary-dark/80' }}">
-                                            <span>9 Nakes: {{ $item['nakes'] }}</span>
-                                            <span>{{ $item['igd'] ? '🚨 IGD 24 Jam' : '🩺 Rawat Jalan' }}</span>
-                                        </div>
+                                        {{-- Tombol Favorit / Heart ala Framer Property Listing --}}
+                                        <button type="button" aria-label="Simpan {{ $item['name'] }}"
+                                                class="absolute right-3.5 top-3.5 z-10 flex size-8 items-center justify-center rounded-full bg-white/95 backdrop-blur-xs text-slate-600 shadow-sm transition-all duration-200 hover:text-rose-500 hover:scale-110 active:scale-95">
+                                            <svg class="size-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"/>
+                                            </svg>
+                                        </button>
                                     </div>
 
-                                    {{-- Informasi Teks Kartu --}}
-                                    <div class="mt-3.5 px-1">
-                                        <span class="text-[11px] font-extrabold text-primary uppercase tracking-wider transition-colors group-hover/card:text-[#ffe2af]">Puskesmas Induk</span>
-                                        <h3 class="mt-0.5 text-base font-extrabold leading-snug text-ink line-clamp-1 transition-colors group-hover/card:text-white">{{ $item['name'] }}</h3>
-                                        <p class="mt-1 text-xs text-muted line-clamp-1 transition-colors">📍 {{ $item['address'] }}</p>
-                                        <p class="mt-1 text-[11px] font-semibold text-muted transition-colors">⏰ {{ $item['hours'] }}</p>
+                                    {{-- Body Informasi Kartu --}}
+                                    <div class="p-4 sm:p-5 flex flex-col gap-2.5">
+                                        {{-- Baris Judul & Status Layanan --}}
+                                        <div class="flex items-start justify-between gap-2">
+                                            <h3 class="text-base font-bold text-slate-900 leading-snug line-clamp-1 group-hover/card:text-primary transition-colors" title="{{ $item['name'] }}">
+                                                {{ $item['name'] }}
+                                            </h3>
+                                            @if ($item['igd'])
+                                                <span class="inline-flex items-center gap-1 shrink-0 rounded-full bg-rose-50 px-2 py-0.5 text-[11px] font-bold text-rose-600 border border-rose-200/60">
+                                                    <span class="size-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                                    IGD 24J
+                                                </span>
+                                            @elseif ($item['inap'])
+                                                <span class="inline-flex items-center shrink-0 rounded-full bg-teal-50 px-2 py-0.5 text-[11px] font-bold text-primary border border-primary/20">
+                                                    Rawat Inap
+                                                </span>
+                                            @else
+                                                <span class="inline-flex items-center shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[11px] font-semibold text-slate-600">
+                                                    Rawat Jalan
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        {{-- Baris Alamat dengan Icon Pin --}}
+                                        <div class="-mt-0.5 flex items-center gap-1.5 text-xs text-slate-500">
+                                            <svg class="size-3.5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                                            </svg>
+                                            <span class="truncate" title="{{ $item['address'] }}">{{ $item['address'] }}</span>
+                                        </div>
+
+                                        {{-- Grid Spesifikasi 3 Kolom (Ala Bedrooms | Bathrooms | sq ft di Framer) --}}
+                                        <div class="grid grid-cols-3 divide-x divide-slate-100 border-t border-slate-100 pt-3 mt-1 text-center">
+                                            <div class="pr-2 text-left">
+                                                <div class="text-[13.5px] font-bold text-slate-900 leading-tight">{{ $item['nakes'] }}</div>
+                                                <div class="text-[10.5px] font-medium text-slate-400 mt-0.5">9 Nakes</div>
+                                            </div>
+                                            <div class="px-2 text-left">
+                                                <div class="text-[13.5px] font-bold text-slate-900 leading-tight truncate">{{ $item['inap'] ? 'Inap' : 'Jalan' }}</div>
+                                                <div class="text-[10.5px] font-medium text-slate-400 mt-0.5">Layanan</div>
+                                            </div>
+                                            <div class="pl-2 text-left">
+                                                <div class="text-[13.5px] font-bold {{ $item['crowd'] === 'Padat' ? 'text-amber-600' : 'text-slate-900' }} leading-tight truncate">{{ $item['crowd'] }}</div>
+                                                <div class="text-[10.5px] font-medium text-slate-400 mt-0.5">Kunjungan</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                {{-- Tombol Pill di Bawah Kartu --}}
-                                <div class="mt-4 pt-1">
-                                    <a href="{{ route('peta') }}"
-                                       draggable="false"
-                                       @if ($copy === 1) tabindex="-1" @endif
-                                       class="flex h-9 w-full items-center justify-center rounded-full bg-primary text-xs font-extrabold text-white shadow-xs transition-all hover:bg-primary-dark hover:scale-[1.02] group-hover/card:shadow-md">
-                                        <span>Lihat di Peta</span>
-                                    </a>
+                                {{-- Footer Baris Bawah (Jam Operasional & Link Lihat Peta) --}}
+                                <div class="px-4 pb-4 sm:px-5 sm:pb-5">
+                                    <div class="flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
+                                        <span class="text-slate-500 font-medium flex items-center gap-1.5 truncate pr-2">
+                                            <svg class="size-3.5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            <span class="truncate">{{ $item['hours'] }}</span>
+                                        </span>
+                                        <a href="{{ route('peta') }}"
+                                           draggable="false"
+                                           @if ($copy === 1) tabindex="-1" @endif
+                                           class="inline-flex items-center gap-1 font-bold text-primary hover:text-accent transition-colors shrink-0">
+                                            <span>Lihat di Peta</span>
+                                            <svg class="size-3.5 transition-transform duration-200 group-hover/card:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </div>
                             </article>
                         @endforeach
