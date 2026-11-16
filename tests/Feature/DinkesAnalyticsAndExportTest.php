@@ -126,3 +126,59 @@ test('dinkes can export analytical reports as utf8 csv and pdf', function () {
 
     expect(str_starts_with((string) $pdfResponse->getContent(), '%PDF'))->toBeTrue();
 });
+
+test('equity analysis rounds up target facilities and csv export respects requested year psw scores', function () {
+    $dinkes = User::factory()->pemerintah()->create();
+    $kecamatan = Kecamatan::factory()->withPolygon()->create([
+        'nama_kecamatan' => 'Bogor Selatan',
+        'jumlah_penduduk' => 100000,
+    ]);
+
+    $facilityA = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatan->id,
+        'kode_puskesmas' => 'P32710101',
+        'nama_puskesmas' => 'Puskesmas Tahun A',
+        'jumlah_posyandu' => 10,
+        'jumlah_sekolah' => 10,
+    ]);
+    Operasional::factory()->create(['puskesmas_id' => $facilityA->id]);
+    TenagaMedis::factory()->create(['puskesmas_id' => $facilityA->id]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityA->id, 'tahun' => 2025, 'total_pasien_bulanan' => 800]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityA->id, 'tahun' => 2026, 'total_pasien_bulanan' => 100]);
+
+    $facilityB = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatan->id,
+        'kode_puskesmas' => 'P32710102',
+        'nama_puskesmas' => 'Puskesmas Tahun B',
+        'jumlah_posyandu' => 10,
+        'jumlah_sekolah' => 10,
+    ]);
+    Operasional::factory()->create(['puskesmas_id' => $facilityB->id]);
+    TenagaMedis::factory()->create(['puskesmas_id' => $facilityB->id]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityB->id, 'tahun' => 2025, 'total_pasien_bulanan' => 200]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityB->id, 'tahun' => 2026, 'total_pasien_bulanan' => 800]);
+
+    app(WorkloadService::class)->recalculateAndPersistScores(2026);
+
+    $this->actingAs($dinkes)
+        ->getJson(route('api.v1.analisis.equity'))
+        ->assertOk()
+        ->assertJsonPath('districts.0.target_count', 4)
+        ->assertJsonPath('districts.0.deficit', 2);
+
+    $csv2025 = $this->actingAs($dinkes)
+        ->get(route('analitik.export.csv', ['tahun' => 2025]))
+        ->assertOk()
+        ->streamedContent();
+
+    $lines = array_values(array_filter(explode("\n", trim(preg_replace('/^\x{EF}\x{BB}\x{BF}/u', '', $csv2025) ?? ''))));
+    $firstRow = str_getcsv($lines[1], ',', '"', '');
+
+    expect($firstRow[0])->toBe('P32710101')
+        ->and((float) $firstRow[15])->toBe(0.2);
+
+    $this->actingAs($dinkes)
+        ->get(route('analitik.index', ['tahun' => 2025]))
+        ->assertOk()
+        ->assertSee('0.20');
+});

@@ -253,7 +253,7 @@ class DatasetBogorSeeder extends Seeder
             throw new RuntimeException("Unable to open dataset file: {$path}");
         }
 
-        $headers = fgetcsv($handle);
+        $headers = fgetcsv($handle, 0, ',', '"', '');
         if (! is_array($headers)) {
             fclose($handle);
             throw new RuntimeException("Dataset CSV header missing in {$path}");
@@ -263,7 +263,7 @@ class DatasetBogorSeeder extends Seeder
         $headers[0] = preg_replace('/^\x{FEFF}/u', '', (string) $headers[0]) ?? (string) $headers[0];
 
         $records = [];
-        while (($data = fgetcsv($handle)) !== false) {
+        while (($data = fgetcsv($handle, 0, ',', '"', '')) !== false) {
             if ($data === [null] || count($data) !== count($headers)) {
                 continue;
             }

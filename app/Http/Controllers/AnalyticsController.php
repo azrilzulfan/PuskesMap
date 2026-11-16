@@ -43,6 +43,17 @@ class AnalyticsController extends Controller
             ->paginate((int) config('sdss.pagination.default_per_page', 15))
             ->withQueryString();
 
+        $pswByFacility = collect($workload['features'] ?? [])
+            ->mapWithKeys(fn (array $feature): array => [
+                (int) $feature['properties']['id'] => (float) $feature['properties']['skor_psw'],
+            ]);
+
+        $facilities->getCollection()->each(function (Puskesmas $facility) use ($pswByFacility): void {
+            if ($pswByFacility->has($facility->id)) {
+                $facility->setAttribute('skor_psw', $pswByFacility->get($facility->id));
+            }
+        });
+
         return view('analytics.index', [
             'districts' => $districts,
             'selectedKecamatanId' => $kecamatanId,
