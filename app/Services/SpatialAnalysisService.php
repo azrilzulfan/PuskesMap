@@ -13,10 +13,25 @@ use Illuminate\Support\Facades\DB;
 
 class SpatialAnalysisService
 {
-    public function isWithinBogorBounds(float $lat, float $lng): bool
+    public function isWithinBogorBounds(float $lat, float $lng, ?int $kecamatanId = null): bool
     {
         if (DB::connection()->getDriverName() !== 'pgsql') {
-            return $lat >= -6.70 && $lat <= -6.50 && $lng >= 106.70 && $lng <= 106.88;
+            $inBounds = $lat >= -6.70 && $lat <= -6.50 && $lng >= 106.70 && $lng <= 106.88;
+            if (! $inBounds) {
+                return false;
+            }
+
+            return $kecamatanId === null
+                || Kecamatan::query()->whereKey($kecamatanId)->exists();
+        }
+
+        if ($kecamatanId !== null) {
+            $row = DB::selectOne(
+                'SELECT EXISTS(SELECT 1 FROM kecamatan WHERE id = ? AND geom IS NOT NULL AND ST_Contains(geom, ST_SetSRID(ST_MakePoint(?, ?), 4326))) AS within_bounds',
+                [$kecamatanId, $lng, $lat],
+            );
+
+            return (bool) ($row->within_bounds ?? false);
         }
 
         $row = DB::selectOne(
@@ -125,6 +140,7 @@ class SpatialAnalysisService
         float $lng,
         float $radiusMeters,
         array $filters = [],
+        bool $withBufferGeometry = true,
     ): array {
         $query = $this->baseFacilityQuery($filters);
         $bufferGeometry = null;
@@ -143,14 +159,16 @@ class SpatialAnalysisService
                 $filters['jam_operasional'] ?? null,
             );
 
-            $bufferRow = DB::selectOne(
-                'SELECT ST_AsGeoJSON(ST_Buffer(ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?)::geometry) AS geojson',
-                [$lng, $lat, $radiusMeters],
-            );
+            if ($withBufferGeometry) {
+                $bufferRow = DB::selectOne(
+                    'SELECT ST_AsGeoJSON(ST_Buffer(ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?)::geometry) AS geojson',
+                    [$lng, $lat, $radiusMeters],
+                );
 
-            $bufferGeometry = $bufferRow && $bufferRow->geojson
-                ? json_decode((string) $bufferRow->geojson, true)
-                : null;
+                $bufferGeometry = $bufferRow && $bufferRow->geojson
+                    ? json_decode((string) $bufferRow->geojson, true)
+                    : null;
+            }
         } else {
             $all = $this->getNearestFacilities($lat, $lng, null, $filters);
             $facilities = $all
@@ -193,7 +211,7 @@ class SpatialAnalysisService
      */
     public function calculateServiceArea(float $bufferKm = 1.5): array
     {
-        $cacheKey = 'sdss:coverage:' . number_format($bufferKm, 1, '.', '');
+        $cacheKey = 'sdss:coverage:'.number_format($bufferKm, 1, '.', '');
 
         return Cache::rememberForever($cacheKey, function () use ($bufferKm): array {
             return $this->computeServiceArea($bufferKm);
@@ -515,7 +533,7 @@ class SpatialAnalysisService
     public function flushSpatialCache(): void
     {
         foreach (config('sdss.coverage.allowed_buffers_km', [1.5, 3.0]) as $bufferKm) {
-            Cache::forget('sdss:coverage:' . number_format((float) $bufferKm, 1, '.', ''));
+            Cache::forget('sdss:coverage:'.number_format((float) $bufferKm, 1, '.', ''));
         }
 
         Cache::forget('sdss:road_access:all');

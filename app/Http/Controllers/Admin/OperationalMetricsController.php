@@ -104,7 +104,7 @@ class OperationalMetricsController extends Controller
             ->where('puskesmas_id', $puskesmas->id)
             ->orderByDesc('tahun')
             ->orderByDesc('bulan')
-            ->paginate((int) config('sdss.pagination.per_page', 15));
+            ->paginate((int) config('sdss.pagination.default_per_page', 15));
 
         return view('admin.operasional.kunjungan', [
             'puskesmas' => $puskesmas,
@@ -136,7 +136,7 @@ class OperationalMetricsController extends Controller
             $kunjungan->recomputeMetrics();
             $kunjungan->save();
 
-            $this->workloadService->recalculateAndPersistScores($tahun);
+            $this->workloadService->recalculateAndPersistScores();
 
             $this->auditLogService->record(
                 $actor,

@@ -46,7 +46,7 @@ class PuskesmasController extends Controller
                 });
             })
             ->orderBy('kode_puskesmas')
-            ->paginate((int) config('sdss.pagination.per_page', 15))
+            ->paginate((int) config('sdss.pagination.default_per_page', 15))
             ->withQueryString();
 
         return view('admin.puskesmas.index', [

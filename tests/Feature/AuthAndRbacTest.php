@@ -86,3 +86,17 @@ test('protected web and api routes enforce authentication and role authorization
     $this->actingAs($admin)->get(route('admin.audit-log.index'))->assertOk();
     $this->actingAs($admin)->get(route('analitik.index'))->assertOk();
 });
+
+test('deactivated authenticated user loses access and is logged out by CheckRole middleware', function () {
+    $dinkes = User::factory()->pemerintah()->create();
+
+    $this->actingAs($dinkes)->get(route('analitik.index'))->assertOk();
+
+    $dinkes->update(['is_active' => false]);
+
+    $this->actingAs($dinkes->fresh())
+        ->getJson(route('api.v1.analisis.equity'))
+        ->assertForbidden();
+
+    $this->assertGuest();
+});

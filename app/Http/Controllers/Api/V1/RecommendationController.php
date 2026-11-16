@@ -26,7 +26,7 @@ class RecommendationController extends Controller
         $radius = isset($validated['radius']) ? (int) $validated['radius'] : null;
 
         $facilities = $radius !== null
-            ? $this->spatialAnalysis->getFacilitiesInBuffer($lat, $lng, (float) $radius)['facilities']
+            ? $this->spatialAnalysis->getFacilitiesInBuffer($lat, $lng, (float) $radius, withBufferGeometry: false)['facilities']
             : $this->spatialAnalysis->getNearestFacilities($lat, $lng, null);
         $ranked = $this->recommendationService->rankFacilities($facilities, $scenario);
 

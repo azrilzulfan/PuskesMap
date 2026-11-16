@@ -26,7 +26,7 @@ class UserController extends Controller
     {
         $users = User::query()
             ->orderBy('name')
-            ->paginate((int) config('sdss.pagination.per_page', 15));
+            ->paginate((int) config('sdss.pagination.default_per_page', 15));
 
         return view('admin.users.index', [
             'users' => $users,
@@ -78,6 +78,12 @@ class UserController extends Controller
         if ($actor->is($user) && array_key_exists('is_active', $validated) && ! (bool) $validated['is_active']) {
             throw ValidationException::withMessages([
                 'is_active' => 'Administrator tidak dapat menonaktifkan akunnya sendiri.',
+            ]);
+        }
+
+        if ($actor->is($user) && (string) $validated['role'] !== UserRole::Admin->value) {
+            throw ValidationException::withMessages([
+                'role' => 'Administrator tidak dapat menurunkan peran akunnya sendiri.',
             ]);
         }
 
@@ -156,7 +162,7 @@ class UserController extends Controller
             ->when($selectedTable !== null, fn ($query) => $query->where('tabel_target', $selectedTable))
             ->orderByDesc('created_at')
             ->orderByDesc('id')
-            ->paginate((int) config('sdss.pagination.per_page', 15))
+            ->paginate((int) config('sdss.pagination.default_per_page', 15))
             ->withQueryString();
 
         return view('admin.audit-log.index', [

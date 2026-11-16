@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Enums\CrowdStatus;
 use App\Enums\WorkloadSpectrum;
 use App\Models\Puskesmas;
+use App\Models\TenagaMedis;
 use Illuminate\Support\Collection;
 
 class MapPayloadPresenter
@@ -43,7 +44,7 @@ class MapPayloadPresenter
 
             $pswScore = round((float) ($facility->skor_psw ?? 0.0), 4);
             $crowdStatus = $kunjungan?->status_kepadatan ?? CrowdStatus::Sedang;
-            $counts = $tenagaMedis?->professionCounts() ?? [];
+            $counts = ($tenagaMedis ?? new TenagaMedis)->professionCounts();
 
             return [
                 'id' => $facility->id,
@@ -62,17 +63,7 @@ class MapPayloadPresenter
                 'bpjs' => true,
                 'nakes_score' => round((float) ($tenagaMedis?->persentase_kelengkapan ?? 0.0), 1),
                 'nakes_count' => array_sum($counts),
-                'nakes_details' => [
-                    'Dokter' => $counts['dokter_umum'] ?? 0,
-                    'Dokter Gigi' => $counts['dokter_gigi'] ?? 0,
-                    'Perawat' => $counts['perawat'] ?? 0,
-                    'Bidan' => $counts['bidan'] ?? 0,
-                    'Tenaga Kesmas' => $counts['kesmas'] ?? 0,
-                    'Tenaga Kesling' => $counts['kesling'] ?? 0,
-                    'ATLM' => $counts['atlm'] ?? 0,
-                    'Tenaga Gizi' => $counts['gizi'] ?? 0,
-                    'Farmasi' => $counts['farmasi'] ?? 0,
-                ],
+                'nakes_details' => $counts,
                 'posyandu_count' => (int) $facility->jumlah_posyandu,
                 'school_count' => (int) $facility->jumlah_sekolah,
                 'monthly_visits' => (int) ($kunjungan?->total_pasien_bulanan ?? 0),

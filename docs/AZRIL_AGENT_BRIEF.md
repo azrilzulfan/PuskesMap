@@ -87,7 +87,7 @@ Jangan mengembalikan angka atau pola lama berikut:
 1. Jalankan `php artisan test`:
    - Pada `pgsql` + PostGIS (`puskesmap_test`), seluruh test backend wajib lolos.
    - Bila Anda menjalankan sementara memakai `DB_CONNECTION=sqlite DB_DATABASE=:memory:`, akan ada **2 kegagalan PostGIS-native yang memang diharapkan** (`ST_Buffer` & `ST_AsText`). Jangan mengubah query PostGIS atau `phpunit.xml` demi mengakali SQLite.
-   - Catatan tambahan: `tests/Feature/MapPageTest.php` masih mengacu kontrak DOM/label legacy (`5603`, `'Sepi'`) dan baru akan diperbarui oleh Fajar pada fase `T-02`.
+   - Catatan tambahan: `tests/Feature/MapPageTest.php` masih mengacu kontrak DOM/label legacy (`'Sepi'` dan struktur kartu/modal lama) hingga perombakan UI fase `T-02` oleh Fajar.
 2. Pastikan `git status --short` hanya mengubah file di area backend Azril (file tim Landing Page & file UI/Design System Team Lead tetap utuh).
 3. Jangan pernah meng-commit `.env` atau kredensial database/Supabase.
 4. Push ke branch `feat/be-*` dan laporkan ringkasan perubahan ke **Fajar (Team Lead)** untuk *review* sebelum masuk ke `main`.

@@ -57,9 +57,9 @@ test('map page loads database facilities and translates crowd status labels for 
     TenagaMedis::factory()->create(['puskesmas_id' => $facility->id]);
     KunjunganPasien::factory()->create([
         'puskesmas_id' => $facility->id,
-        'total_pasien_bulanan' => 1500,
-        'kapasitas_maksimal_bulanan' => 5603,
-        'persentase_keramaian' => 26.77,
+        'total_pasien_bulanan' => 425,
+        'kapasitas_maksimal_bulanan' => 850,
+        'persentase_keramaian' => 50.0,
         'status_kepadatan' => CrowdStatus::Rendah,
     ]);
 
@@ -67,5 +67,7 @@ test('map page loads database facilities and translates crowd status labels for 
 
     $response->assertOk()
         ->assertSee('Puskesmas Uji Peta')
+        ->assertSee('"Dokter":3', false)
+        ->assertSee('"Farmasi":2', false)
         ->assertSee('"crowd":"Sepi"', false);
 });

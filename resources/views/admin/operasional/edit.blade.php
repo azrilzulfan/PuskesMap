@@ -61,7 +61,7 @@
                     <div>
                         <label for="jam_tutup" class="block text-xs font-bold text-ink">Jam Tutup</label>
                         <input id="jam_tutup" name="jam_tutup" type="text" required
-                               value="{{ old('jam_tutup', $puskesmas->operasional?->jam_tutup ?? '15:00:00') }}"
+                               value="{{ old('jam_tutup', $puskesmas->operasional?->jam_tutup ?? '14:00:00') }}"
                                class="mt-1.5 w-full rounded-xl border border-gray-200 bg-input px-3 py-2 text-sm text-ink">
                     </div>
                 </div>

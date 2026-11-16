@@ -98,3 +98,13 @@ test('igd 24 jam facility still evaluates regular polyclinic durationHours witho
 
     expect($op->durationHours())->toBe(6.5);
 });
+
+test('maut normalizes identical zero benefit criterion to 0.0 per product specification', function () {
+    $service = app(RecommendationService::class);
+    $a = makeInMemoryFacility(1, 'Puskesmas Zero A', 500.0, false, '07:30:00', '14:00:00', 0.0, 20.0);
+    $b = makeInMemoryFacility(2, 'Puskesmas Zero B', 1000.0, false, '07:30:00', '14:00:00', 0.0, 20.0);
+
+    $ranked = $service->rankFacilities(collect([$a, $b]), MautScenario::Reguler, 3);
+
+    expect($ranked->first()['utilities']['nakes'])->toBe(0.0);
+});

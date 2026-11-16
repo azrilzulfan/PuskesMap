@@ -30,7 +30,15 @@ class PuskesmasController extends Controller
     public function show(int $id): JsonResponse
     {
         $facility = Puskesmas::query()
-            ->with(['kecamatan', 'operasional', 'tenagaMedis'])
+            ->with([
+                'kecamatan',
+                'operasional',
+                'tenagaMedis',
+                'kunjunganPasien' => fn ($query) => $query
+                    ->orderByDesc('tahun')
+                    ->orderByDesc('bulan')
+                    ->limit(12),
+            ])
             ->withLatestKunjungan()
             ->findOrFail($id);
 

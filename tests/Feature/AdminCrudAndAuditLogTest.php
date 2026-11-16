@@ -163,15 +163,55 @@ test('admin updates operational, nakes completeness, and patient visits with aut
         ->post(route('admin.kunjungan.store', $facility), [
             'bulan' => 12,
             'tahun' => 2025,
-            'total_pasien_bulanan' => 5000,
-            'kapasitas_maksimal_bulanan' => 5603,
+            'total_pasien_bulanan' => 765,
+            'kapasitas_maksimal_bulanan' => 850,
         ])
         ->assertRedirect(route('admin.kunjungan.index', $facility));
 
     $visit = KunjunganPasien::query()->where('puskesmas_id', $facility->id)->firstOrFail();
-    expect($visit->persentase_keramaian)->toBe(89.24);
+    expect($visit->persentase_keramaian)->toBe(90.0);
     expect($visit->status_kepadatan)->toBe(CrowdStatus::Padat);
     expect(AuditLog::query()->where('tabel_target', 'kunjungan_pasien')->count())->toBe(1);
+});
+
+test('admin cannot demote self and adding new year visit preserves existing facilities psw scores', function () {
+    $admin = User::factory()->admin()->create();
+    $kecamatan = Kecamatan::factory()->withPolygon()->create();
+
+    $facilityA = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatan->id,
+        'jumlah_posyandu' => 60,
+        'jumlah_sekolah' => 45,
+    ]);
+    $facilityB = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatan->id,
+        'jumlah_posyandu' => 20,
+        'jumlah_sekolah' => 15,
+    ]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityA->id, 'tahun' => 2025, 'total_pasien_bulanan' => 600]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityB->id, 'tahun' => 2025, 'total_pasien_bulanan' => 800]);
+
+    $this->actingAs($admin)
+        ->post(route('admin.kunjungan.store', $facilityA), [
+            'bulan' => 1,
+            'tahun' => 2026,
+            'total_pasien_bulanan' => 500,
+            'kapasitas_maksimal_bulanan' => 850,
+        ])
+        ->assertRedirect(route('admin.kunjungan.index', $facilityA));
+
+    expect((float) $facilityB->fresh()->skor_psw)->toBeGreaterThan(0.0);
+
+    $this->actingAs($admin)
+        ->put(route('admin.users.update', $admin), [
+            'name' => $admin->name,
+            'email' => $admin->email,
+            'role' => UserRole::Pemerintah->value,
+            'is_active' => '1',
+        ])
+        ->assertSessionHasErrors('role');
+
+    expect($admin->fresh()->role)->toBe(UserRole::Admin);
 });
 
 test('admin can manage users, cannot deactivate self, and can inspect filtered audit logs', function () {

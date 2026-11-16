@@ -45,7 +45,7 @@
                             id="email"
                             name="email"
                             type="email"
-                            autocomplete="email"
+                            autocomplete="username"
                             required
                             value="{{ old('email') }}"
                             placeholder="Masukkan email admin..."

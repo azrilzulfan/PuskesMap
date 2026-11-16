@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Enums\WorkloadSpectrum;
+use App\Models\KunjunganPasien;
 use App\Models\Puskesmas;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -69,6 +70,21 @@ class PuskesmasSummaryResource extends JsonResource
                 'persentase_keramaian' => round((float) $latestKunjungan->persentase_keramaian, 2),
                 'status_kepadatan' => $latestKunjungan->status_kepadatan->value,
             ] : null,
+            'riwayat_kunjungan' => $this->whenLoaded('kunjunganPasien', fn (): array => $this->kunjunganPasien
+                ->sortBy([
+                    ['tahun', 'asc'],
+                    ['bulan', 'asc'],
+                ])
+                ->values()
+                ->map(fn (KunjunganPasien $kunjungan): array => [
+                    'bulan' => (int) $kunjungan->bulan,
+                    'tahun' => (int) $kunjungan->tahun,
+                    'total_pasien_bulanan' => (int) $kunjungan->total_pasien_bulanan,
+                    'kapasitas_maksimal_bulanan' => (int) $kunjungan->kapasitas_maksimal_bulanan,
+                    'persentase_keramaian' => round((float) $kunjungan->persentase_keramaian, 2),
+                    'status_kepadatan' => $kunjungan->status_kepadatan->value,
+                ])
+                ->all()),
             'kapasitas_wilayah' => [
                 'jumlah_posyandu' => (int) $this->jumlah_posyandu,
                 'jumlah_sekolah' => (int) $this->jumlah_sekolah,

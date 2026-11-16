@@ -60,11 +60,12 @@ class StorePuskesmasRequest extends FormRequest
 
                 $lat = (float) $this->input('y_lat');
                 $lng = (float) $this->input('x_long');
+                $kecamatanId = $this->integer('kecamatan_id') ?: null;
 
-                if (! app(SpatialAnalysisService::class)->isWithinBogorBounds($lat, $lng)) {
+                if (! app(SpatialAnalysisService::class)->isWithinBogorBounds($lat, $lng, $kecamatanId)) {
                     $validator->errors()->add(
                         'y_lat',
-                        'Koordinat Puskesmas berada di luar batas administratif Kota Bogor.',
+                        'Koordinat Puskesmas berada di luar batas administratif kecamatan atau Kota Bogor.',
                     );
                 }
             },

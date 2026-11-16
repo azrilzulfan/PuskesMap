@@ -75,9 +75,20 @@ class Operasional extends Model
         $now = ($at ? CarbonImmutable::instance($at) : CarbonImmutable::now($timezone))
             ->setTimezone($timezone);
 
+        if ($now->isSunday()) {
+            return false;
+        }
+
+        [$open, $close] = match (true) {
+            $now->isFriday() => ['07:30:00', '14:30:00'],
+            $now->isSaturday() => ['07:30:00', '12:00:00'],
+            default => [
+                substr((string) $this->jam_buka, 0, 8),
+                substr((string) $this->jam_tutup, 0, 8),
+            ],
+        };
+
         $current = $now->format('H:i:s');
-        $open = substr((string) $this->jam_buka, 0, 8);
-        $close = substr((string) $this->jam_tutup, 0, 8);
 
         if ($close <= $open) {
             return $current >= $open || $current <= $close;

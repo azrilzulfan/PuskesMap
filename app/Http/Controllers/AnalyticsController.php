@@ -40,7 +40,7 @@ class AnalyticsController extends Controller
             ->when($kecamatanId !== null, fn ($query) => $query->where('kecamatan_id', $kecamatanId))
             ->orderByDesc('skor_psw')
             ->orderBy('kode_puskesmas')
-            ->paginate((int) config('sdss.pagination.per_page', 15))
+            ->paginate((int) config('sdss.pagination.default_per_page', 15))
             ->withQueryString();
 
         return view('analytics.index', [

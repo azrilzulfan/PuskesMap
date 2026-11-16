@@ -64,7 +64,7 @@ Sebelum menulis kode atau mengubah logika SDSS, baca dokumen spesifikasi aktif b
    - Gunakan layout terisolasi `resources/views/layouts/` (`app.blade.php`, `map.blade.php`) dengan Alpine.js bundled (`data-alpine="bundled"`) dan komponen `<x-ui.*>` di `resources/views/components/ui/`.
    - Gunakan ikon resmi `mallardduck/blade-lucide-icons` (`<x-lucide-*>`) / `lucide` JS — dilarang membuat `<svg>` manual atau memakai emoji.
    - Wajib Light Mode, kontras WCAG AA/AAA (`--accent: #0A6663`), tanpa gradien dekoratif atau `rgba`/`backdrop-blur` berlebihan.
-   - **Konfigurasi `phpunit.xml`:** Sengaja mengarah ke `DB_CONNECTION=pgsql` (`puskesmap_test`). **Dilarang mengubah `phpunit.xml` kembali ke `sqlite`.** Pengujian darurat dengan `DB_CONNECTION=sqlite DB_DATABASE=:memory:` akan menyisakan 2 kegagalan PostGIS-native (`ST_Buffer` & `ST_AsText`). Selain itu, `tests/Feature/MapPageTest.php` masih mengacu kontrak DOM/label legacy (`5603`, `'Sepi'`) hingga perombakan UI `T-02`.
+   - **Konfigurasi `phpunit.xml`:** Sengaja mengarah ke `DB_CONNECTION=pgsql` (`puskesmap_test`). **Dilarang mengubah `phpunit.xml` kembali ke `sqlite`.** Pengujian darurat dengan `DB_CONNECTION=sqlite DB_DATABASE=:memory:` akan menyisakan 2 kegagalan PostGIS-native (`ST_Buffer` & `ST_AsText`). Selain itu, `tests/Feature/MapPageTest.php` masih mengacu kontrak DOM/label legacy (`'Sepi'`) hingga perombakan UI `T-02`.
 5. **Lingkungan Lokal Windows:**
    - Gunakan `npm.cmd` di PowerShell jika eksekusi `.ps1` diblokir.
    - `composer.json` memakai `"optimize-autoloader": false` agar `composer dump-autoload` tidak macet di Windows NTFS; untuk build produksi gunakan flag CLI `composer install --optimize-autoloader`.

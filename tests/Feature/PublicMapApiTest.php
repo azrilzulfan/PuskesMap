@@ -193,3 +193,35 @@ test('recommendation endpoint enforces kota bogor polygon boundary and computes 
         ->assertJsonPath('radius_meters', 1000)
         ->assertJsonCount(2, 'recommendations');
 });
+
+test('public facility detail endpoint returns latest 12 months visit history ordered chronologically', function () {
+    $kec = Kecamatan::factory()->create();
+    $facility = Puskesmas::factory()->create(['kecamatan_id' => $kec->id]);
+    Operasional::factory()->create(['puskesmas_id' => $facility->id]);
+    TenagaMedis::factory()->create(['puskesmas_id' => $facility->id]);
+
+    for ($month = 1; $month <= 12; $month++) {
+        KunjunganPasien::factory()->create([
+            'puskesmas_id' => $facility->id,
+            'tahun' => 2025,
+            'bulan' => $month,
+            'total_pasien_bulanan' => 400 + ($month * 10),
+        ]);
+    }
+
+    KunjunganPasien::factory()->create([
+        'puskesmas_id' => $facility->id,
+        'tahun' => 2024,
+        'bulan' => 12,
+        'total_pasien_bulanan' => 300,
+    ]);
+
+    $response = $this->getJson(route('api.v1.puskesmas.show', ['puskesmas' => $facility->id]));
+
+    $response->assertOk()
+        ->assertJsonCount(12, 'data.riwayat_kunjungan')
+        ->assertJsonPath('data.riwayat_kunjungan.0.tahun', 2025)
+        ->assertJsonPath('data.riwayat_kunjungan.0.bulan', 1)
+        ->assertJsonPath('data.riwayat_kunjungan.11.bulan', 12)
+        ->assertJsonPath('data.kunjungan_terbaru.bulan', 12);
+});

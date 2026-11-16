@@ -168,7 +168,7 @@ class RecommendationService
     {
         $range = $bounds['max'] - $bounds['min'];
         if (abs($range) < 1e-9) {
-            return 1.0;
+            return abs($value) < 1e-9 ? 0.0 : 1.0;
         }
 
         return ($value - $bounds['min']) / $range;
