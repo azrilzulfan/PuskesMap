@@ -48,7 +48,7 @@ class ReportExportService
                 'Skor PSW',
                 'Spektrum Beban',
                 'Buffer Cakupan (km)',
-            ]);
+            ], ',', '"', '');
 
             foreach ($rows as $row) {
                 fputcsv($handle, [
@@ -70,7 +70,7 @@ class ReportExportService
                     $row['skor_psw'],
                     $row['spektrum'],
                     $bufferKm,
-                ]);
+                ], ',', '"', '');
             }
 
             fclose($handle);
@@ -106,6 +106,8 @@ class ReportExportService
      */
     private function collectFacilityReportRows(?int $kecamatanId, int $tahun): array
     {
+        $pswByFacility = $this->workloadService->calculatePSWIndex($tahun)->keyBy('puskesmas_id');
+
         $facilities = Puskesmas::query()
             ->with(['kecamatan', 'operasional', 'tenagaMedis'])
             ->withLatestKunjungan($tahun)
@@ -114,8 +116,10 @@ class ReportExportService
             ->orderBy('kode_puskesmas')
             ->get();
 
-        return $facilities->map(function (Puskesmas $facility): array {
-            $score = (float) ($facility->skor_psw ?? 0.0);
+        return $facilities->map(function (Puskesmas $facility) use ($pswByFacility): array {
+            $pswEntry = $pswByFacility->get($facility->id);
+            $score = (float) ($pswEntry['skor_psw'] ?? $facility->skor_psw ?? 0.0);
+            $spectrum = (string) ($pswEntry['spektrum'] ?? WorkloadSpectrum::fromScore($score)->value);
 
             return [
                 'kode_puskesmas' => $facility->kode_puskesmas,
@@ -134,8 +138,15 @@ class ReportExportService
                 'persentase_keramaian' => (float) ($facility->latestKunjungan?->persentase_keramaian ?? 0.0),
                 'status_kepadatan' => $facility->latestKunjungan?->status_kepadatan?->value ?? '-',
                 'skor_psw' => round($score, 2),
-                'spektrum' => WorkloadSpectrum::fromScore($score)->value,
+                'spektrum' => $spectrum,
             ];
-        })->all();
+        })->sort(function (array $a, array $b): int {
+            $scoreCmp = $b['skor_psw'] <=> $a['skor_psw'];
+            if ($scoreCmp !== 0) {
+                return $scoreCmp;
+            }
+
+            return strcmp($a['kode_puskesmas'], $b['kode_puskesmas']);
+        })->values()->all();
     }
 }

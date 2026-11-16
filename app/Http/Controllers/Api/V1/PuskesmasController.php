@@ -21,9 +21,12 @@ class PuskesmasController extends Controller
     public function index(PuskesmasFilterRequest $request): JsonResponse
     {
         $facilities = $this->spatialAnalysis->getFilteredFacilities($request->validated());
+        $boundaries = $this->spatialAnalysis->getDistrictBoundaries();
 
         return response()->json(
-            (new PuskesmasGeoJsonCollection($facilities))->toArray($request),
+            (new PuskesmasGeoJsonCollection($facilities, [
+                'kecamatan_boundaries' => $boundaries,
+            ]))->toArray($request),
         );
     }
 

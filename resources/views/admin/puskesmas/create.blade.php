@@ -1,21 +1,17 @@
-<x-layout title="Tambah Puskesmas - Admin PuskesMap" body-class="min-h-dvh bg-[#f5f8f7] text-ink font-sans">
-    <x-internal-nav />
+<x-dashboard-shell
+    title="Tambah Puskesmas - Admin PuskesMap"
+    greeting="Tambah Puskesmas Baru"
+    subtitle="Isi profil fasilitas dan pilih titik koordinat pada peta Kota Bogor"
+>
+    <x-slot:headerActions>
+        <a href="{{ route('admin.puskesmas.index') }}"
+           class="inline-flex h-11 items-center rounded-full bg-white px-5 text-xs font-extrabold text-primary-dark shadow-[0_6px_20px_rgba(0,121,121,0.06)] transition hover:bg-surface-mint">
+            &larr; Kembali ke Daftar
+        </a>
+    </x-slot:headerActions>
 
-    <main class="mx-auto max-w-4xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-extrabold text-ink">Tambah Puskesmas Baru</h1>
-            <a href="{{ route('admin.puskesmas.index') }}" class="text-xs font-bold text-primary hover:underline">&larr; Kembali ke Daftar</a>
-        </div>
-
-        <form method="POST" action="{{ route('admin.puskesmas.store') }}" class="space-y-6 rounded-2xl border border-gray-200 bg-white p-6">
-            @csrf
-            @include('admin.puskesmas._form')
-            <div class="flex justify-end gap-3 border-t border-gray-100 pt-4">
-                <a href="{{ route('admin.puskesmas.index') }}" class="rounded-xl border border-gray-200 px-4 py-2.5 text-xs font-bold text-ink">Batal</a>
-                <button type="submit" class="rounded-xl bg-primary px-5 py-2.5 text-xs font-extrabold text-white hover:bg-primary-dark cursor-pointer">
-                    Simpan Puskesmas
-                </button>
-            </div>
-        </form>
-    </main>
-</x-layout>
+    <form method="POST" action="{{ route('admin.puskesmas.store') }}">
+        @csrf
+        @include('admin.puskesmas._form', ['submitLabel' => 'Simpan Puskesmas', 'submitAccent' => true])
+    </form>
+</x-dashboard-shell>

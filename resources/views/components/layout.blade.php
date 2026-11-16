@@ -19,7 +19,7 @@
     </script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="antialiased overflow-x-hidden {{ $bodyClass }}">
+<body class="antialiased overflow-x-clip {{ $bodyClass }}">
     {{ $slot }}
 </body>
 </html>

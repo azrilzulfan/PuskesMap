@@ -161,7 +161,7 @@ class SpatialAnalysisService
 
             if ($withBufferGeometry) {
                 $bufferRow = DB::selectOne(
-                    'SELECT ST_AsGeoJSON(ST_Buffer(ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?)::geometry) AS geojson',
+                    'SELECT ST_AsGeoJSON(ST_Buffer(ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?)::geometry, 6) AS geojson',
                     [$lng, $lat, $radiusMeters],
                 );
 
@@ -491,7 +491,7 @@ class SpatialAnalysisService
         foreach ($districts as $district) {
             $population = (int) $district->jumlah_penduduk;
             $existing = (int) $district->puskesmas_count;
-            $target = max(1, (int) round($population / $ratioStandard));
+            $target = max(1, (int) ceil($population / $ratioStandard));
             $deficit = max(0, $target - $existing);
             $avgPsw = round((float) ($district->puskesmas_avg_skor_psw ?? 0.0), 2);
 
@@ -525,6 +525,21 @@ class SpatialAnalysisService
             ],
             'districts' => $items,
         ];
+    }
+
+    /**
+     * Retrieve cached district administrative boundary polygons as a GeoJSON FeatureCollection.
+     *
+     * @return array{
+     *     type: string,
+     *     features: array<int, array<string, mixed>>
+     * }
+     */
+    public function getDistrictBoundaries(): array
+    {
+        return Cache::rememberForever('sdss:kecamatan:boundaries', function (): array {
+            return $this->computeDistrictBoundaries();
+        });
     }
 
     /**
@@ -596,6 +611,50 @@ class SpatialAnalysisService
                 default => true,
             };
         })->values();
+    }
+
+    /**
+     * @return array{
+     *     type: string,
+     *     features: array<int, array<string, mixed>>
+     * }
+     */
+    private function computeDistrictBoundaries(): array
+    {
+        $query = Kecamatan::query()
+            ->select([
+                'id',
+                'kode_kecamatan',
+                'nama_kecamatan',
+                'jumlah_penduduk',
+                'luas_wilayah_km2',
+            ])
+            ->orderBy('id');
+
+        if (DB::connection()->getDriverName() === 'pgsql') {
+            $query->selectRaw('ST_AsGeoJSON(geom, 6) AS geojson');
+        }
+
+        $features = $query->get()->map(function (Kecamatan $district): array {
+            $geojson = $district->getAttribute('geojson');
+
+            return [
+                'type' => 'Feature',
+                'geometry' => ! empty($geojson) ? json_decode((string) $geojson, true) : null,
+                'properties' => [
+                    'id' => (int) $district->id,
+                    'kode_kecamatan' => (string) $district->kode_kecamatan,
+                    'nama_kecamatan' => (string) $district->nama_kecamatan,
+                    'jumlah_penduduk' => (int) $district->jumlah_penduduk,
+                    'luas_wilayah_km2' => (float) $district->luas_wilayah_km2,
+                ],
+            ];
+        })->all();
+
+        return [
+            'type' => 'FeatureCollection',
+            'features' => $features,
+        ];
     }
 
     private function haversineMeters(float $lat1, float $lng1, float $lat2, float $lng2): float

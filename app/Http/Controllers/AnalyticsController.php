@@ -43,6 +43,17 @@ class AnalyticsController extends Controller
             ->paginate((int) config('sdss.pagination.default_per_page', 15))
             ->withQueryString();
 
+        $pswByFacility = collect($workload['features'] ?? [])
+            ->mapWithKeys(fn (array $feature): array => [
+                (int) $feature['properties']['id'] => (float) $feature['properties']['skor_psw'],
+            ]);
+
+        $facilities->getCollection()->each(function (Puskesmas $facility) use ($pswByFacility): void {
+            if ($pswByFacility->has($facility->id)) {
+                $facility->setAttribute('skor_psw', $pswByFacility->get($facility->id));
+            }
+        });
+
         return view('analytics.index', [
             'districts' => $districts,
             'selectedKecamatanId' => $kecamatanId,
@@ -53,6 +64,33 @@ class AnalyticsController extends Controller
             'workload' => $workload,
             'roadAccess' => $roadAccess,
             'facilities' => $facilities,
+        ]);
+    }
+
+    public function map(Request $request): View
+    {
+        $filters = $this->validateFilters($request);
+        $kecamatanId = $filters['kecamatan_id'];
+        $bufferKm = $filters['buffer_km'];
+        $tahun = $filters['tahun'];
+
+        $districts = Kecamatan::query()->orderBy('nama_kecamatan')->get();
+        $coverage = $this->spatialAnalysis->calculateServiceArea($bufferKm);
+        $equity = $this->spatialAnalysis->getEquityAnalysis($kecamatanId);
+        $workload = $this->workloadService->getWorkloadDistribution($kecamatanId, $tahun);
+
+        return view('analytics.map', [
+            'districts' => $districts,
+            'selectedKecamatanId' => $kecamatanId,
+            'bufferKm' => $bufferKm,
+            'tahun' => $tahun,
+            'coverage' => $coverage,
+            'equity' => $equity,
+            'workload' => $workload,
+            'bogorCenter' => config('sdss.spatial.bogor_center', [
+                'lat' => -6.597147,
+                'lng' => 106.806039,
+            ]),
         ]);
     }
 

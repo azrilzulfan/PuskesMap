@@ -7,6 +7,8 @@ use App\Models\Operasional;
 use App\Models\Puskesmas;
 use App\Models\TenagaMedis;
 use App\Models\User;
+use App\Services\SpatialAnalysisService;
+use Illuminate\Support\Facades\Cache;
 
 test('public geojson api lists and filters puskesmas with related records', function () {
     $kecA = Kecamatan::factory()->withPolygon()->create(['nama_kecamatan' => 'Bogor Tengah']);
@@ -37,6 +39,9 @@ test('public geojson api lists and filters puskesmas with related records', func
     $allResponse->assertOk()
         ->assertJsonPath('type', 'FeatureCollection')
         ->assertJsonPath('count', 2)
+        ->assertJsonPath('meta.kecamatan_boundaries.type', 'FeatureCollection')
+        ->assertJsonCount(2, 'meta.kecamatan_boundaries.features')
+        ->assertJsonPath('meta.kecamatan_boundaries.features.0.geometry.type', 'MultiPolygon')
         ->assertJsonStructure([
             'type',
             'count',
@@ -47,7 +52,17 @@ test('public geojson api lists and filters puskesmas with related records', func
                     'properties' => ['id', 'kode_puskesmas', 'nama_puskesmas', 'status_igd_24jam', 'persentase_kelengkapan_nakes'],
                 ],
             ],
+            'meta' => [
+                'kecamatan_boundaries' => [
+                    'type',
+                    'features',
+                ],
+            ],
         ]);
+
+    expect(Cache::has('sdss:kecamatan:boundaries'))->toBeTrue();
+    app(SpatialAnalysisService::class)->flushSpatialCache();
+    expect(Cache::has('sdss:kecamatan:boundaries'))->toBeFalse();
 
     $filteredResponse = $this->getJson(route('api.v1.puskesmas.index', [
         'igd_24jam' => 1,

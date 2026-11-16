@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <title>Laporan Analitik Spasial PuskesMap Kota Bogor</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #1d2b2b; margin: 18px; }
-        h1 { font-size: 16px; margin: 0 0 4px 0; color: #007979; }
-        h2 { font-size: 12px; margin: 16px 0 6px 0; color: #0b5c5c; border-bottom: 1px solid #d1e3e0; padding-bottom: 3px; }
-        .meta { font-size: 9px; color: #616f6f; margin-bottom: 12px; }
+        body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #111C24; margin: 18px; }
+        h1 { font-size: 16px; margin: 0 0 4px 0; color: #0A6663; }
+        h2 { font-size: 12px; margin: 16px 0 6px 0; color: #074E4C; border-bottom: 1px solid #E1E7EC; padding-bottom: 3px; }
+        .meta { font-size: 9px; color: #4E5D6C; margin-bottom: 12px; }
         .grid { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-        .kpi td { width: 25%; border: 1px solid #d7e5e3; padding: 8px; background: #f4f9f8; vertical-align: top; }
-        .kpi-label { font-size: 8px; color: #616f6f; text-transform: uppercase; }
-        .kpi-value { font-size: 13px; font-weight: bold; color: #1d2b2b; margin-top: 2px; }
+        .kpi td { width: 25%; border: 1px solid #E1E7EC; padding: 8px; background: #F4F7F6; vertical-align: top; }
+        .kpi-label { font-size: 8px; color: #4E5D6C; text-transform: uppercase; }
+        .kpi-value { font-size: 13px; font-weight: bold; color: #111C24; margin-top: 2px; }
         table.data { width: 100%; border-collapse: collapse; margin-top: 6px; }
-        table.data th, table.data td { border: 1px solid #dce7e5; padding: 5px 6px; text-align: left; }
-        table.data th { background: #e8f4f2; color: #0b5c5c; font-weight: bold; }
+        table.data th, table.data td { border: 1px solid #E1E7EC; padding: 5px 6px; text-align: left; }
+        table.data th { background: #EAF4F3; color: #074E4C; font-weight: bold; }
         .num { text-align: right; }
-        .badge-tinggi { color: #b91c1c; font-weight: bold; }
-        .badge-ideal { color: #15803d; font-weight: bold; }
-        .badge-rendah { color: #1d4ed8; font-weight: bold; }
+        .badge-tinggi { color: #DC2626; font-weight: bold; }
+        .badge-ideal { color: #16A34A; font-weight: bold; }
+        .badge-rendah { color: #2563EB; font-weight: bold; }
     </style>
 </head>
 <body>
