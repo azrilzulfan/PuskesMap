@@ -9,36 +9,24 @@
         [
             'label' => 'IGD 24 Jam',
             'icon' => 'shield-plus',
-            'bg' => 'from-[#45b884] to-[#2e9e6b]',
-            'text' => 'text-white',
-            'iconWrap' => 'bg-white/22 text-white',
-            'shadow' => 'shadow-[0_18px_36px_-8px_rgba(46,158,107,0.40)]',
+            'iconBg' => 'bg-map-pin',
             'pos' => 'lg:absolute lg:left-[3%] xl:left-[5%] lg:top-[10%]',
-            'tilt' => '-rotate-6',
             'float' => 'float-soft',
             'delay' => 80,
         ],
         [
             'label' => 'Radius 1–5 km',
             'icon' => 'radar-pin',
-            'bg' => 'from-[#0e9191] to-[#007979]',
-            'text' => 'text-white',
-            'iconWrap' => 'bg-white/22 text-white',
-            'shadow' => 'shadow-[0_18px_36px_-8px_rgba(0,121,121,0.40)]',
+            'iconBg' => 'bg-primary',
             'pos' => 'lg:absolute lg:left-[21%] xl:left-[23%] lg:top-[0%]',
-            'tilt' => 'rotate-3',
             'float' => 'float-soft-alt',
             'delay' => 160,
         ],
         [
             'label' => 'Rekomendasi Terdekat',
             'icon' => 'sparkles-target',
-            'bg' => 'from-[#ee884a] to-[#e37434]',
-            'text' => 'text-white',
-            'iconWrap' => 'bg-white/22 text-white',
-            'shadow' => 'shadow-[0_20px_38px_-8px_rgba(227,116,52,0.44)]',
+            'iconBg' => 'bg-accent',
             'pos' => 'lg:absolute lg:left-[1%] xl:left-[2%] lg:bottom-[14%]',
-            'tilt' => '-rotate-3',
             'float' => 'float-soft',
             'delay' => 240,
         ],
@@ -48,36 +36,24 @@
         [
             'label' => '9 Profesi Nakes',
             'icon' => 'medical-team',
-            'bg' => 'from-[#ffe8be] to-[#ffd691]',
-            'text' => 'text-accent-strong',
-            'iconWrap' => 'bg-white/65 text-accent-strong',
-            'shadow' => 'shadow-[0_18px_34px_-8px_rgba(227,116,52,0.32)]',
+            'iconBg' => 'bg-accent',
             'pos' => 'lg:absolute lg:right-[3%] xl:right-[5%] lg:top-[9%]',
-            'tilt' => 'rotate-6',
             'float' => 'float-soft-alt',
             'delay' => 120,
         ],
         [
             'label' => 'Peta WebGIS',
             'icon' => 'map-gis',
-            'bg' => 'from-[#cdecf4] to-[#bfe6ef]',
-            'text' => 'text-primary-dark',
-            'iconWrap' => 'bg-white/70 text-primary-dark',
-            'shadow' => 'shadow-[0_18px_34px_-8px_rgba(0,121,121,0.28)]',
+            'iconBg' => 'bg-primary',
             'pos' => 'lg:absolute lg:right-[1%] xl:right-[2%] lg:bottom-[14%]',
-            'tilt' => '-rotate-3',
             'float' => 'float-soft',
             'delay' => 200,
         ],
         [
             'label' => 'Beban Kunjungan',
             'icon' => 'clinic-bed',
-            'bg' => 'from-[#0e7070] to-[#0b5c5c]',
-            'text' => 'text-white',
-            'iconWrap' => 'bg-white/20 text-white',
-            'shadow' => 'shadow-[0_18px_36px_-8px_rgba(11,92,92,0.40)]',
+            'iconBg' => 'bg-crowd-low',
             'pos' => 'lg:absolute lg:right-[20%] xl:right-[22%] lg:bottom-[0%]',
-            'tilt' => '-rotate-4',
             'float' => 'float-soft-alt',
             'delay' => 280,
         ],
@@ -693,14 +669,14 @@
                 </h2>
             </div>
 
-            {{-- Bubble Fitur Sisi Kiri & Kanan (Tanpa Emoji, Menggunakan Elemen Ikon SVG) --}}
+            {{-- Bubble Fitur Sisi Kiri & Kanan (Style Kapsul Clean Sesuai Keseluruhan Halaman: Putih, border halus, shadow lembut, text ink & icon badge warna PuskesMap) --}}
             @foreach (['order-1' => $featureBubblesLeft, 'order-3' => $featureBubblesRight] as $orderClass => $bubbles)
                 <div class="{{ $orderClass }} flex flex-wrap justify-center gap-2.5 sm:gap-5 lg:contents">
                     @foreach ($bubbles as $bubble)
                         <div data-reveal="pop" data-reveal-delay="{{ $bubble['delay'] }}" class="{{ $bubble['pos'] }}">
                             <div class="{{ $bubble['float'] }}">
-                                <div class="inline-flex items-center gap-2 sm:gap-3.5 rounded-full bg-gradient-to-b {{ $bubble['bg'] }} {{ $bubble['shadow'] }} {{ $bubble['tilt'] }} {{ $bubble['text'] }} px-4 py-2 sm:px-7 sm:py-3.5 lg:px-8 lg:py-4 ring-1 ring-white/50 transition-transform duration-300 ease-out hover:scale-105 hover:rotate-0 cursor-default select-none">
-                                    <span class="flex size-7 sm:size-10 lg:size-11 shrink-0 items-center justify-center rounded-full {{ $bubble['iconWrap'] }}" aria-hidden="true">
+                                <div class="inline-flex items-center gap-2.5 sm:gap-3.5 rounded-full bg-white/95 backdrop-blur-md px-4 py-2 sm:px-6 sm:py-3.5 lg:px-7 lg:py-4 border border-slate-200/90 shadow-[0_8px_24px_rgba(7,52,52,0.08)] hover:shadow-[0_16px_36px_rgba(7,52,52,0.14)] hover:border-primary/40 transition-all duration-300 ease-out hover:-translate-y-1 cursor-default select-none group/bubble">
+                                    <span class="flex size-7 sm:size-9 lg:size-10 shrink-0 items-center justify-center rounded-full {{ $bubble['iconBg'] }} text-white shadow-xs transition-transform duration-300 group-hover/bubble:scale-110" aria-hidden="true">
                                         @switch($bubble['icon'])
                                             @case('shield-plus')
                                                 <svg class="size-4 sm:size-5" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24">
@@ -743,7 +719,7 @@
                                                 @break
                                         @endswitch
                                     </span>
-                                    <span class="whitespace-nowrap text-sm sm:text-lg lg:text-xl font-extrabold tracking-tight">{{ $bubble['label'] }}</span>
+                                    <span class="whitespace-nowrap text-sm sm:text-base lg:text-[17px] font-extrabold tracking-tight text-ink group-hover/bubble:text-primary transition-colors">{{ $bubble['label'] }}</span>
                                 </div>
                             </div>
                         </div>
