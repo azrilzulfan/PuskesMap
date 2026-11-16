@@ -252,6 +252,28 @@ html {
   animation: float-soft 5.2s ease-in-out -2s infinite;
 }
 
+.float-soft-slow {
+  animation: float-soft 5.8s ease-in-out -3.2s infinite;
+}
+
+.float-soft-fast {
+  animation: float-soft 3.9s ease-in-out -1.2s infinite;
+}
+
+.float-soft-reverse {
+  animation: float-soft-reverse 4.8s ease-in-out -2.2s infinite;
+}
+
+@keyframes float-soft-reverse {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, 8px, 0);
+  }
+}
+
 .hero-logo-floating {
   animation: heroLogoFloat 4.8s ease-in-out infinite;
   will-change: transform;
@@ -369,6 +391,9 @@ html {
   [data-reveal].is-revealed,
   .float-soft,
   .float-soft-alt,
+  .float-soft-slow,
+  .float-soft-fast,
+  .float-soft-reverse,
   .hero-logo-floating {
     animation: none;
   }
