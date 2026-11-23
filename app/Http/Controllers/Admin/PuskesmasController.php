@@ -34,9 +34,7 @@ class PuskesmasController extends Controller
         $search = trim((string) $request->input('q', ''));
         $kecamatanId = $request->filled('kecamatan_id') ? (int) $request->input('kecamatan_id') : null;
 
-        $puskesmas = Puskesmas::query()
-            ->with(['kecamatan', 'operasional', 'tenagaMedis'])
-            ->withLatestKunjungan()
+        $baseQuery = Puskesmas::query()
             ->when($kecamatanId !== null, fn ($query) => $query->where('kecamatan_id', $kecamatanId))
             ->when($search !== '', function ($query) use ($search): void {
                 $operator = DB::connection()->getDriverName() === 'pgsql' ? 'ILIKE' : 'LIKE';
@@ -44,13 +42,29 @@ class PuskesmasController extends Controller
                     $subQuery->where('nama_puskesmas', $operator, "%{$search}%")
                         ->orWhere('kode_puskesmas', $operator, "%{$search}%");
                 });
-            })
+            });
+
+        $summaryStats = [
+            'total' => (clone $baseQuery)->count(),
+            'nakes_complete_count' => (clone $baseQuery)
+                ->whereHas('tenagaMedis', fn ($query) => $query->where('persentase_kelengkapan', '>=', 100))
+                ->count(),
+            'igd_count' => (clone $baseQuery)
+                ->whereHas('operasional', fn ($query) => $query->where('status_igd_24jam', true))
+                ->count(),
+            'avg_psw' => round((float) ((clone $baseQuery)->avg('skor_psw') ?? 0.0), 2),
+        ];
+
+        $puskesmas = (clone $baseQuery)
+            ->with(['kecamatan', 'operasional', 'tenagaMedis'])
+            ->withLatestKunjungan()
             ->orderBy('kode_puskesmas')
             ->paginate((int) config('sdss.pagination.default_per_page', 15))
             ->withQueryString();
 
         return view('admin.puskesmas.index', [
             'puskesmas' => $puskesmas,
+            'summaryStats' => $summaryStats,
             'districts' => Kecamatan::query()->orderBy('nama_kecamatan')->get(),
             'search' => $search,
             'selectedKecamatanId' => $kecamatanId,

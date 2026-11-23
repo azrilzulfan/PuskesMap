@@ -20,14 +20,12 @@ Dokumen ini adalah acuan resmi kolaborasi tim di dalam repositori `PuskesMap/` a
   - Aset foto di `public/images/puskesmas/` wajib terkompres ringan, hanya memasukkan foto yang benar-benar direferensikan di UI, dan memakai penamaan huruf kecil tanpa spasi agar aman di server Linux.
 
 ### B. Tim Inti SDSS (`Fajar` & `Azril`) — Pemegang Penuh Modul Inti
-Hanya **Fajar** dan **Azril** yang memegang seluruh modul inti SDSS: dataset referensi & seeder, migrasi PostGIS, Eloquent models/enums, `app/Services/*`, `app/Http/Controllers/*`, `/api/v1/*`, `/peta`, `/puskesmas/{kode_puskesmas}` *(rencana fase UI `T-02`, belum aktif di `routes/web.php`)*, `/login`, `/analitik/*`, dan `/admin/*`.
+Hanya **Fajar** dan **Azril** yang memegang seluruh modul inti SDSS: dataset referensi & seeder, migrasi PostGIS, Eloquent models/enums, `app/Services/*`, `app/Http/Controllers/*`, `/api/v1/*`, `/peta`, `/puskesmas/{kode_puskesmas}` *(rencana fase UI `T-02`, belum aktif di `routes/web.php`)*, `/login`, `/analitik`, `/analitik/peta`, dan `/admin/*`.
 
 - **Fajar (*Team Lead*):**
-  - Pemegang otoritas akhir arsitektur, kontrak data resmi 2025–2026, prioritas *UI/UX user-friendly first*, optimasi, *maintainability*, serta *final review* sebelum merge ke `main`.
-  - Memegang desain sistem (`--accent: #0A6663`, `layouts/*`, `components/ui/*`), `resources/views/auth/login.blade.php`, perombakan UI OneMap `/peta`, `/puskesmas/{kode_puskesmas}` (`T-02`), `/analitik`, dan `/admin` views, serta konfigurasi Supabase.
-- **Azril (*Backend & Engine SDSS*):**
-  - Menangani pengembangan dan pemeliharaan backend pendukung (migrasi, model, *service layer*, endpoint `/api/v1/*`, RBAC, controller CRUD, Pest tests).
-  - Wajib mengacu penuh pada angka, skema, dan aturan di folder `docs/` serta arahan/koreksi Team Lead; tidak melakukan perombakan desain sistem atau menyentuh file milik tim Landing Page.
+  - Pemegang otoritas akhir arsitektur, kontrak data resmi 2025–2026, prioritas *UI/UX user-friendly first*, optimasi, *maintainability*, serta penentu & penstandardisasi **UI final sebelum rilis** (`--accent: #0A6663`, `layouts/*`, `components/ui/*`, `DESIGN_SPEC.md`, `UI_RULES.md`, dan konfigurasi Supabase).
+- **Azril (*Backend, Engine SDSS, & Eksplorasi Fitur*):**
+  - Menangani pengembangan dan pemeliharaan backend pendukung (migrasi, model, *service layer*, endpoint `/api/v1/*`, RBAC, controller CRUD, Pest tests), serta **dibebaskan mengeksplorasi rancangan fitur/UI kreatif** pada modul internal (`/analitik*`, `/admin/*`, komponen shell pendukung) selama kontrak data baku terjaga. Keputusan UI final pada fase rilis tetap berada di Team Lead.
 
 ---
 
@@ -61,10 +59,8 @@ Sebelum menulis kode atau mengubah logika SDSS, baca dokumen spesifikasi aktif b
    - Seluruh daftar admin & audit log wajib terpaginasi `10–25` baris (`paginate(15)` sesuai `NFR-09`).
    - Poligon statis wajib memakai `ST_AsGeoJSON(geom, 6)` + `Cache::rememberForever` dan di-flush melalui `SpatialAnalysisService::flushSpatialCache()` setiap ada mutasi CRUD Admin.
 4. **Standar UI/Frontend SDSS & Pengujian:**
-   - Gunakan layout terisolasi `resources/views/layouts/` (`app.blade.php`, `map.blade.php`) dengan Alpine.js bundled (`data-alpine="bundled"`) dan komponen `<x-ui.*>` di `resources/views/components/ui/`.
-   - Gunakan ikon resmi `mallardduck/blade-lucide-icons` (`<x-lucide-*>`) / `lucide` JS — dilarang membuat `<svg>` manual atau memakai emoji.
-   - Wajib Light Mode, kontras WCAG AA/AAA (`--accent: #0A6663`), tanpa gradien dekoratif atau `rgba`/`backdrop-blur` berlebihan.
-   - **Konfigurasi `phpunit.xml`:** Sengaja mengarah ke `DB_CONNECTION=pgsql` (`puskesmap_test`). **Dilarang mengubah `phpunit.xml` kembali ke `sqlite`.** Pengujian darurat dengan `DB_CONNECTION=sqlite DB_DATABASE=:memory:` akan menyisakan 2 kegagalan PostGIS-native (`ST_Buffer` & `ST_AsText`). Selain itu, `tests/Feature/MapPageTest.php` masih mengacu kontrak DOM/label legacy (`'Sepi'`) hingga perombakan UI `T-02`.
+   - **Fase Eksplorasi Tim vs Target Standar Rilis:** Selama pengembangan paralel saat ini, tim dibebaskan bereksperimen secara kreatif di cabang tampilan masing-masing (misal eksplorasi Landing Page maupun Bento Dashboard internal `dashboard-shell.blade.php`), sementara penyelarasan akhir sebelum rilis akan dipimpin oleh **Fajar** mengacu penuh pada `layouts/` (`app.blade.php`, `map.blade.php`), `<x-ui.*>`, `<x-lucide-*>`, dan `UI_RULES.md` (`--accent: #0A6663`, Light Mode).
+   - **Konfigurasi `phpunit.xml`:** Sengaja mengarah ke `DB_CONNECTION=pgsql` (`puskesmap_test`). **Dilarang mengubah `phpunit.xml` kembali ke `sqlite`.** Pengujian darurat dengan `DB_CONNECTION=sqlite` dan `DB_DATABASE=:memory:` akan menyisakan **3 ketidakcocokan PostGIS-native** (`ST_AsGeoJSON` `'MultiPolygon'`, `ST_Buffer` `'Polygon'`, dan `ST_AsText`) — `35 passed, 2 failed, 1 error` dari total baseline `38` runtime tests. Selain itu, `tests/Feature/MapPageTest.php` masih mengacu kontrak DOM/label legacy (`'Sepi'`) hingga perombakan UI `T-02`.
 5. **Lingkungan Lokal Windows:**
    - Gunakan `npm.cmd` di PowerShell jika eksekusi `.ps1` diblokir.
    - `composer.json` memakai `"optimize-autoloader": false` agar `composer dump-autoload` tidak macet di Windows NTFS; untuk build produksi gunakan flag CLI `composer install --optimize-autoloader`.
@@ -73,7 +69,6 @@ Sebelum menulis kode atau mengubah logika SDSS, baca dokumen spesifikasi aktif b
 
 ## 4. Aturan Alur Git Tim
 
-1. Selalu `git pull origin main` sebelum memulai pekerjaan baru.
-2. Buat branch fitur sesuai area masing-masing (misal `feat/be-*`, `feat/ui-*`, `feat/landing-*`).
-3. **Jangan push langsung ke `main`** tanpa *review* dari Team Lead (`Fajar`).
-4. Jangan pernah meng-commit `.env` atau kredensial Supabase.
+1. Selalu `git pull origin main` (atau `--rebase`) sebelum memulai atau mengirim perubahan baru agar pekerjaan antar-anggota tidak saling menimpa.
+2. Disarankan memakai branch fitur (`feat/be-*`, `feat/ui-*`, `feat/landing-*`), namun tim tetap diperbolehkan berkolaborasi fleksibel di GitHub (termasuk sinkronisasi ke `main`) asal **tidak melakukan `--force` push** dan selalu menginformasikan perubahan besar ke Team Lead.
+3. Jangan pernah meng-commit `.env` atau kredensial Supabase.

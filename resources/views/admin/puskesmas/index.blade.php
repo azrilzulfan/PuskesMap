@@ -1,7 +1,8 @@
 @php
-    $igdCount = $puskesmas->getCollection()->filter(fn ($p) => (bool) $p->operasional?->status_igd_24jam)->count();
-    $nakesCompleteCount = $puskesmas->getCollection()->filter(fn ($p) => (float) ($p->tenagaMedis?->persentase_kelengkapan ?? 0) >= 100)->count();
-    $avgPsw = $puskesmas->getCollection()->avg('skor_psw') ?? 0.0;
+    $totalCount = (int) ($summaryStats['total'] ?? $puskesmas->total());
+    $igdCount = (int) ($summaryStats['igd_count'] ?? $puskesmas->getCollection()->filter(fn ($p) => (bool) $p->operasional?->status_igd_24jam)->count());
+    $nakesCompleteCount = (int) ($summaryStats['nakes_complete_count'] ?? $puskesmas->getCollection()->filter(fn ($p) => (float) ($p->tenagaMedis?->persentase_kelengkapan ?? 0) >= 100)->count());
+    $avgPsw = (float) ($summaryStats['avg_psw'] ?? ($puskesmas->getCollection()->avg('skor_psw') ?? 0.0));
 @endphp
 
 <x-dashboard-shell
@@ -29,7 +30,7 @@
         <article class="flex items-center justify-between gap-3 rounded-[22px] bg-white p-5 shadow-[0_8px_24px_rgba(0,121,121,0.05)]">
             <div>
                 <p class="text-xs font-semibold text-muted">Total Puskesmas</p>
-                <p class="mt-1.5 text-2xl font-extrabold tracking-tight text-ink tabular-nums">{{ $puskesmas->total() }}</p>
+                <p class="mt-1.5 text-2xl font-extrabold tracking-tight text-ink tabular-nums">{{ $totalCount }}</p>
             </div>
             <div class="flex h-10 items-end gap-1.5" aria-hidden="true">
                 <span class="w-1.5 h-5 rounded-full bg-surface-mint"></span>

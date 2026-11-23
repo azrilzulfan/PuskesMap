@@ -187,8 +187,61 @@ test('equity analysis rounds up target facilities and csv export respects reques
     expect($firstRow[0])->toBe('P32710101')
         ->and((float) $firstRow[15])->toBe(0.2);
 
+    $body2025 = $this->actingAs($dinkes)
+        ->get(route('analitik.index', ['tahun' => 2025]))
+        ->assertOk()
+        ->assertSee('0.20')
+        ->getContent();
+
+    expect(strpos($body2025, 'Puskesmas Tahun A'))->toBeLessThan(strpos($body2025, 'Puskesmas Tahun B'));
+
+    $body2026 = $this->actingAs($dinkes)
+        ->get(route('analitik.index', ['tahun' => 2026]))
+        ->assertOk()
+        ->getContent();
+
+    expect(strpos($body2026, 'Puskesmas Tahun B'))->toBeLessThan(strpos($body2026, 'Puskesmas Tahun A'));
+
+    $this->actingAs($dinkes)
+        ->getJson(route('api.v1.analisis.equity', ['tahun' => 2025]))
+        ->assertOk()
+        ->assertJsonPath('districts.0.avg_psw_score', 0.1);
+});
+
+test('analytics index sorts all matching facilities by requested year before paginating', function () {
+    $dinkes = User::factory()->pemerintah()->create();
+    $kecamatan = Kecamatan::factory()->withPolygon()->create();
+
+    for ($i = 1; $i <= 15; $i++) {
+        $facility = Puskesmas::factory()->create([
+            'kecamatan_id' => $kecamatan->id,
+            'kode_puskesmas' => sprintf('P327199%02d', $i),
+            'nama_puskesmas' => sprintf('Puskesmas Reguler %02d', $i),
+            'jumlah_posyandu' => 50,
+            'jumlah_sekolah' => 50,
+        ]);
+        Operasional::factory()->create(['puskesmas_id' => $facility->id]);
+        TenagaMedis::factory()->create(['puskesmas_id' => $facility->id]);
+        KunjunganPasien::factory()->create(['puskesmas_id' => $facility->id, 'tahun' => 2025, 'total_pasien_bulanan' => 200]);
+        KunjunganPasien::factory()->create(['puskesmas_id' => $facility->id, 'tahun' => 2026, 'total_pasien_bulanan' => 800]);
+    }
+
+    $top2025Facility = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatan->id,
+        'kode_puskesmas' => 'P32719999',
+        'nama_puskesmas' => 'Puskesmas Prioritas 2025',
+        'jumlah_posyandu' => 50,
+        'jumlah_sekolah' => 50,
+    ]);
+    Operasional::factory()->create(['puskesmas_id' => $top2025Facility->id]);
+    TenagaMedis::factory()->create(['puskesmas_id' => $top2025Facility->id]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $top2025Facility->id, 'tahun' => 2025, 'total_pasien_bulanan' => 850]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $top2025Facility->id, 'tahun' => 2026, 'total_pasien_bulanan' => 100]);
+
+    app(WorkloadService::class)->recalculateAndPersistScores(2026);
+
     $this->actingAs($dinkes)
         ->get(route('analitik.index', ['tahun' => 2025]))
         ->assertOk()
-        ->assertSee('0.20');
+        ->assertSee('Puskesmas Prioritas 2025');
 });

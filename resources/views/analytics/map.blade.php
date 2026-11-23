@@ -111,8 +111,8 @@
                 </div>
             </div>
 
-            <div id="internal-map-wrap" class="relative flex-1 min-h-[480px] lg:min-h-[640px] w-full overflow-hidden rounded-[18px] border border-primary/15 bg-[#f4f7f6]">
-                <div id="internal-leaflet-map" class="isolate z-0 h-full w-full" aria-label="Peta Spasial Internal Dinkes Kota Bogor"></div>
+            <div id="internal-map-wrap" class="relative h-[480px] lg:h-auto lg:min-h-[640px] lg:flex-1 w-full overflow-hidden rounded-[18px] border border-primary/15 bg-[#f4f7f6]">
+                <div id="internal-leaflet-map" class="isolate z-0 absolute inset-0 h-full w-full" aria-label="Peta Spasial Internal Dinkes Kota Bogor"></div>
 
                 {{-- Banner Mode Pilih Titik --}}
                 <div id="pick-point-banner" class="hidden pointer-events-auto absolute top-3 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2.5 rounded-full bg-ink/95 px-4 py-2 text-[11px] font-bold text-white shadow-float backdrop-blur-md">

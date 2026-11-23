@@ -157,8 +157,9 @@
                     preview.textContent = '';
                     return;
                 }
-                const pct = ((total / cap) * 100).toFixed(1);
-                const status = pct >= 85 ? 'Padat' : (pct >= 50 ? 'Sedang' : 'Longgar');
+                const rawPct = (total / cap) * 100;
+                const pct = rawPct.toFixed(1);
+                const status = rawPct > 85 ? 'Padat' : (rawPct >= 60 ? 'Sedang' : 'Rendah');
                 preview.textContent = 'Pratinjau keramaian: ' + pct + '% (' + status + ')';
             }
 

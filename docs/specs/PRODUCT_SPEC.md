@@ -9,7 +9,7 @@ File ini adalah cetak biru produk yang menjelaskan **APA** yang dibuat dan **KEN
 
 - Nama Produk: PuskesMap — Sistem Pendukung Keputusan Spasial (WebGIS) Pemetaan Layanan dan Prioritas Puskesmas Kota Bogor
 - Status Spec: Disetujui & Disinkronkan ke Implementasi (`T-01`)
-- Terakhir diperbarui: 2026-11-16
+- Terakhir diperbarui: 2026-11-23
 - File Bahan / Referensi:
   - Dataset resmi 2025–2026 di [`database/seeders/csv/`](../../database/seeders/csv) dan [`docs/sql/provenance.csv`](../sql/provenance.csv)
   - Arsip historis awal: [`Software Requirements Specification (SRS) (revisi 12).pdf`](../archive/Software%20Requirements%20Specification%20%28SRS%29%20%28revisi%2012%29.pdf)
@@ -25,7 +25,7 @@ File ini adalah cetak biru produk yang menjelaskan **APA** yang dibuat dan **KEN
   - Staf Dinas Kesehatan dapat mengidentifikasi Puskesmas berbeban tinggi, wilayah di luar jangkauan layanan radius `1,5 km` atau `3,0 km` (*blank spot* — `FR-09`), ketimpangan rasio penduduk (`1 : 30.000` — `FR-10`), dan kekurangan profesi tenaga kesehatan secara langsung di atas peta serta mengunduh laporannya dalam format CSV dan PDF (`FR-11`, `FR-21`).
 - **Landasan Regulasi yang Diselaraskan:**
   - Mengacu pada standar rasio spasial-demografis dan ketenagaan **Permenkes No. 43 Tahun 2019 yang diperbarui dan dipertahankan dalam Permenkes No. 19 Tahun 2024 Pasal 10**, yaitu:
-    1. Minimal 1 Puskesmas di setiap kecamatan dan rasio kecukupan **1 Puskesmas per 30.000 penduduk**.
+    1. Minimal 1 Puskesmas di setiap kecamatan dan rasio kecukupan **1 Puskesmas per 30.000 penduduk** (target ideal dihitung dengan pembulatan ke atas `ceil(penduduk / 30.000)` agar defisit fasilitas tetap terdeteksi).
     2. Standar **9 profesi tenaga kesehatan inti** (*Dokter Umum, Dokter Gigi, Perawat, Bidan, Tenaga Promosi Kesehatan/Kesmas, Tenaga Sanitasi Lingkungan/Kesling, Nutrisionis/Gizi, Tenaga Kefarmasian/Apoteker, dan Ahli Teknologi Laboratorium Medik/ATLM*). Berdasarkan data resmi Tabel 14, 16, dan 17 Profil Kesehatan Dinas Kesehatan Kota Bogor Tahun 2025, dua profesi tambahan baru pada Permenkes 19/2024 (*Psikolog Klinis* dan *Fisioterapis*) masih bernilai `0` di seluruh 25 Puskesmas Kota Bogor, sehingga 9 profesi inti digunakan sebagai tolok ukur operasional yang valid.
 
 ---

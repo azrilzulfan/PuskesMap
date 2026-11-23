@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\DB;
 
 class SpatialAnalysisService
 {
+    public function __construct(
+        private readonly ?WorkloadService $workloadService = null,
+    ) {}
+
     public function isWithinBogorBounds(float $lat, float $lng, ?int $kecamatanId = null): bool
     {
         if (DB::connection()->getDriverName() !== 'pgsql') {
@@ -472,16 +476,23 @@ class SpatialAnalysisService
      *     }>
      * }
      */
-    public function getEquityAnalysis(?int $kecamatanId = null): array
+    public function getEquityAnalysis(?int $kecamatanId = null, ?int $tahun = null): array
     {
         $ratioStandard = max(1, (int) config('sdss.equity.population_per_facility', 30000));
 
         $districts = Kecamatan::query()
             ->when($kecamatanId !== null, fn (Builder $q) => $q->whereKey($kecamatanId))
             ->withCount('puskesmas')
-            ->withAvg('puskesmas', 'skor_psw')
+            ->when($tahun === null, fn (Builder $q) => $q->withAvg('puskesmas', 'skor_psw'))
             ->orderBy('id')
             ->get();
+
+        $pswAvgByDistrict = $tahun !== null
+            ? ($this->workloadService ?? app(WorkloadService::class))
+                ->calculatePSWIndex($tahun)
+                ->groupBy('kecamatan_id')
+                ->map(fn (Collection $items): float => round((float) $items->avg('skor_psw'), 2))
+            : collect();
 
         $totalPop = 0;
         $totalExisting = 0;
@@ -493,7 +504,9 @@ class SpatialAnalysisService
             $existing = (int) $district->puskesmas_count;
             $target = max(1, (int) ceil($population / $ratioStandard));
             $deficit = max(0, $target - $existing);
-            $avgPsw = round((float) ($district->puskesmas_avg_skor_psw ?? 0.0), 2);
+            $avgPsw = $tahun !== null
+                ? (float) ($pswAvgByDistrict->get($district->id) ?? 0.0)
+                : round((float) ($district->puskesmas_avg_skor_psw ?? 0.0), 2);
 
             $totalPop += $population;
             $totalExisting += $existing;

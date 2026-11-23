@@ -82,7 +82,7 @@ class ReportExportService
     public function downloadPdf(?int $kecamatanId = null, float $bufferKm = 1.5, int $tahun = 2025): Response
     {
         $coverage = $this->spatialAnalysis->calculateServiceArea($bufferKm);
-        $equity = $this->spatialAnalysis->getEquityAnalysis($kecamatanId);
+        $equity = $this->spatialAnalysis->getEquityAnalysis($kecamatanId, $tahun);
         $workload = $this->workloadService->getWorkloadDistribution($kecamatanId, $tahun);
         $facilities = $this->collectFacilityReportRows($kecamatanId, $tahun);
 

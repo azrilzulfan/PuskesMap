@@ -27,10 +27,12 @@ class AnalysisController extends Controller
 
     public function equity(EquityAnalysisRequest $request): JsonResponse
     {
-        $kecamatanId = $request->validated('kecamatan_id');
+        $validated = $request->validated();
+        $kecamatanId = isset($validated['kecamatan_id']) ? (int) $validated['kecamatan_id'] : null;
+        $tahun = isset($validated['tahun']) ? (int) $validated['tahun'] : null;
 
         return response()->json(
-            $this->spatialAnalysis->getEquityAnalysis($kecamatanId !== null ? (int) $kecamatanId : null),
+            $this->spatialAnalysis->getEquityAnalysis($kecamatanId, $tahun),
         );
     }
 

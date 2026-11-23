@@ -247,3 +247,34 @@ test('admin can manage users, cannot deactivate self, and can inspect filtered a
         ->assertOk()
         ->assertSee('Staff Analitik');
 });
+
+test('admin puskesmas index computes summary kpi cards across all matching pages', function () {
+    $admin = User::factory()->admin()->create();
+    $kecamatan = Kecamatan::factory()->withPolygon()->create();
+
+    for ($i = 1; $i <= 17; $i++) {
+        $facility = Puskesmas::factory()->create([
+            'kecamatan_id' => $kecamatan->id,
+            'kode_puskesmas' => sprintf('P327188%02d', $i),
+            'nama_puskesmas' => sprintf('Puskesmas KPI %02d', $i),
+            'skor_psw' => 0.50,
+        ]);
+        Operasional::factory()->create([
+            'puskesmas_id' => $facility->id,
+            'status_igd_24jam' => true,
+        ]);
+        TenagaMedis::factory()->create([
+            'puskesmas_id' => $facility->id,
+            'persentase_kelengkapan' => 100.0,
+            'kategori_jumlah_nakes' => NakesCategory::Lengkap,
+        ]);
+    }
+
+    $this->actingAs($admin)
+        ->get(route('admin.puskesmas.index'))
+        ->assertOk()
+        ->assertViewHas('summaryStats', fn (array $stats): bool => $stats['total'] === 17
+            && $stats['igd_count'] === 17
+            && $stats['nakes_complete_count'] === 17
+            && $stats['avg_psw'] === 0.5);
+});

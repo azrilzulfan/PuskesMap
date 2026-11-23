@@ -1,22 +1,22 @@
-# AZRIL_AGENT_BRIEF.md — Instruksi Kerja Wajib untuk AI Agent Pendamping Azril
+# AZRIL_AGENT_BRIEF.md — Panduan Kolaborasi & Kontrak Data untuk AI Agent Pendamping Azril
 
-> **Pesan Resmi dari Fajar (Team Lead):** Dokumen ini disusun dan diinstruksikan langsung oleh **Fajar (`Team Lead`)** sebagai panduan wajib bagi AI Agent yang mendampingi **Azril** di repositori `PuskesMap/`. Seluruh aturan di bawah ini merupakan acuan arsitektur, kontrak data, dan pembagian area kerja yang sudah dikonsolidasikan di branch `main` (termasuk sinkronisasi pasca audit `T-01`).
-
----
-
-## 1. Posisi Peran & Tata Kelola Tim
-
-- Anda mendampingi **Azril** pada pengembangan modul **Backend & Engine SDSS** `PuskesMap/`.
-- **Team Lead proyek ini adalah `Fajar`.** Seluruh keputusan akhir arsitektur, skema data 2025–2026, Design System (`<x-ui.*>`, `DESIGN_SPEC.md`, `UI_RULES.md`), serta persetujuan merge ke `main` berada di tangan **Fajar**.
-- Apabila terdapat pekerjaan lama di commit sebelumnya atau arsip PDF/SRS lama yang berbeda dengan spesifikasi di `docs/specs/` dan `config/sdss.php`, **spec aktif di `docs/specs/` dan arahan Team Lead (`Fajar`) adalah acuan yang menang**.
+> **Pesan Resmi dari Fajar (Team Lead):** Dokumen ini adalah acuan kolaborasi bagi AI Agent yang mendampingi **Azril** di repositori `PuskesMap/`. Kebijakan kolaborasi dibuat **fleksibel untuk eksplorasi fitur dan UI kreatif**, selama seluruh **kontrak data baku 2025–2026**, batas keamanan/RBAC, dan integritas repositori bersama tetap terjaga. Keputusan arsitektur akhir serta standarisasi UI final sebelum rilis berada di tangan **Fajar (`Team Lead`)**.
 
 ---
 
-## 2. Prosedur Wajib Sebelum Menulis Kode
+## 1. Posisi Peran & Kebebasan Eksplorasi Tim
 
-1. Pastikan berada di branch terbaru dari `origin/main` (`git pull origin main`).
-2. Buat branch fitur baru untuk pekerjaan backend Azril (misal `feat/be-<nama-fitur>`). **Dilarang push langsung ke `main`.**
-3. Baca berurutan sebelum merencanakan perubahan apa pun:
+- Anda mendampingi **Azril** pada pengembangan **Backend, Engine SDSS, dan eksplorasi fitur/UI pendukung** di `PuskesMap/`.
+- **Kebijakan Eksplorasi UI:** Team Lead membebaskan anggota tim (termasuk Azril pada area `/analitik*`, `/admin/*`, komponen `dashboard-shell.blade.php`, dan `/peta` serta Tim Landing Page pada `/`) untuk berkreasi bebas terlebih dahulu secara visual/UX. Nantinya pada fase finalisasi (`T-02` / `T-03`), **Fajar (`Team Lead`)** yang akan meninjau, memilih, dan menstandarkan UI final sesuai `DESIGN_SPEC.md` dan `UI_RULES.md`.
+- **Ketentuan Spec & Data:** Apabila terdapat pekerjaan lama di commit sebelumnya atau arsip PDF/SRS lama di `docs/archive/` yang berbeda dengan spesifikasi di `docs/specs/` dan `config/sdss.php`, **kontrak data aktif di `docs/specs/` dan `config/sdss.php` adalah acuan yang menang**.
+
+---
+
+## 2. Alur Kerja Git & Sebelum Menulis Kode
+
+1. Selalu jalankan `git pull origin main` (atau `--rebase`) terlebih dahulu sebelum bekerja agar tidak menimpa progres rekan tim.
+2. **Alur Branch Bebas & Aman:** Anda boleh bekerja di branch fitur (misal `feat/be-*` atau `feat/ui-*`) maupun langsung menyinkronkan ke `main` bila diperlukan agar tidak terkunci saat berkolaborasi—dengan syarat **dilarang `--force` push**, **dilarang meng-commit `.env` / kredensial**, dan pastikan perubahan tidak merusak halaman tim lain.
+3. Baca ringkas sebelum mengubah logika SDSS:
    - `docs/TEAM_GUIDE.md`
    - `docs/specs/PRODUCT_SPEC.md`
    - `docs/specs/TECH_SPEC.md`
@@ -27,25 +27,20 @@
 
 ---
 
-## 3. Batas Kepemilikan File (DILARANG DISENTUH Tanpa Izin Team Lead)
+## 3. Koordinasi Area File (Menghindari Konflik Antar-Tim)
 
-### A. Area Tim Landing Page (`Kayla` & `Kaila`) — Dilarang Disentuh
-- `resources/views/welcome.blade.php`
-- `resources/views/components/bogor-map.blade.php`
-- `resources/views/components/layout.blade.php` & `resources/views/components/button.blade.php`
-- `resources/js/landing/landing-page.js`
-- `resources/css/landing.css` serta token `@theme` Landing Page di `resources/css/app.css`
-- `public/images/*`
+### A. Area Tim Landing Page (`Kayla`, `Kaila`, & `Dila`) — Koordinasi Sebelum Mengubah
+- `resources/views/welcome.blade.php`, `resources/views/components/bogor-map.blade.php`, `resources/views/components/layout.blade.php`, `resources/views/components/button.blade.php`
+- `resources/js/landing/landing-page.js`, `resources/css/landing.css`, serta `public/images/*`
+- Jangan menimpa kreativitas tim Landing Page tanpa koordinasi; bila perlu menyinkronkan data dari controller/dataset, pastikan angkanya berasal dari CSV resmi (`database/seeders/csv/`).
 
-### B. Area Design System & Perombakan UI Team Lead (`Fajar`) — Jangan Diubah Paralel
-- `resources/views/layouts/*` (`app.blade.php`, `map.blade.php`)
-- `resources/views/components/ui/*` (`button`, `input`, `select`, `badge`, `drawer`, `modal`)
-- `resources/views/auth/login.blade.php`
-- `resources/css/app.css`, `resources/css/map.css`, `resources/js/app.js`
-- `resources/views/peta.blade.php`, `resources/views/map/partials/*`, `resources/js/map/sdss-map.js`, `resources/views/analytics/*`, `resources/views/admin/*`, serta rute detail `/puskesmas/{kode_puskesmas}` (rencana fase UI `T-02`) — area UI ini berada di bawah kendali **Fajar (Team Lead)** agar sesuai `DESIGN_SPEC.md` (OneMap, palet `#0A6663`, Lucide icons). **Jangan mengedit view/JS/CSS frontend SDSS secara paralel kecuali diminta eksplisit oleh Fajar.**
+### B. Area Fondasi Design System Team Lead (`Fajar`) — Acuan Standar Final UI
+- `resources/views/layouts/*`, `resources/views/components/ui/*`, `resources/views/auth/login.blade.php`
+- `resources/css/app.css`, `resources/css/map.css`, `resources/js/app.js`, `resources/js/map/sdss-map.js`
+- Rute `/analitik`, `/analitik/peta`, `/admin/*`, `/peta`, serta rencana detail `/puskesmas/{kode_puskesmas}` (`T-02`) saat ini boleh dieksplorasi secara kreatif (termasuk `resources/views/components/dashboard-shell.blade.php`, `resources/views/analytics/map.blade.php`, dan `resources/views/admin/*`), dengan catatan tampilan final sebelum rilis akan di-review dan distandarkan kembali oleh **Fajar**.
 
-### C. Area Fokus Kerja Azril (Backend & Engine SDSS)
-- `app/Services/*`, `app/Http/Controllers/*`, `app/Http/Requests/*`, `app/Http/Resources/*`, `app/Models/*`, `app/Enums/*`, `database/migrations/*`, `database/seeders/*`, `routes/api_v1.php`, dan `tests/*` (kecuali `tests/Feature/DesignSystemAndDatasetTest.php` milik fondasi Team Lead).
+### C. Area Fokus Utama Azril (Backend & Engine SDSS)
+- `app/Services/*`, `app/Http/Controllers/*`, `app/Http/Requests/*`, `app/Http/Resources/*`, `app/Models/*`, `app/Enums/*`, `database/migrations/*`, `database/seeders/*`, `routes/*`, dan `tests/*` (pertahankan `tests/Feature/DesignSystemAndDatasetTest.php` sebagai penjaga kontrak).
 
 ---
 
@@ -76,18 +71,18 @@ Jangan mengembalikan angka atau pola lama berikut:
    - `composer.json` sudah memasang `mallardduck/blade-lucide-icons` & `barryvdh/laravel-dompdf`, serta sengaja memakai `"optimize-autoloader": false` agar `composer dump-autoload` tidak macet di Windows NTFS lokal. Jangan kembalikan ke `true` pada `composer.json` (gunakan flag CLI `--optimize-autoloader` saat build produksi).
    - **JANGAN MENGUBAH `phpunit.xml`** (`DB_CONNECTION=pgsql`, `DB_DATABASE=puskesmap_test`) kembali ke `sqlite`.
    - Di PowerShell Windows, gunakan `npm.cmd` bila `npm` terblokir kebijakan `.ps1`.
-7. **Jika Suatu Saat Diminta Membuat UI oleh Team Lead (`Fajar`):**
-   - Wajib memakai layout `layouts/app.blade.php` atau `layouts/map.blade.php` (`data-alpine="bundled"`), komponen `<x-ui.*>`, dan ikon `<x-lucide-*>` / `lucide` JS.
-   - Patuhi penuh `docs/specs/UI_RULES.md`: hanya Light Mode, nol emoji, nol `<svg>` manual, nol gradien dekoratif, nol `rgba`/`backdrop-blur` berlebihan.
+7. **Acuan Standar UI Rilis Akhir (`DESIGN_SPEC.md` & `UI_RULES.md`):**
+   - Pada masa eksplorasi kreatif saat ini, penggunaan komponen dashboard alternatif seperti `dashboard-shell.blade.php` diizinkan agar pengembangan UI cepat berkembang.
+   - Untuk standarisasi akhir yang dipimpin **Fajar**, target rilis mengacu pada layout `layouts/app.blade.php` / `layouts/map.blade.php` (`data-alpine="bundled"`), komponen `<x-ui.*>`, ikon `<x-lucide-*>` / `lucide` JS, serta `docs/specs/UI_RULES.md` (Light Mode, nol emoji, kontras `--accent: #0A6663`).
 
 ---
 
 ## 5. Checklist Verifikasi Sebelum Push / Lapor Selesai
 
-1. Jalankan `php artisan test`:
-   - Pada `pgsql` + PostGIS (`puskesmap_test`), seluruh test backend wajib lolos.
-   - Bila Anda menjalankan sementara memakai `DB_CONNECTION=sqlite DB_DATABASE=:memory:`, akan ada **2 kegagalan PostGIS-native yang memang diharapkan** (`ST_Buffer` & `ST_AsText`). Jangan mengubah query PostGIS atau `phpunit.xml` demi mengakali SQLite.
+1. Jalankan `php artisan test` dan `npm.cmd run build`:
+   - Pada `pgsql` + PostGIS (`puskesmap_test`), seluruh test suite (baseline saat ini `38` runtime tests) wajib lolos.
+   - Bila Anda menjalankan sementara memakai `DB_CONNECTION=sqlite` dan `DB_DATABASE=:memory:`, akan ada **3 ketidakcocokan PostGIS-native yang memang diharapkan** (`ST_AsGeoJSON` `'MultiPolygon'`, `ST_Buffer` `'Polygon'`, dan `ST_AsText` — `35 passed, 2 failed, 1 error` dari `38` tests). Jangan mengubah query PostGIS atau `phpunit.xml` demi mengakali SQLite.
    - Catatan tambahan: `tests/Feature/MapPageTest.php` masih mengacu kontrak DOM/label legacy (`'Sepi'` dan struktur kartu/modal lama) hingga perombakan UI fase `T-02` oleh Fajar.
-2. Pastikan `git status --short` hanya mengubah file di area backend Azril (file tim Landing Page & file UI/Design System Team Lead tetap utuh).
+2. Jalankan `php vendor/bin/pint --dirty --test` agar format kode tetap rapi.
 3. Jangan pernah meng-commit `.env` atau kredensial database/Supabase.
-4. Push ke branch `feat/be-*` dan laporkan ringkasan perubahan ke **Fajar (Team Lead)** untuk *review* sebelum masuk ke `main`.
+4. Setelah push (baik di branch fitur maupun sinkronisasi `main`), laporkan ringkasan file yang disentuh dan hasil test ke **Fajar (Team Lead)** agar koordinasi tim tetap transparan.

@@ -9,7 +9,7 @@ File ini adalah cetak biru tampilan (UI) dan pengalaman pengguna (UX) yang menje
 
 - Nama Produk: PuskesMap — Sistem Pendukung Keputusan Spasial (WebGIS) Puskesmas Kota Bogor
 - Status Spec: Disetujui & Disinkronkan ke Rute Repo (`T-01` -> `T-02`)
-- Terakhir diperbarui: 2026-11-13
+- Terakhir diperbarui: 2026-11-23
 - File Bahan / Referensi:
   - [`UI_RULES.md`](./UI_RULES.md) (Aturan Wajib Tingkat 1A, 1B, 2, dan 3)
   - [`Logo.jpeg`](./Logo.jpeg) (Identitas Visual Resmi PuskesMap)
@@ -95,9 +95,10 @@ File ini adalah cetak biru tampilan (UI) dan pengalaman pengguna (UX) yang menje
 2. **Layar 2 — Kalkulator Rekomendasi Radius & Top-3 MAUT (`/peta` — Mode *Rekomendasi Radius*):**
    - Di dalam *drawer* kiri, pengguna menentukan titik lokasi (tombol GPS atau klik peta — `FR-05`), memilih radius (`1 km`, `3 km`, atau `5 km` — `FR-06`), dan memilih skenario bobot (`Darurat`, `Reguler`, atau `Evaluasi Pemda` bagi akun login `pemerintah`/`admin` — `FR-07`).
    - Menampilkan lingkaran radius berwarna `--gis-user-pin` di peta, menampilkan 3 kartu peringkat teratas (`#1`, `#2`, `#3`) lengkap dengan jarak (`km`), skor akhir MAUT, status buka/UGD, dan rincian kontribusi 5 kriteria, serta **otomatis menggerakkan fokus peta (`flyTo`) dan menyorot penanda Puskesmas peringkat `#1` (`FR-08`)**.
-3. **Layar 3 — Dasbor Analitik Kewilayahan & Beban Wilayah PSW (`/analitik` — Role `pemerintah` & `admin`):**
-   - Menyediakan kontrol layer analitik Dinkes (Peta Choropleth Rasio Kecamatan `1:30.000` [`FR-10`], Spektrum PSW [`FR-24`], 37 Zona Jangkauan Jalan & 941 Ruas Jalan Utama [`FR-23`], serta Buffer Cakupan Layanan `1,5 km` atau `3,0 km` beserta luas *blank spot* dalam $\text{km}^2$ [`FR-09`]).
+3. **Layar 3 — Dasbor Analitik Kewilayahan & Peta Internal Dinkes (`/analitik` & `/analitik/peta` — Role `pemerintah` & `admin`):**
+   - Menyediakan kontrol layer analitik Dinkes di halaman dasbor (`/analitik`) maupun peta interaktif internal + simulator MAUT Pemda (`/analitik/peta`), meliputi Peta Choropleth Rasio Kecamatan `1:30.000` (`FR-10`), Spektrum PSW (`FR-24`), 37 Zona Jangkauan Jalan & 941 Ruas Jalan Utama (`FR-23`), serta Buffer Cakupan Layanan `1,5 km` atau `3,0 km` beserta luas *blank spot* dalam $\text{km}^2$ (`FR-09`).
    - Menampilkan kartu ringkasan statistik fasilitas kota (`FR-11`), tabel peringkat 25 Puskesmas berdasarkan `skor_psw`, grafik perbandingan `Chart.js`, dan tombol aksi **"Unduh CSV"** serta **"Unduh PDF"** (`FR-21`).
+   - *(Catatan Status Tim: Eksplorasi tampilan bento internal via `dashboard-shell.blade.php` & `analytics/map.blade.php` saat ini bersifat kreatif terbuka; penyelarasan akhir UI menuju acuan `UI_RULES.md` `#0A6663` & `Lucide Icons` ditetapkan oleh Team Lead pada fase `T-02` / `T-03`.)*
 4. **Layar 4 — Halaman / Panel Detail Profil Puskesmas (`/puskesmas/{kode_puskesmas}` — *Rencana Fase UI `T-02`*):**
    - Menampilkan informasi lengkap Puskesmas: status layanan saat ini (Buka/Tutup WIB & UGD 24 Jam), alamat, koordinat, nomor telepon/WhatsApp resmi, tautan eksternal aktif `https://dinkes.kotabogor.go.id/<slug>` (`FR-13`), beban binaan UKM (Posyandu & Sekolah 2025 — `FR-02`), matriks ketersediaan 9 profesi Nakes beserta persentase pemenuhannya (`FR-12`), serta indikator estimasi keramaian & grafik tren kunjungan pasien baru 12 bulan (`Chart.js` — `FR-22`).
 5. **Layar 5 — Halaman Login & Dashboard Manajemen Data Master (`/login` & `/admin/*` — Role `admin`):**

@@ -9,7 +9,7 @@ File ini adalah cetak biru teknis yang menjelaskan **BAGAIMANA** produk dibangun
 
 - Nama Produk: PuskesMap — Sistem Pendukung Keputusan Spasial (WebGIS) Puskesmas Kota Bogor
 - Status Spec: Disetujui & Disinkronkan ke Implementasi Backend (`T-01`)
-- Terakhir diperbarui: 2026-11-13
+- Terakhir diperbarui: 2026-11-23
 - File Bahan / Referensi:
   - [`00_PANDUAN.md`](../sql/00_PANDUAN.md), [`01_schema.sql`](../sql/01_schema.sql), [`04_validasi.sql`](../sql/04_validasi.sql), [`05_hitung_psw.sql`](../sql/05_hitung_psw.sql)
   - `DatasetBogorSeeder.php`, `UserSeeder.php`, & [`provenance.csv`](../sql/provenance.csv)
@@ -54,7 +54,7 @@ PuskesMap/
 │   ├── Http/
 │   │   ├── Controllers/
 │   │   │   ├── MapController.php               # Peta publik /peta & payload awal puskesmas
-│   │   │   ├── AnalyticsController.php         # Dasbor analitik Dinkes (/analitik) & ekspor CSV/PDF (FR-11, FR-21)
+│   │   │   ├── AnalyticsController.php         # Dasbor analitik Dinkes (/analitik, /analitik/peta) & ekspor CSV/PDF (FR-11, FR-21)
 │   │   │   ├── AuthController.php              # Login/logout sesi RBAC (pemerintah & admin — FR-14, FR-15)
 │   │   │   ├── Api/V1/
 │   │   │   │   ├── PuskesmasController.php     # API /api/v1/puskesmas*, /nearest, /radius, /{puskesmas}
@@ -84,7 +84,7 @@ PuskesMap/
 │   └── geojson/
 │       └── jalan_utama.geojson                 # 941 ruas jalan utama OSM (lazy-loaded + HTTP cached)
 ├── routes/
-│   ├── web.php                                 # Rute /, /peta, /login, /logout, /analitik*, /admin/*
+│   ├── web.php                                 # Rute /, /peta, /login, /logout, /analitik, /analitik/peta, /analitik/ekspor/*, /admin/*
 │   ├── api_v1.php                              # Rute /api/v1/* (middleware web + throttle:api)
 │   └── console.php                             # Penjadwalan harian supabase-keep-alive (SELECT 1)
 └── resources/
@@ -93,7 +93,7 @@ PuskesMap/
     └── views/
         ├── layouts/                            # Layout terisolasi SDSS (app.blade.php, map.blade.php)
         ├── components/ui/                      # Komponen Blade SDSS (<x-ui.button>, input, select, badge, drawer, modal)
-        └── ...                                 # welcome.blade.php (Landing), peta.blade.php, auth/login.blade.php, analytics/, admin/, exports/
+        └── ...                                 # welcome.blade.php (Landing), peta.blade.php, auth/login.blade.php, dashboard-shell.blade.php, analytics/ (index, map), admin/, exports/
 ```
 
 ---
@@ -127,16 +127,16 @@ Struktur tabel relasional-spasial pada PostgreSQL/PostGIS (`SRID 4326` / WGS 84)
   - `GET /` — Halaman Beranda / Landing Page PuskesMap (area tim Landing Page).
   - `GET /peta` (serta pengalihan `GET /map` -> `/peta`) — Kanvas Peta Utama WebGIS SDSS PuskesMap (Publik & Internal).
   - `GET /puskesmas/{kode_puskesmas}` *(rencana fase UI `T-02`)* — Halaman/panel detail lengkap Puskesmas (`FR-02`, `FR-12`, `FR-13`, `FR-22`).
-  - `GET /analitik` & `GET /analitik/ekspor/{format}` (`csv|pdf`) — Khusus role `pemerintah` & `admin`: menampilkan Dasbor Analitik Spasial (`FR-11`), evaluasi `PSW-Index` (`FR-24`), rasio kecamatan (`FR-10`), jaringan jalan (`FR-23`), area cakupan/blank spot `1,5 km` atau `3,0 km` (`FR-09`), serta mengunduh laporan CSV/PDF (`FR-21`).
+  - `GET /analitik`, `GET /analitik/peta`, & `GET /analitik/ekspor/{format}` (`csv|pdf`) — Khusus role `pemerintah` & `admin`: menampilkan Dasbor Analitik Spasial (`FR-11`), peta internal tematik & simulator MAUT Pemda (`analitik.peta`), evaluasi `PSW-Index` (`FR-24`), rasio kecamatan (`FR-10`), jaringan jalan (`FR-23`), area cakupan/blank spot `1,5 km` atau `3,0 km` (`FR-09`), serta mengunduh laporan CSV/PDF (`FR-21`).
   - `GET|POST /login`, `POST /logout` (`FR-14`, `FR-15`), serta `Resource /admin/puskesmas` (tanpa `show`), `GET|PUT /admin/puskesmas/{puskesmas}/operasional`, `PUT /admin/puskesmas/{puskesmas}/tenaga-medis`, `GET|POST /admin/puskesmas/{puskesmas}/kunjungan`, `GET|POST|PUT /admin/users`, `PATCH /admin/users/{user}/deactivate`, dan `GET /admin/audit-log` (`FR-16` s/d `FR-20`, khusus role `admin`).
 - **9 Endpoint REST API Internal Asinkron (`/api/v1/*`, middleware `web` + `throttle:api`):**
-  1. `GET /api/v1/puskesmas` (Publik) — Parameter: `kecamatan_id`, `igd_24jam`, `jam_operasional`, `kelengkapan_nakes` -> Mengembalikan `GeoJSON FeatureCollection` lengkap beserta batas wilayah kecamatan ter-cache.
+  1. `GET /api/v1/puskesmas` (Publik) — Parameter: `kecamatan_id`, `igd_24jam`, `jam_operasional`, `kelengkapan_nakes` -> Mengembalikan `GeoJSON FeatureCollection` lengkap beserta properti tambahan `kecamatan_boundaries` (batas wilayah kecamatan ter-cache).
   2. `GET /api/v1/puskesmas/nearest` (Publik) — Parameter: `lat`, `lng`, `limit` (default `5`, maks `25`) -> Mengembalikan `GeoJSON FeatureCollection` Puskesmas terdekat terurut `ST_Distance`.
   3. `GET /api/v1/puskesmas/radius` (Publik) — Parameter: `lat`, `lng`, `radius` (integer `100–20000` meter) -> Mengembalikan `GeoJSON FeatureCollection` hasil penapisan `ST_DWithin` + `meta.buffer_geometry`.
   4. `GET /api/v1/puskesmas/{puskesmas}` (Publik, `{puskesmas}` numerik) — Mengembalikan detail lengkap 1 Puskesmas beserta operasional, 9 profesi Nakes, dan riwayat kunjungan 12 bulan.
   5. `POST /api/v1/rekomendasi` (Publik untuk `darurat|reguler`; khusus `pemerintah|admin` terautentikasi untuk `pemda` -> tamu mendapat `HTTP 403`) — Parameter: `lat`, `lng`, `scenario` (`darurat|reguler|pemda`), `radius` (opsional: `1000|3000|5000`) -> Menjalankan `RecommendationService::rankFacilities()` dan mengembalikan JSON Top-3 Rekomendasi MAUT beserta `radius_meters`.
   6. `GET /api/v1/analisis/coverage` (Pemerintah, Admin) — Parameter: `buffer_km` (`1.5` atau `3.0`) -> Menjalankan `ST_Union(ST_Buffer(geom::geography, radius))` dan mengembalikan `GeoJSON FeatureCollection` cakupan beserta kalkulasi luas *blank spot* ($\text{km}^2$) per kota & kecamatan.
-  7. `GET /api/v1/analisis/equity` (Pemerintah, Admin) — Parameter: `kecamatan_id` (opsional) -> Mengembalikan `JSON Series Rasio Layanan` (`1 : 30.000` penduduk).
+  7. `GET /api/v1/analisis/equity` (Pemerintah, Admin) — Parameter opsional: `kecamatan_id`, `tahun` -> Mengembalikan `JSON Series Rasio Layanan` (`ceil(jumlah_penduduk / 30.000)`, deficit, serta `avg_psw_score` per kecamatan sesuai tahun).
   8. `GET /api/v1/analisis/workload-spectrum` (Pemerintah, Admin) — Parameter: `kecamatan_id` (opsional), `tahun=2025` -> Mengembalikan `GeoJSON FeatureCollection` Spektrum `PSW-Index` dari `WorkloadService`.
   9. `GET /api/v1/analisis/road-access` (Pemerintah, Admin) — Parameter: `kecamatan_id` (opsional) -> Mengembalikan `GeoJSON FeatureCollection` 37 zona `jangkauan_jalan` yang di-cache.
 - **Optimasi Performa & Penghematan Kuota *Egress* Supabase:**
