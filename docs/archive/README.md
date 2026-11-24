@@ -6,7 +6,7 @@ Berkas di dalam folder ini hanya disimpan sebagai **arsip referensi laporan akad
 - `Software Requirements Specification (SRS) (revisi 12).pdf` — Dokumen SRS awal (Revisi 12).
 
 > **Aturan Wajib:** Dokumen aktif yang berlaku sebagai sumber kebenaran teknis dan UI di repositori adalah:
-> 1. `docs/TEAM_GUIDE.md` & `docs/AZRIL_AGENT_BRIEF.md`
+> 1. `docs/TEAM_GUIDE.md`
 > 2. `docs/specs/{PRODUCT_SPEC,TECH_SPEC,DESIGN_SPEC,UI_RULES}.md`
 > 3. `docs/sql/{00_PANDUAN.md,01_schema.sql,04_validasi.sql,05_hitung_psw.sql,provenance.csv}`
 >

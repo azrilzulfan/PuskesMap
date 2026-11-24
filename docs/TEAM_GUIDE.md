@@ -16,16 +16,16 @@ Dokumen ini adalah acuan resmi kolaborasi tim di dalam repositori `PuskesMap/` a
   - `public/images/*`
 - **Aturan:**
   - Tidak mengubah modul inti SDSS, dataset, migrasi, API, maupun layout/komponen `<x-ui.*>`.
-  - Seluruh data puskesmas yang ditampilkan di Landing Page (status `IGD 24 Jam` = hanya 6 puskesmas, `Rawat Inap` = 0 / tidak ditampilkan, jam tutup poli `14:00 WIB`, kelengkapan 9 nakes `100%` atau `89%`, serta kepadatan `Rendah|Sedang|Padat`) **wajib mengacu pada CSV resmi di `database/seeders/csv/`** — dilarang mengisi angka/status perkiraan manual.
-  - Aset foto di `public/images/puskesmas/` wajib terkompres ringan, hanya memasukkan foto yang benar-benar direferensikan di UI, dan memakai penamaan huruf kecil tanpa spasi agar aman di server Linux.
+  - Seluruh data puskesmas yang ditampilkan di Landing Page (`GET /` kini ditenagai database via `MapController::landing()` & `MapPayloadPresenter` — status `IGD 24 Jam` = hanya 6 puskesmas, `Rawat Inap` = 0, jadwal reguler `Operasional::isOpenAt()`, kelengkapan 9 nakes `100%` atau `88,9%`, serta kepadatan `Rendah|Sedang|Padat`) **wajib mengacu pada CSV resmi / PostgreSQL**, bukan angka manual.
+  - Aset foto di `public/images/puskesmas/` wajib terkompres ringan dan hanya menyimpan foto yang direferensikan.
 
 ### B. Tim Inti SDSS (`Fajar` & `Azril`) — Pemegang Penuh Modul Inti
-Hanya **Fajar** dan **Azril** yang memegang seluruh modul inti SDSS: dataset referensi & seeder, migrasi PostGIS, Eloquent models/enums, `app/Services/*`, `app/Http/Controllers/*`, `/api/v1/*`, `/peta`, `/puskesmas/{kode_puskesmas}` *(rencana fase UI `T-02`, belum aktif di `routes/web.php`)*, `/login`, `/analitik`, `/analitik/peta`, dan `/admin/*`.
+Hanya **Fajar** dan **Azril** yang memegang seluruh modul inti SDSS: dataset referensi & seeder (`database/seeders/*`), migrasi PostGIS (`database/migrations/*`), Eloquent models/enums (`app/Models/*`, `app/Enums/*`), `app/Services/*`, `app/Http/*`, `/api/v1/*`, `/peta`, `/puskesmas/{kode_puskesmas}`, `/login`, `/analitik`, `/analitik/peta`, `/admin/*`, `tests/*` (pertahankan `tests/Feature/DesignSystemAndDatasetTest.php`), serta fondasi Design System (`layouts/*`, `components/ui/*`, `resources/js/map/*`, `resources/css/app.css`, `resources/css/map.css`).
 
 - **Fajar (*Team Lead*):**
   - Pemegang otoritas akhir arsitektur, kontrak data resmi 2025–2026, prioritas *UI/UX user-friendly first*, optimasi, *maintainability*, serta penentu & penstandardisasi **UI final sebelum rilis** (`--accent: #0A6663`, `layouts/*`, `components/ui/*`, `DESIGN_SPEC.md`, `UI_RULES.md`, dan konfigurasi Supabase).
 - **Azril (*Backend, Engine SDSS, & Eksplorasi Fitur*):**
-  - Menangani pengembangan dan pemeliharaan backend pendukung (migrasi, model, *service layer*, endpoint `/api/v1/*`, RBAC, controller CRUD, Pest tests), serta **dibebaskan mengeksplorasi rancangan fitur/UI kreatif** pada modul internal (`/analitik*`, `/admin/*`, komponen shell pendukung) selama kontrak data baku terjaga. Keputusan UI final pada fase rilis tetap berada di Team Lead.
+  - Menangani pengembangan dan pemeliharaan backend pendukung (migrasi, model, *service layer*, endpoint `/api/v1/*`, RBAC, controller CRUD, Pest tests), serta **dibebaskan mengeksplorasi rancangan fitur/UI kreatif** pada modul internal (`/analitik*`, `/admin/*`, `dashboard-shell.blade.php`) selama kontrak data baku terjaga. Keputusan UI final pada fase rilis (`[T-03]`) tetap berada di Team Lead.
 
 ---
 
@@ -51,16 +51,17 @@ Sebelum menulis kode atau mengubah logika SDSS, baca dokumen spesifikasi aktif b
    - `kapasitas_maksimal_bulanan` default = **`850`** (bukan `5603`).
    - `operasional.jam_tutup` reguler default = **`14:00:00`** (bukan `15:00:00`).
    - Kota Bogor memiliki **`0` Puskesmas Rawat Inap** (`rawat_inap = false`); filter/badge Rawat Inap tidak ditampilkan di UI publik.
-   - **Algoritma MAUT & Durasi Operasional:** `Operasional::durationHours()` selalu menghitung jam poli reguler (`jam_buka`–`jam_tutup`) meskipun `status_igd_24jam === true` agar kriteria `hours` tidak menggandakan bobot `igd`. `POST /api/v1/rekomendasi` mendukung filter `radius` opsional (`1000|3000|5000`).
+   - **Algoritma MAUT & Durasi Operasional:** `Operasional::durationHours()` selalu menghitung jam poli reguler (`jam_buka`–`jam_tutup`) meskipun `status_igd_24jam === true` agar kriteria `hours` tidak menggandakan bobot `igd`. `POST /api/v1/rekomendasi` mendukung filter `radius` opsional (`1000|3000|5000`), bobot resmi `config/sdss.php` (`darurat`, `reguler`, `pemda`), dan `PSW-Index = 0.40 pop + 0.20 edu + 0.20 pos + 0.20 kur` (`Tinggi >= 0.70`, `Ideal >= 0.40`, `Rendah < 0.40`).
 3. **Aturan Akses, Optimasi Laravel, & Keamanan:**
    - Skenario MAUT **`pemda`** (`Evaluasi Kebijakan Pemda`) dilarang untuk publik dan hanya boleh diakses role `pemerintah` / `admin` terautentikasi (HTTP `403` untuk tamu).
+   - `UserSeeder` membaca `PUSKESMAP_ADMIN_PASSWORD` dan `PUSKESMAP_DINKES_PASSWORD` dari `.env`.
    - Koneksi PostgreSQL/Supabase menggunakan `DB_SEARCH_PATH=public,extensions` dan Supavisor Session Mode port `5432`. Keep-alive harian (`supabase-keep-alive`) terjadwal di `routes/console.php`.
    - `AppServiceProvider` mengaktifkan `Model::preventLazyLoading(! app()->isProduction())` — seluruh query relasi wajib memakai *eager loading* (`with()` / `loadMissing()`).
    - Seluruh daftar admin & audit log wajib terpaginasi `10–25` baris (`paginate(15)` sesuai `NFR-09`).
    - Poligon statis wajib memakai `ST_AsGeoJSON(geom, 6)` + `Cache::rememberForever` dan di-flush melalui `SpatialAnalysisService::flushSpatialCache()` setiap ada mutasi CRUD Admin.
 4. **Standar UI/Frontend SDSS & Pengujian:**
-   - **Fase Eksplorasi Tim vs Target Standar Rilis:** Selama pengembangan paralel saat ini, tim dibebaskan bereksperimen secara kreatif di cabang tampilan masing-masing (misal eksplorasi Landing Page maupun Bento Dashboard internal `dashboard-shell.blade.php`), sementara penyelarasan akhir sebelum rilis akan dipimpin oleh **Fajar** mengacu penuh pada `layouts/` (`app.blade.php`, `map.blade.php`), `<x-ui.*>`, `<x-lucide-*>`, dan `UI_RULES.md` (`--accent: #0A6663`, Light Mode).
-   - **Konfigurasi `phpunit.xml`:** Sengaja mengarah ke `DB_CONNECTION=pgsql` (`puskesmap_test`). **Dilarang mengubah `phpunit.xml` kembali ke `sqlite`.** Pengujian darurat dengan `DB_CONNECTION=sqlite` dan `DB_DATABASE=:memory:` akan menyisakan **3 ketidakcocokan PostGIS-native** (`ST_AsGeoJSON` `'MultiPolygon'`, `ST_Buffer` `'Polygon'`, dan `ST_AsText`) — `35 passed, 2 failed, 1 error` dari total baseline `38` runtime tests. Selain itu, `tests/Feature/MapPageTest.php` masih mengacu kontrak DOM/label legacy (`'Sepi'`) hingga perombakan UI `T-02`.
+   - **Fase Eksplorasi Tim vs Target Standar Rilis (`[T-03]`):** Selama pengembangan paralel, tim dibebaskan bereksperimen secara kreatif, sementara standarisasi akhir sebelum rilis dipimpin oleh **Fajar** mengacu penuh pada `layouts/` (`app.blade.php`, `map.blade.php` `data-alpine="bundled"`), `<x-ui.*>`, `<x-lucide-*>`, dan `UI_RULES.md` (`--accent: #0A6663`, Light Mode).
+   - **Konfigurasi `phpunit.xml` & Pengujian:** Sengaja mengarah ke `DB_CONNECTION=pgsql` (`puskesmap_test`). **Dilarang mengubah `phpunit.xml` kembali ke `sqlite`.** Isolasi pengujian lokal lewat `.env.testing` (lihat `.env.testing.example`). Baseline suite saat ini berjumlah **`44` tests** (`php artisan test`), disertai pemeriksaan format `php vendor/bin/pint --dirty --test` dan `npm.cmd run build` sebelum push. Pengujian darurat memakai SQLite in-memory akan menyisakan 3 kegagalan query PostGIS-native yang memang diharapkan.
 5. **Lingkungan Lokal Windows:**
    - Gunakan `npm.cmd` di PowerShell jika eksekusi `.ps1` diblokir.
    - `composer.json` memakai `"optimize-autoloader": false` agar `composer dump-autoload` tidak macet di Windows NTFS; untuk build produksi gunakan flag CLI `composer install --optimize-autoloader`.
