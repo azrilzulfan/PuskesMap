@@ -17,6 +17,7 @@ function initVisitTrendChart() {
 
     try {
         const series = JSON.parse(dataEl.textContent || '{}');
+        const capacity = Number(series.capacity ?? 850);
         new Chart(canvas, {
             type: 'line',
             data: {
@@ -34,8 +35,8 @@ function initVisitTrendChart() {
                         pointBackgroundColor: '#0A6663',
                     },
                     {
-                        label: 'Kapasitas Acuan (850/bln)',
-                        data: (series.labels || []).map(() => Number(series.capacity ?? 850)),
+                        label: `Kapasitas Acuan (${capacity}/bln)`,
+                        data: (series.labels || []).map(() => capacity),
                         borderColor: '#B54708',
                         borderDash: [5, 5],
                         borderWidth: 1.5,

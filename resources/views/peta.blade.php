@@ -22,13 +22,13 @@
 
     {{-- Payload JSON Data Puskesmas & Konfigurasi API untuk Modul JS Peta --}}
     <script id="puskesmas-data" type="application/json">
-        {!! json_encode($puskesmas) !!}
+        {!! json_encode($puskesmas, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}
     </script>
     <script id="map-config" type="application/json">
         {!! json_encode([
             'bogorCenter' => $bogorCenter,
             'canUsePemda' => $canUsePemda,
             'rekomendasiUrl' => route('api.v1.rekomendasi'),
-        ]) !!}
+        ], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!}
     </script>
 </x-layout>

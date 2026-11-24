@@ -660,8 +660,9 @@ export function initPuskesMapSDSS() {
                             if (radiusSelect) {
                                 radiusSelect.value = "5000";
                                 radiusSelect.dispatchEvent(new Event("change"));
+                            } else {
+                                runMautEngine(closeMobileDrawer);
                             }
-                            runMautEngine(closeMobileDrawer);
                         });
                     document
                         .getElementById("btn-expand-radius-all")
@@ -669,8 +670,9 @@ export function initPuskesMapSDSS() {
                             if (radiusSelect) {
                                 radiusSelect.value = "all";
                                 radiusSelect.dispatchEvent(new Event("change"));
+                            } else {
+                                runMautEngine(closeMobileDrawer);
                             }
-                            runMautEngine(closeMobileDrawer);
                         });
                 }
                 return;
@@ -875,8 +877,8 @@ export function initPuskesMapSDSS() {
                 .map(
                     ([prof, count]) => `
                 <div class="p-2 rounded-lg bg-gray-50 border border-gray-100">
-                    <span class="text-muted block text-[10px] leading-tight">${prof}</span>
-                    <strong class="text-xs text-primary-dark font-bold">${count} staf</strong>
+                    <span class="text-muted block text-[10px] leading-tight">${escapeHtml(prof)}</span>
+                    <strong class="text-xs text-primary-dark font-bold">${escapeHtml(count)} staf</strong>
                 </div>
             `,
                 )
@@ -1018,8 +1020,8 @@ export function initPuskesMapSDSS() {
 
         userMarker.bindPopup(
             `<div class="p-2.5 font-sans text-ink">
-                <div class="text-xs font-extrabold text-primary-dark">${labelText}</div>
-                <div class="text-[11px] font-mono text-muted mt-0.5">${coordFormatted}${accuracyText ? ` &bull; ${accuracyText}` : ""}</div>
+                <div class="text-xs font-extrabold text-primary-dark">${escapeHtml(labelText)}</div>
+                <div class="text-[11px] font-mono text-muted mt-0.5">${escapeHtml(coordFormatted)}${accuracyText ? ` &bull; ${escapeHtml(accuracyText)}` : ""}</div>
                 <div class="text-[10px] text-primary font-semibold mt-1">Geser pin untuk koreksi presisi</div>
             </div>`,
         );
@@ -1459,18 +1461,30 @@ export function initPuskesMapSDSS() {
     const quickScenarioBtns = document.querySelectorAll(
         "[data-quick-scenario]",
     );
+    const syncQuickScenarioUI = (val) => {
+        quickScenarioBtns.forEach((b) => {
+            const active = b.dataset.quickScenario === val;
+            b.classList.toggle("bg-ink", active);
+            b.classList.toggle("text-white", active);
+            b.classList.toggle("bg-white", !active);
+            b.classList.toggle("border", !active);
+            b.classList.toggle("border-gray-200", !active);
+            b.classList.toggle("text-ink", !active);
+        });
+    };
+    document
+        .querySelectorAll('input[name="maut-scenario"]')
+        .forEach((radio) => {
+            radio.addEventListener("change", () => {
+                if (radio.checked) {
+                    syncQuickScenarioUI(radio.value);
+                }
+            });
+        });
     quickScenarioBtns.forEach((btn) => {
         btn.addEventListener("click", () => {
             const val = btn.dataset.quickScenario;
-            quickScenarioBtns.forEach((b) => {
-                const active = b === btn;
-                b.classList.toggle("bg-ink", active);
-                b.classList.toggle("text-white", active);
-                b.classList.toggle("bg-white", !active);
-                b.classList.toggle("border", !active);
-                b.classList.toggle("border-gray-200", !active);
-                b.classList.toggle("text-ink", !active);
-            });
+            syncQuickScenarioUI(val);
 
             const radio = document.querySelector(
                 `input[name="maut-scenario"][value="${val}"]`,

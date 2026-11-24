@@ -174,7 +174,7 @@
                                 <input type="radio" name="maut-scenario" value="reguler" class="text-accent focus:ring-accent">
                                 <div>
                                     <span class="font-extrabold text-ink block">Layanan Reguler</span>
-                                    <span class="text-[10px] text-muted block">Jam 30% &middot; Jarak 20% &middot; Nakes 20% &middot; Antrean 20%</span>
+                                    <span class="text-[10px] text-muted block">Jam 30% &middot; Jarak 20% &middot; Nakes 20% &middot; Antrean 20% &middot; IGD 10%</span>
                                 </div>
                             </label>
 
@@ -183,7 +183,7 @@
                                     <input type="radio" name="maut-scenario" value="pemda" class="text-accent focus:ring-accent">
                                     <div>
                                         <span class="font-extrabold text-ink block">Evaluasi Pemda</span>
-                                        <span class="text-[10px] text-muted block">Nakes 30% &middot; Jarak 20% &middot; Antrean 20%</span>
+                                        <span class="text-[10px] text-muted block">Nakes 30% &middot; Jarak 20% &middot; Antrean 20% &middot; IGD 15% &middot; Jam 15%</span>
                                     </div>
                                 </label>
                             @endif
