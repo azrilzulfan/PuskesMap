@@ -358,6 +358,54 @@ class SpatialAnalysisService
     }
 
     /**
+     * Extract coverage metrics for the active filter scope (either citywide or one selected district).
+     *
+     * @param  array<string, mixed>  $coverage
+     * @return array{
+     *     is_filtered: bool,
+     *     scope_label: string,
+     *     luas_wilayah_km2: float,
+     *     luas_terlayani_km2: float,
+     *     blankspot_km2: float,
+     *     persentase_terlayani: float,
+     *     persentase_blankspot: float
+     * }
+     */
+    public function summarizeCoverageScope(array $coverage, ?int $kecamatanId = null, ?string $fallbackDistrictName = null): array
+    {
+        if ($kecamatanId !== null) {
+            foreach ($coverage['per_kecamatan'] ?? [] as $district) {
+                if ((int) ($district['kecamatan_id'] ?? 0) === $kecamatanId) {
+                    $coveredPct = (float) ($district['persentase_terlayani'] ?? 0.0);
+
+                    return [
+                        'is_filtered' => true,
+                        'scope_label' => 'Kec. '.(string) ($district['nama_kecamatan'] ?? ($fallbackDistrictName ?: '-')),
+                        'luas_wilayah_km2' => (float) ($district['luas_wilayah_km2'] ?? 0.0),
+                        'luas_terlayani_km2' => (float) ($district['luas_terlayani_km2'] ?? 0.0),
+                        'blankspot_km2' => (float) ($district['blankspot_km2'] ?? 0.0),
+                        'persentase_terlayani' => $coveredPct,
+                        'persentase_blankspot' => round(max(0.0, 100.0 - $coveredPct), 1),
+                    ];
+                }
+            }
+        }
+
+        $summary = $coverage['summary'] ?? [];
+        $cityCoveredPct = (float) ($summary['persentase_terlayani'] ?? 0.0);
+
+        return [
+            'is_filtered' => $kecamatanId !== null && $fallbackDistrictName !== null,
+            'scope_label' => $fallbackDistrictName ? 'Kec. '.$fallbackDistrictName : 'Kota Bogor',
+            'luas_wilayah_km2' => (float) ($summary['luas_kota_km2'] ?? 0.0),
+            'luas_terlayani_km2' => (float) ($summary['luas_terlayani_km2'] ?? 0.0),
+            'blankspot_km2' => (float) ($summary['blankspot_km2'] ?? 0.0),
+            'persentase_terlayani' => $cityCoveredPct,
+            'persentase_blankspot' => (float) ($summary['persentase_blankspot'] ?? round(max(0.0, 100.0 - $cityCoveredPct), 1)),
+        ];
+    }
+
+    /**
      * Retrieve road accessibility layers (jangkauan_jalan) and summary statistics.
      *
      * @return array{

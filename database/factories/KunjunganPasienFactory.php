@@ -21,7 +21,6 @@ class KunjunganPasienFactory extends Factory
     {
         $total = fake()->numberBetween(300, 950);
         $capacity = (int) config('sdss.capacity.default_monthly', 850);
-        $percentage = round(($total / $capacity) * 100, 1);
 
         return [
             'puskesmas_id' => Puskesmas::factory(),
@@ -29,8 +28,14 @@ class KunjunganPasienFactory extends Factory
             'tahun' => 2025,
             'total_pasien_bulanan' => $total,
             'kapasitas_maksimal_bulanan' => $capacity,
-            'persentase_keramaian' => $percentage,
-            'status_kepadatan' => CrowdStatus::fromPercentage($percentage),
+            'persentase_keramaian' => function (array $attributes): float {
+                $effectiveCapacity = max(1, (int) $attributes['kapasitas_maksimal_bulanan']);
+
+                return round(((int) $attributes['total_pasien_bulanan'] / $effectiveCapacity) * 100, 2);
+            },
+            'status_kepadatan' => fn (array $attributes): CrowdStatus => CrowdStatus::fromPercentage(
+                (float) $attributes['persentase_keramaian'],
+            ),
         ];
     }
 }

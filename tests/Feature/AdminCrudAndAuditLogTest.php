@@ -278,3 +278,42 @@ test('admin puskesmas index computes summary kpi cards across all matching pages
             && $stats['nakes_complete_count'] === 17
             && $stats['avg_psw'] === 0.5);
 });
+
+test('admin users edit validation failure reopens edit modal without leaking into create form and computes global totals', function () {
+    $admin = User::factory()->admin()->create(['name' => 'Admin Utama']);
+    $targetUser = User::factory()->pemerintah()->create(['name' => 'Staf Awal', 'email' => 'staf@puskesmap.local']);
+
+    for ($i = 1; $i <= 16; $i++) {
+        User::factory()->pemerintah()->create(['name' => sprintf('Pegawai %02d', $i)]);
+    }
+
+    $this->actingAs($admin)
+        ->get(route('admin.puskesmas.create'))
+        ->assertOk()
+        ->assertSee('<option value="Non Rawat Inap" selected>', false);
+
+    $this->actingAs($admin)
+        ->get(route('admin.users.index'))
+        ->assertOk()
+        ->assertSee('isEditOpen: false', false)
+        ->assertDontSee('editingUser: {"id"', false)
+        ->assertViewHas('activeUsersTotal', 18)
+        ->assertViewHas('adminUsersTotal', 1);
+
+    $failedEdit = $this->actingAs($admin)
+        ->from(route('admin.users.index'))
+        ->followingRedirects()
+        ->put(route('admin.users.update', $targetUser), [
+            '_form_context' => 'edit',
+            '_edit_user_id' => $targetUser->id,
+            '_edit_update_url' => route('admin.users.update', $targetUser),
+            'name' => 'Nama Bocor Edit',
+            'email' => $admin->email,
+            'role' => UserRole::Pemerintah->value,
+            'is_active' => '1',
+        ]);
+
+    $failedEdit->assertOk()
+        ->assertSee('isEditOpen: true', false)
+        ->assertSee('<input id="name" name="name" type="text" required value=""', false);
+});

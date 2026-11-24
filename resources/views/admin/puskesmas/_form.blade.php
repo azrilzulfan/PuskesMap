@@ -110,7 +110,7 @@
                 <select id="kategori_layanan" name="kategori_layanan" required
                         class="mt-1.5 min-h-11 w-full rounded-xl border border-[#7B8A97] bg-input px-3.5 py-2.5 text-sm text-ink transition focus:bg-white focus:border-primary">
                     @foreach ($categories as $category)
-                        <option value="{{ $category->value }}" @selected(old('kategori_layanan', $puskesmas->kategori_layanan->value ?? '') === $category->value)>
+                        <option value="{{ $category->value }}" @selected(old('kategori_layanan', isset($puskesmas) ? $puskesmas->kategori_layanan->value : \App\Enums\ServiceCategory::NonRawatInap->value) === $category->value)>
                             {{ $category->value }}
                         </option>
                     @endforeach
@@ -145,10 +145,6 @@
                     <label class="flex min-h-10 items-center gap-2.5 text-xs font-bold text-ink cursor-pointer">
                         <input type="checkbox" name="status_igd_24jam" value="1" class="size-4 accent-primary" @checked(old('status_igd_24jam'))>
                         <span>Memiliki IGD 24 Jam</span>
-                    </label>
-                    <label class="flex min-h-10 items-center gap-2.5 text-xs font-bold text-ink cursor-pointer">
-                        <input type="checkbox" name="rawat_inap" value="1" class="size-4 accent-primary" @checked(old('rawat_inap'))>
-                        <span>Tersedia Rawat Inap</span>
                     </label>
                 </div>
             @endif

@@ -31,7 +31,11 @@ class AnalyticsController extends Controller
         $tahun = $filters['tahun'];
 
         $districts = Kecamatan::query()->orderBy('nama_kecamatan')->get();
+        $selectedDistrictName = $kecamatanId !== null
+            ? $districts->firstWhere('id', $kecamatanId)?->nama_kecamatan
+            : null;
         $coverage = $this->spatialAnalysis->calculateServiceArea($bufferKm);
+        $coverageScope = $this->spatialAnalysis->summarizeCoverageScope($coverage, $kecamatanId, $selectedDistrictName);
         $equity = $this->spatialAnalysis->getEquityAnalysis($kecamatanId, $tahun);
         $workload = $this->workloadService->getWorkloadDistribution($kecamatanId, $tahun);
         $roadAccess = $this->spatialAnalysis->analyzeRoadAccessibility($kecamatanId);
@@ -79,6 +83,7 @@ class AnalyticsController extends Controller
             'bufferKm' => $bufferKm,
             'tahun' => $tahun,
             'coverage' => $coverage,
+            'coverageScope' => $coverageScope,
             'equity' => $equity,
             'workload' => $workload,
             'roadAccess' => $roadAccess,
@@ -94,7 +99,11 @@ class AnalyticsController extends Controller
         $tahun = $filters['tahun'];
 
         $districts = Kecamatan::query()->orderBy('nama_kecamatan')->get();
+        $selectedDistrictName = $kecamatanId !== null
+            ? $districts->firstWhere('id', $kecamatanId)?->nama_kecamatan
+            : null;
         $coverage = $this->spatialAnalysis->calculateServiceArea($bufferKm);
+        $coverageScope = $this->spatialAnalysis->summarizeCoverageScope($coverage, $kecamatanId, $selectedDistrictName);
         $equity = $this->spatialAnalysis->getEquityAnalysis($kecamatanId, $tahun);
         $workload = $this->workloadService->getWorkloadDistribution($kecamatanId, $tahun);
 
@@ -104,6 +113,7 @@ class AnalyticsController extends Controller
             'bufferKm' => $bufferKm,
             'tahun' => $tahun,
             'coverage' => $coverage,
+            'coverageScope' => $coverageScope,
             'equity' => $equity,
             'workload' => $workload,
             'bogorCenter' => config('sdss.spatial.bogor_center', [
@@ -142,7 +152,7 @@ class AnalyticsController extends Controller
     {
         $validated = $request->validate([
             'kecamatan_id' => ['nullable', 'integer', 'exists:kecamatan,id'],
-            'buffer_km' => ['nullable', 'numeric', Rule::in([1.5, 3, 3.0])],
+            'buffer_km' => ['nullable', 'numeric', Rule::in(['1.5', '3', '3.0'])],
             'tahun' => ['nullable', 'integer', 'min:2020', 'max:2100'],
         ]);
 

@@ -1,6 +1,8 @@
 @php
-    $coveragePct = (float) ($coverage['summary']['persentase_terlayani'] ?? 0);
+    $coveragePct = (float) ($coverageScope['persentase_terlayani'] ?? $coverage['summary']['persentase_terlayani'] ?? 0);
+    $initialBlankspotKm2 = (float) ($coverageScope['blankspot_km2'] ?? $coverage['summary']['blankspot_km2'] ?? 0);
     $isAdmin = (bool) auth()->user()?->isAdmin();
+    $hasExplicitBuffer = request()->filled('buffer_km');
 @endphp
 
 <x-dashboard-shell
@@ -9,16 +11,16 @@
     subtitle="Eksplorasi layer analitik Dinkes, area blankspot, spektrum PSW-Index & simulasi MAUT Evaluasi Pemda"
 >
     <x-slot:headerActions>
-        <a href="{{ route('analitik.index', ['kecamatan_id' => $selectedKecamatanId, 'buffer_km' => $bufferKm, 'tahun' => $tahun]) }}"
+        <a id="btn-link-analitik" href="{{ route('analitik.index', ['kecamatan_id' => $selectedKecamatanId, 'buffer_km' => $bufferKm, 'tahun' => $tahun]) }}"
            class="inline-flex h-11 items-center rounded-full bg-white px-5 text-xs font-extrabold text-primary-dark shadow-[0_6px_20px_rgba(0,121,121,0.06)] transition hover:bg-surface-mint">
             &larr; Dasbor Analitik
         </a>
-        <a href="{{ route('analitik.export.csv', ['kecamatan_id' => $selectedKecamatanId, 'buffer_km' => $bufferKm, 'tahun' => $tahun]) }}"
+        <a id="btn-export-csv" href="{{ route('analitik.export.csv', ['kecamatan_id' => $selectedKecamatanId, 'buffer_km' => $bufferKm, 'tahun' => $tahun]) }}"
            title="Unduh CSV"
            class="inline-flex h-11 items-center rounded-full bg-white px-4 text-xs font-bold text-primary-dark shadow-[0_6px_20px_rgba(0,121,121,0.06)] transition hover:bg-surface-mint">
             CSV
         </a>
-        <a href="{{ route('analitik.export.pdf', ['kecamatan_id' => $selectedKecamatanId, 'buffer_km' => $bufferKm, 'tahun' => $tahun]) }}"
+        <a id="btn-export-pdf" href="{{ route('analitik.export.pdf', ['kecamatan_id' => $selectedKecamatanId, 'buffer_km' => $bufferKm, 'tahun' => $tahun]) }}"
            title="Unduh PDF"
            class="inline-flex h-11 items-center rounded-full bg-gradient-to-r from-primary to-primary-dark px-5 text-xs font-extrabold text-white shadow-xs transition hover:opacity-95">
             Unduh PDF
@@ -62,7 +64,7 @@
             </span>
             <div>
                 <p class="text-xs font-semibold text-muted">Area Blankspot</p>
-                <p id="kpi-blankspot-km2" class="mt-1 text-2xl font-extrabold tracking-tight text-ink tabular-nums">{{ $coverage['summary']['blankspot_km2'] }} <span class="text-sm font-bold text-muted">km&sup2;</span></p>
+                <p id="kpi-blankspot-km2" class="mt-1 text-2xl font-extrabold tracking-tight text-ink tabular-nums">{{ $initialBlankspotKm2 }} <span class="text-sm font-bold text-muted">km&sup2;</span></p>
             </div>
         </article>
 
@@ -276,10 +278,19 @@
             const bogorCenter = [{{ (float) ($bogorCenter['lat'] ?? -6.597147) }}, {{ (float) ($bogorCenter['lng'] ?? 106.806039) }}];
             const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
             const isAdmin = @json($isAdmin);
+            const activeYear = @json((int) $tahun);
+            const hasExplicitBuffer = @json($hasExplicitBuffer);
             const initialSummary = {
                 bufferKm: @json((string) $bufferKm),
                 coveragePct: @json($coveragePct),
-                blankspotKm2: @json($coverage['summary']['blankspot_km2'] ?? 0),
+                blankspotKm2: @json($initialBlankspotKm2),
+                summary: {!! json_encode($coverage['summary'] ?? [], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
+                perKecamatan: {!! json_encode($coverage['per_kecamatan'] ?? [], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) !!},
+            };
+            const exportRoutes = {
+                analytics: @json(route('analitik.index')),
+                csv: @json(route('analitik.export.csv')),
+                pdf: @json(route('analitik.export.pdf')),
             };
 
             const urls = {
@@ -291,6 +302,8 @@
                 roadAccess: @json(route('api.v1.analisis.road-access')),
                 jalanUtama: @json(asset('geojson/jalan_utama.geojson')),
             };
+
+            let activeCoverageData = null;
 
             function escapeHtml(val) {
                 return String(val ?? '')
@@ -448,16 +461,69 @@
                 });
             }
 
+            function getSelectedCoverageMetrics(summaryObj, perDistrictArr) {
+                const selectedDistrict = document.getElementById('district-focus-select')?.value || '';
+                if (selectedDistrict && Array.isArray(perDistrictArr)) {
+                    const matched = perDistrictArr.find((d) => String(d.kecamatan_id) === String(selectedDistrict));
+                    if (matched) {
+                        return {
+                            pct: matched.persentase_terlayani ?? 0,
+                            blankspot: matched.blankspot_km2 ?? 0,
+                        };
+                    }
+                }
+
+                return {
+                    pct: summaryObj?.persentase_terlayani ?? 0,
+                    blankspot: summaryObj?.blankspot_km2 ?? 0,
+                };
+            }
+
+            function updateCoverageKpis(bufferLabel, metrics) {
+                document.getElementById('kpi-coverage-label').textContent = 'Terlayani (' + bufferLabel + ' km)';
+                document.getElementById('kpi-coverage-pct').textContent = (metrics.pct ?? 0) + '%';
+                document.getElementById('kpi-blankspot-km2').innerHTML = (metrics.blankspot ?? 0) + ' <span class="text-sm font-bold text-muted">km&sup2;</span>';
+            }
+
+            function syncHeaderExportLinks() {
+                const selectedDistrict = document.getElementById('district-focus-select')?.value || '';
+                const bufferKm = document.getElementById('coverage-buffer-select')?.value || initialSummary.bufferKm;
+                const params = new URLSearchParams();
+                if (selectedDistrict) {
+                    params.set('kecamatan_id', selectedDistrict);
+                }
+                params.set('buffer_km', bufferKm);
+                params.set('tahun', String(activeYear));
+                const query = params.toString();
+
+                const linkMap = {
+                    'btn-link-analitik': exportRoutes.analytics,
+                    'btn-export-csv': exportRoutes.csv,
+                    'btn-export-pdf': exportRoutes.pdf,
+                };
+
+                Object.entries(linkMap).forEach(([id, baseUrl]) => {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        el.href = baseUrl + '?' + query;
+                    }
+                });
+            }
+
             function showFacilityBox(props) {
                 selectedFacilityId = props.id;
                 refreshMarkerStyles();
+
+                const wl = cachedWorkloadById[props.id];
+                const pswScore = wl ? wl.skor_psw : props.skor_psw;
+                const pswSpectrum = wl ? wl.spektrum : (props.spektrum_beban || '-');
 
                 const box = document.getElementById('selected-facility-box');
                 box.classList.remove('hidden');
                 document.getElementById('sel-code').textContent = props.kode_puskesmas + ' · ' + (props.nama_kecamatan || '-');
                 document.getElementById('sel-name').textContent = props.nama_puskesmas;
-                document.getElementById('sel-meta').textContent = (props.status_igd_24jam ? 'IGD 24 Jam' : 'Poli Reguler') + ' · Spektrum ' + (props.spektrum_beban || '-');
-                document.getElementById('sel-psw').textContent = props.skor_psw !== null ? Number(props.skor_psw).toFixed(2) : '-';
+                document.getElementById('sel-meta').textContent = (props.status_igd_24jam ? 'IGD 24 Jam' : 'Poli Reguler') + ' · Spektrum ' + pswSpectrum;
+                document.getElementById('sel-psw').textContent = pswScore !== null && pswScore !== undefined ? Number(pswScore).toFixed(2) : '-';
                 document.getElementById('sel-nakes').textContent = (props.persentase_kelengkapan_nakes ?? 0) + '%';
                 document.getElementById('sel-visits').textContent = props.total_pasien_bulanan ?? 0;
 
@@ -485,6 +551,7 @@
 
                     const coords = feature.geometry.coordinates;
                     const wl = cachedWorkloadById[p.id];
+                    const pswScore = wl ? wl.skor_psw : p.skor_psw;
                     const fillColor = usePswColor && wl
                         ? wl.color
                         : (p.status_igd_24jam ? '#e37434' : '#007979');
@@ -504,7 +571,7 @@
                             '<div class="text-[10px] font-extrabold uppercase tracking-wider text-primary-dark">' + escapeHtml(p.kode_puskesmas) + ' &middot; Kec. ' + escapeHtml(p.nama_kecamatan || '-') + '</div>' +
                             '<div class="text-sm font-extrabold leading-snug text-ink">' + escapeHtml(p.nama_puskesmas) + '</div>' +
                             '<div class="grid grid-cols-3 gap-2 border-t border-primary/10 pt-2 tabular-nums">' +
-                                '<div><span class="block text-[10px] text-muted">PSW</span><strong>' + escapeHtml(p.skor_psw !== null ? Number(p.skor_psw).toFixed(2) : '-') + '</strong></div>' +
+                                '<div><span class="block text-[10px] text-muted">PSW</span><strong>' + escapeHtml(pswScore !== null && pswScore !== undefined ? Number(pswScore).toFixed(2) : '-') + '</strong></div>' +
                                 '<div><span class="block text-[10px] text-muted">Nakes</span><strong>' + escapeHtml((p.persentase_kelengkapan_nakes ?? 0) + '%') + '</strong></div>' +
                                 '<div><span class="block text-[10px] text-muted">Layanan</span><strong>' + (p.status_igd_24jam ? 'IGD 24J' : 'Reguler') + '</strong></div>' +
                             '</div>' +
@@ -562,10 +629,11 @@
             async function loadInitialData() {
                 statusEl.textContent = 'Memuat layer...';
                 try {
+                    const yearParam = '?tahun=' + encodeURIComponent(activeYear);
                     const [facRes, eqRes, wlRes] = await Promise.all([
                         fetch(urls.puskesmas, { headers: { Accept: 'application/json' } }),
-                        fetch(urls.equity, { headers: { Accept: 'application/json' } }),
-                        fetch(urls.workload, { headers: { Accept: 'application/json' } }),
+                        fetch(urls.equity + yearParam, { headers: { Accept: 'application/json' } }),
+                        fetch(urls.workload + yearParam, { headers: { Accept: 'application/json' } }),
                     ]);
 
                     if (!facRes.ok || !eqRes.ok || !wlRes.ok) {
@@ -588,6 +656,14 @@
                     renderDistrictBoundaries();
                     renderFacilities();
                     statusEl.textContent = 'Aktif (' + cachedFacilities.length + ' unit)';
+
+                    if (hasExplicitBuffer) {
+                        const covCheckbox = document.getElementById('toggle-coverage');
+                        if (covCheckbox && !covCheckbox.checked) {
+                            covCheckbox.checked = true;
+                            toggleCoverageLayer();
+                        }
+                    }
                 } catch (err) {
                     statusEl.textContent = 'Gagal memuat layer';
                 }
@@ -597,10 +673,12 @@
                 const checkbox = document.getElementById('toggle-coverage');
                 coverageGroup.clearLayers();
                 if (!checkbox.checked) {
+                    activeCoverageData = null;
                     if (map.hasLayer(coverageGroup)) { map.removeLayer(coverageGroup); }
-                    document.getElementById('kpi-coverage-label').textContent = 'Terlayani (' + initialSummary.bufferKm + ' km)';
-                    document.getElementById('kpi-coverage-pct').textContent = initialSummary.coveragePct + '%';
-                    document.getElementById('kpi-blankspot-km2').innerHTML = initialSummary.blankspotKm2 + ' <span class="text-sm font-bold text-muted">km&sup2;</span>';
+                    updateCoverageKpis(
+                        initialSummary.bufferKm,
+                        getSelectedCoverageMetrics(initialSummary.summary, initialSummary.perKecamatan),
+                    );
                     statusEl.textContent = 'Aktif (' + cachedFacilities.length + ' unit)';
                     updateLegend();
                     return;
@@ -615,10 +693,12 @@
                     });
                     if (!res.ok) { throw new Error('HTTP error'); }
                     const data = await res.json();
+                    activeCoverageData = data;
 
-                    document.getElementById('kpi-coverage-label').textContent = 'Terlayani (' + bufferKm + ' km)';
-                    document.getElementById('kpi-coverage-pct').textContent = (data.summary?.persentase_terlayani ?? 0) + '%';
-                    document.getElementById('kpi-blankspot-km2').innerHTML = (data.summary?.blankspot_km2 ?? 0) + ' <span class="text-sm font-bold text-muted">km&sup2;</span>';
+                    updateCoverageKpis(
+                        bufferKm,
+                        getSelectedCoverageMetrics(data.summary, data.per_kecamatan),
+                    );
 
                     L.geoJSON(data, {
                         style: (feature) => {
@@ -656,7 +736,11 @@
                 checkbox.disabled = true;
                 statusEl.textContent = 'Memuat zona jalan...';
                 try {
-                    const res = await fetch(urls.roadAccess, { headers: { Accept: 'application/json' } });
+                    const selectedDistrict = document.getElementById('district-focus-select')?.value || '';
+                    const roadUrl = selectedDistrict
+                        ? urls.roadAccess + '?kecamatan_id=' + encodeURIComponent(selectedDistrict)
+                        : urls.roadAccess;
+                    const res = await fetch(roadUrl, { headers: { Accept: 'application/json' } });
                     if (!res.ok) { throw new Error('HTTP error'); }
                     const data = await res.json();
 
@@ -809,7 +893,27 @@
             document.getElementById('toggle-equity').addEventListener('change', renderDistrictBoundaries);
             document.getElementById('toggle-psw').addEventListener('change', renderFacilities);
             document.getElementById('toggle-coverage').addEventListener('change', toggleCoverageLayer);
+            function refreshCoverageAndRoadLayersForDistrict() {
+                if (document.getElementById('toggle-coverage').checked && activeCoverageData) {
+                    const bufferKm = document.getElementById('coverage-buffer-select').value;
+                    updateCoverageKpis(
+                        bufferKm,
+                        getSelectedCoverageMetrics(activeCoverageData.summary, activeCoverageData.per_kecamatan),
+                    );
+                } else {
+                    updateCoverageKpis(
+                        initialSummary.bufferKm,
+                        getSelectedCoverageMetrics(initialSummary.summary, initialSummary.perKecamatan),
+                    );
+                }
+
+                if (document.getElementById('toggle-road-access').checked) {
+                    toggleRoadAccessLayer();
+                }
+            }
+
             document.getElementById('coverage-buffer-select').addEventListener('change', () => {
+                syncHeaderExportLinks();
                 if (document.getElementById('toggle-coverage').checked) { toggleCoverageLayer(); }
             });
             document.getElementById('toggle-road-access').addEventListener('change', toggleRoadAccessLayer);
@@ -818,6 +922,9 @@
             document.getElementById('district-focus-select').addEventListener('change', () => {
                 renderDistrictBoundaries();
                 renderFacilities();
+                syncHeaderExportLinks();
+                refreshCoverageAndRoadLayersForDistrict();
+
                 if (!document.getElementById('district-focus-select').value) {
                     map.setView(bogorCenter, 13);
                 }
@@ -830,6 +937,8 @@
                 mautGroup.clearLayers();
                 renderDistrictBoundaries();
                 renderFacilities();
+                syncHeaderExportLinks();
+                refreshCoverageAndRoadLayersForDistrict();
                 map.setView(bogorCenter, 13);
             });
 

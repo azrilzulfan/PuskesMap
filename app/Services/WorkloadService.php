@@ -35,10 +35,25 @@ class WorkloadService
      */
     public function calculatePSWIndex(?int $tahun = null): Collection
     {
-        $visitAggregateQuery = DB::table('kunjungan_pasien')
-            ->select('puskesmas_id', DB::raw('AVG(total_pasien_bulanan) AS avg_visits'))
-            ->when($tahun !== null, fn ($query) => $query->where('tahun', $tahun))
-            ->groupBy('puskesmas_id');
+        if ($tahun !== null) {
+            $visitAggregateQuery = DB::table('kunjungan_pasien')
+                ->select('puskesmas_id', DB::raw('AVG(total_pasien_bulanan) AS avg_visits'))
+                ->where('tahun', $tahun)
+                ->groupBy('puskesmas_id');
+        } else {
+            // When updating stored scores without an explicit year filter, evaluate each facility's latest recorded year instead of blending multiple years.
+            $latestYearSubquery = DB::table('kunjungan_pasien')
+                ->select('puskesmas_id', DB::raw('MAX(tahun) AS max_tahun'))
+                ->groupBy('puskesmas_id');
+
+            $visitAggregateQuery = DB::table('kunjungan_pasien AS kp')
+                ->joinSub($latestYearSubquery, 'latest_yr', function ($join): void {
+                    $join->on('latest_yr.puskesmas_id', '=', 'kp.puskesmas_id')
+                        ->on('latest_yr.max_tahun', '=', 'kp.tahun');
+                })
+                ->select('kp.puskesmas_id', DB::raw('AVG(kp.total_pasien_bulanan) AS avg_visits'))
+                ->groupBy('kp.puskesmas_id');
+        }
 
         $facilities = Puskesmas::query()
             ->join('kecamatan', 'kecamatan.id', '=', 'puskesmas.kecamatan_id')

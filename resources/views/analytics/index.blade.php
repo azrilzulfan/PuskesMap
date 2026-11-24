@@ -1,6 +1,6 @@
 @php
     $coverageByDistrict = collect($coverage['per_kecamatan'] ?? [])->keyBy('kecamatan_id');
-    $coveragePct = (float) ($coverage['summary']['persentase_terlayani'] ?? 0);
+    $coveragePct = (float) ($coverageScope['persentase_terlayani'] ?? $coverage['summary']['persentase_terlayani'] ?? 0);
     $hasActiveFilters = $selectedKecamatanId !== null || abs($bufferKm - 1.5) >= 0.01 || (int) $tahun !== 2025;
     $isAdminUser = (bool) auth()->user()?->isAdmin();
 @endphp
@@ -36,6 +36,16 @@
             <span class="hidden sm:inline">PDF</span>
         </a>
     </x-slot:headerActions>
+
+    @if ($errors->any())
+        <div role="alert" class="rounded-[20px] border-l-4 border-[#B42318] bg-white px-5 py-3.5 text-xs text-[#B42318] shadow-[0_6px_20px_rgba(0,121,121,0.06)]">
+            <ul class="list-disc space-y-1 pl-4 font-semibold">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     {{-- Row 1: 4 Compact Metric Cards (Kartu ke-4 Teal Gradient Highlight persis referensi) --}}
     <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -84,7 +94,7 @@
             </span>
             <div>
                 <p class="text-xs font-semibold text-muted">Area Blankspot</p>
-                <p class="mt-1 text-2xl font-extrabold tracking-tight text-ink tabular-nums">{{ $coverage['summary']['blankspot_km2'] }} <span class="text-sm font-bold text-muted">km&sup2;</span></p>
+                <p class="mt-1 text-2xl font-extrabold tracking-tight text-ink tabular-nums">{{ $coverageScope['blankspot_km2'] ?? $coverage['summary']['blankspot_km2'] }} <span class="text-sm font-bold text-muted">km&sup2;</span></p>
             </div>
         </article>
 
@@ -121,13 +131,13 @@
                     <div class="rounded-2xl bg-[#f7fbfa] p-4 shadow-[0_4px_14px_rgba(0,121,121,0.05)]">
                         <p class="text-[11px] font-semibold text-muted">Wilayah Terlayani</p>
                         <div class="mt-1.5 flex items-baseline gap-2">
-                            <span class="text-xl font-extrabold text-ink tabular-nums">{{ $coverage['summary']['luas_terlayani_km2'] }} km&sup2;</span>
+                            <span class="text-xl font-extrabold text-ink tabular-nums">{{ $coverageScope['luas_terlayani_km2'] ?? $coverage['summary']['luas_terlayani_km2'] }} km&sup2;</span>
                             <span class="text-[11px] font-bold text-primary">{{ $coveragePct }}%</span>
                         </div>
                     </div>
 
                     <div class="rounded-2xl bg-[#f7fbfa] p-4 shadow-[0_4px_14px_rgba(0,121,121,0.05)]">
-                        <p class="text-[11px] font-semibold text-muted">Kebutuhan Ideal Kota</p>
+                        <p class="text-[11px] font-semibold text-muted">{{ ($coverageScope['is_filtered'] ?? false) ? 'Kebutuhan Ideal Kec.' : 'Kebutuhan Ideal Kota' }}</p>
                         <div class="mt-1.5 flex items-baseline gap-2">
                             <span class="text-xl font-extrabold text-ink tabular-nums">{{ $equity['city_totals']['target_count'] }} Unit</span>
                             <span class="text-[11px] font-bold text-accent-strong">-{{ $equity['city_totals']['deficit'] }} defisit</span>
@@ -144,13 +154,13 @@
         {{-- Middle Card (3 cols): Semi-Circle Gauge (persis gaya Earnings 80%) --}}
         <article class="lg:col-span-3 flex flex-col justify-between rounded-[24px] bg-white p-6 shadow-[0_8px_24px_rgba(0,121,121,0.05)]">
             <div>
-                <h2 class="text-base font-extrabold text-ink">Cakupan Kota</h2>
+                <h2 class="text-base font-extrabold text-ink">Cakupan {{ $coverageScope['scope_label'] ?? 'Kota' }}</h2>
                 <p class="mt-0.5 text-xs font-medium text-muted">Total Penduduk Terdata</p>
                 <p class="mt-2 text-2xl font-extrabold tracking-tight text-primary-dark tabular-nums">
                     {{ number_format($equity['city_totals']['population'], 0, ',', '.') }}
                 </p>
                 <p class="mt-1 text-xs font-medium text-muted">
-                    {{ $coverage['summary']['luas_kota_km2'] }} km&sup2; luas administratif Kota Bogor
+                    {{ $coverageScope['luas_wilayah_km2'] ?? $coverage['summary']['luas_kota_km2'] }} km&sup2; luas administratif {{ $coverageScope['scope_label'] ?? 'Kota Bogor' }}
                 </p>
             </div>
 

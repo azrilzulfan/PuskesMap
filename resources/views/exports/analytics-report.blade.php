@@ -22,27 +22,30 @@
     </style>
 </head>
 <body>
+@php
+    $coverageByDistrict = collect($coverage['per_kecamatan'] ?? [])->keyBy('kecamatan_id');
+@endphp
     <h1>Laporan Analitik Spasial Layanan Puskesmas Kota Bogor (PuskesMap SDSS)</h1>
     <div class="meta">
-        Dicetak pada: {{ $generatedAt }} &bull; Tahun Kunjungan: {{ $tahun }} &bull; Radius Buffer Analisis: {{ $bufferKm }} km
+        Dicetak pada: {{ $generatedAt }} &bull; Wilayah: {{ $selectedDistrictName ? 'Kec. '.$selectedDistrictName : 'Seluruh Kota Bogor' }} &bull; Tahun Kunjungan: {{ $tahun }} &bull; Radius Buffer Analisis: {{ $bufferKm }} km
     </div>
 
     <table class="grid kpi">
         <tr>
             <td>
                 <div class="kpi-label">Cakupan Wilayah ({{ $bufferKm }} km)</div>
-                <div class="kpi-value">{{ $coverage['summary']['persentase_terlayani'] }}% Terlayani</div>
-                <div>Blankspot: {{ $coverage['summary']['blankspot_km2'] }} km&sup2; ({{ $coverage['summary']['persentase_blankspot'] }}%)</div>
+                <div class="kpi-value">{{ $coverageScope['persentase_terlayani'] ?? $coverage['summary']['persentase_terlayani'] }}% Terlayani</div>
+                <div>Blankspot: {{ $coverageScope['blankspot_km2'] ?? $coverage['summary']['blankspot_km2'] }} km&sup2; ({{ $coverageScope['persentase_blankspot'] ?? $coverage['summary']['persentase_blankspot'] }}%)</div>
             </td>
             <td>
                 <div class="kpi-label">Rasio Ekuitas (1 : {{ number_format($equity['standard_population_per_facility'], 0, ',', '.') }})</div>
                 <div class="kpi-value">{{ $equity['city_totals']['puskesmas_count'] }} / {{ $equity['city_totals']['target_count'] }} Unit</div>
-                <div>Defisit Kota: {{ $equity['city_totals']['deficit'] }} unit</div>
+                <div>{{ $selectedDistrictName ? 'Defisit Wilayah' : 'Defisit Kota' }}: {{ $equity['city_totals']['deficit'] }} unit</div>
             </td>
             <td>
-                <div class="kpi-label">Total Populasi Kota</div>
+                <div class="kpi-label">{{ $selectedDistrictName ? 'Total Populasi Kecamatan' : 'Total Populasi Kota' }}</div>
                 <div class="kpi-value">{{ number_format($equity['city_totals']['population'], 0, ',', '.') }} Jiwa</div>
-                <div>Luas Kota: {{ $coverage['summary']['luas_kota_km2'] }} km&sup2;</div>
+                <div>Luas Wilayah: {{ $coverageScope['luas_wilayah_km2'] ?? $coverage['summary']['luas_kota_km2'] }} km&sup2;</div>
             </td>
             <td>
                 <div class="kpi-label">Spektrum Beban PSW</div>
@@ -61,18 +64,25 @@
                 <th class="num">Puskesmas</th>
                 <th class="num">Target Ideal</th>
                 <th>Status Rasio</th>
+                <th class="num">Terlayani (%)</th>
+                <th class="num">Blankspot (km&sup2;)</th>
                 <th class="num">Rata-rata PSW</th>
                 <th>Spektrum</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($equity['districts'] as $district)
+                @php
+                    $distCov = $coverageByDistrict->get($district['id']);
+                @endphp
                 <tr>
                     <td>{{ $district['nama_kecamatan'] }}</td>
                     <td class="num">{{ number_format($district['jumlah_penduduk'], 0, ',', '.') }}</td>
                     <td class="num">{{ $district['puskesmas_count'] }}</td>
                     <td class="num">{{ $district['target_count'] }}</td>
                     <td>{{ $district['ratio_status'] }}</td>
+                    <td class="num">{{ $distCov ? $distCov['persentase_terlayani'].'%' : '-' }}</td>
+                    <td class="num">{{ $distCov ? $distCov['blankspot_km2'] : '-' }}</td>
                     <td class="num">{{ $district['avg_psw_score'] }}</td>
                     <td>{{ $district['psw_spectrum'] }}</td>
                 </tr>

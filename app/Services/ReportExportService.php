@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\WorkloadSpectrum;
+use App\Models\Kecamatan;
 use App\Models\Puskesmas;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
@@ -81,7 +82,11 @@ class ReportExportService
 
     public function downloadPdf(?int $kecamatanId = null, float $bufferKm = 1.5, int $tahun = 2025): Response
     {
+        $selectedDistrictName = $kecamatanId !== null
+            ? Kecamatan::query()->whereKey($kecamatanId)->value('nama_kecamatan')
+            : null;
         $coverage = $this->spatialAnalysis->calculateServiceArea($bufferKm);
+        $coverageScope = $this->spatialAnalysis->summarizeCoverageScope($coverage, $kecamatanId, $selectedDistrictName);
         $equity = $this->spatialAnalysis->getEquityAnalysis($kecamatanId, $tahun);
         $workload = $this->workloadService->getWorkloadDistribution($kecamatanId, $tahun);
         $facilities = $this->collectFacilityReportRows($kecamatanId, $tahun);
@@ -90,9 +95,12 @@ class ReportExportService
 
         $pdf = Pdf::loadView('exports.analytics-report', [
             'generatedAt' => now('Asia/Jakarta')->format('d M Y H:i').' WIB',
+            'selectedKecamatanId' => $kecamatanId,
+            'selectedDistrictName' => $selectedDistrictName,
             'bufferKm' => $bufferKm,
             'tahun' => $tahun,
             'coverage' => $coverage,
+            'coverageScope' => $coverageScope,
             'equity' => $equity,
             'workload' => $workload,
             'facilities' => $facilities,

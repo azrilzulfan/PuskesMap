@@ -103,16 +103,11 @@
             <div class="space-y-4">
                 <h2 class="border-b border-primary/10 pb-3 text-base font-extrabold text-ink">Status &amp; Jam Operasional</h2>
 
-                <div class="grid grid-cols-1 gap-2 rounded-2xl bg-[#f7fbfa] p-4 sm:grid-cols-2">
+                <div class="rounded-2xl bg-[#f7fbfa] p-4">
                     <label class="flex min-h-10 items-center gap-2.5 text-xs font-bold text-ink cursor-pointer">
                         <input type="checkbox" name="status_igd_24jam" value="1" class="size-4 accent-primary"
                                @checked(old('status_igd_24jam', $puskesmas->operasional?->status_igd_24jam ?? false))>
                         <span>IGD 24 Jam</span>
-                    </label>
-                    <label class="flex min-h-10 items-center gap-2.5 text-xs font-bold text-ink cursor-pointer">
-                        <input type="checkbox" name="rawat_inap" value="1" class="size-4 accent-primary"
-                               @checked(old('rawat_inap', $puskesmas->operasional?->rawat_inap ?? false))>
-                        <span>Rawat Inap</span>
                     </label>
                 </div>
 

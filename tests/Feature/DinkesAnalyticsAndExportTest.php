@@ -7,7 +7,9 @@ use App\Models\Operasional;
 use App\Models\Puskesmas;
 use App\Models\TenagaMedis;
 use App\Models\User;
+use App\Services\SpatialAnalysisService;
 use App\Services\WorkloadService;
+use Illuminate\Support\Facades\Cache;
 
 test('dinkes dashboard and analysis apis return postgis coverage, equity, workload spectrum, and road access', function () {
     $dinkes = User::factory()->pemerintah()->create();
@@ -250,4 +252,117 @@ test('analytics index sorts all matching facilities by requested year before pag
         ->get(route('analitik.index', ['tahun' => 2025]))
         ->assertOk()
         ->assertSee('Puskesmas Prioritas 2025');
+});
+
+test('workload service defaults to each facility latest year without blending multiple years', function () {
+    $kecamatan = Kecamatan::factory()->withPolygon()->create(['jumlah_penduduk' => 100000]);
+
+    $facilityA = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatan->id,
+        'kode_puskesmas' => 'P32710901',
+        'jumlah_posyandu' => 20,
+        'jumlah_sekolah' => 20,
+    ]);
+    $facilityB = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatan->id,
+        'kode_puskesmas' => 'P32710902',
+        'jumlah_posyandu' => 20,
+        'jumlah_sekolah' => 20,
+    ]);
+
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityA->id, 'tahun' => 2025, 'total_pasien_bulanan' => 800]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityA->id, 'tahun' => 2026, 'total_pasien_bulanan' => 200]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityB->id, 'tahun' => 2025, 'total_pasien_bulanan' => 500]);
+
+    $scores = app(WorkloadService::class)->calculatePSWIndex(null)->keyBy('puskesmas_id');
+
+    expect((float) $scores[$facilityA->id]['avg_visits'])->toBe(200.0)
+        ->and((float) $scores[$facilityB->id]['avg_visits'])->toBe(500.0);
+});
+
+test('analytics index, internal map, pdf view, rbac, and spatial cache invalidation work accurately per district and year', function () {
+    $dinkes = User::factory()->pemerintah()->create();
+    $admin = User::factory()->admin()->create();
+
+    $kecamatanCentral = Kecamatan::factory()->withPolygon()->create([
+        'kode_kecamatan' => '3271040',
+        'nama_kecamatan' => 'Bogor Tengah',
+        'jumlah_penduduk' => 100000,
+    ]);
+    $kecamatanEast = Kecamatan::factory()->create([
+        'kode_kecamatan' => '3271020',
+        'nama_kecamatan' => 'Bogor Timur',
+        'jumlah_penduduk' => 90000,
+        'geom' => 'MULTIPOLYGON(((106.820 -6.620, 106.860 -6.620, 106.860 -6.600, 106.820 -6.600, 106.820 -6.620)))',
+    ]);
+
+    $facilityA = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatanCentral->id,
+        'nama_puskesmas' => 'Puskesmas Tengah Uji',
+        'x_long' => 106.7950,
+        'y_lat' => -6.5950,
+    ]);
+    Operasional::factory()->create(['puskesmas_id' => $facilityA->id]);
+    TenagaMedis::factory()->create(['puskesmas_id' => $facilityA->id]);
+    KunjunganPasien::factory()->create(['puskesmas_id' => $facilityA->id, 'tahun' => 2026, 'total_pasien_bulanan' => 600]);
+
+    JangkauanJalan::factory()->withPolygon()->create(['kecamatan_id' => $kecamatanCentral->id]);
+    app(WorkloadService::class)->recalculateAndPersistScores(2026);
+
+    $service = app(SpatialAnalysisService::class);
+    $fullCoverage = $service->calculateServiceArea(1.5);
+    $expectedDistrictCov = collect($fullCoverage['per_kecamatan'])->firstWhere('kecamatan_id', $kecamatanCentral->id);
+
+    $this->get(route('analitik.export.csv'))->assertRedirect(route('login'));
+    $this->get(route('analitik.export.pdf'))->assertRedirect(route('login'));
+    $this->getJson(route('api.v1.analisis.workload'))->assertUnauthorized();
+    $this->getJson(route('api.v1.analisis.road-access'))->assertUnauthorized();
+
+    $this->actingAs($dinkes)
+        ->get(route('analitik.index', ['kecamatan_id' => $kecamatanCentral->id, 'tahun' => 2026]))
+        ->assertOk()
+        ->assertViewHas('coverageScope', fn (array $scope): bool => $scope['is_filtered'] === true
+            && $scope['scope_label'] === 'Kec. Bogor Tengah'
+            && $scope['persentase_terlayani'] === (float) $expectedDistrictCov['persentase_terlayani']
+            && $scope['blankspot_km2'] === (float) $expectedDistrictCov['blankspot_km2'])
+        ->assertSee('Cakupan Kec. Bogor Tengah')
+        ->assertDontSee('Puskesmas di Bogor Timur');
+
+    $this->actingAs($dinkes)
+        ->get('/analitik?kecamatan_id='.$kecamatanCentral->id.'&buffer_km=3.0&tahun=2026')
+        ->assertOk()
+        ->assertSee('Cakupan Kec. Bogor Tengah')
+        ->assertSee('Terlayani (3 km)');
+
+    $this->actingAs($dinkes)
+        ->get('/analitik/peta?kecamatan_id='.$kecamatanCentral->id.'&buffer_km=3.0&tahun=2026')
+        ->assertOk()
+        ->assertSee('const activeYear = 2026;', false)
+        ->assertSee('const hasExplicitBuffer = true;', false)
+        ->assertSee("'?tahun=' + encodeURIComponent(activeYear)", false);
+
+    $this->actingAs($dinkes)
+        ->getJson(route('api.v1.analisis.road-access', ['kecamatan_id' => $kecamatanEast->id]))
+        ->assertOk()
+        ->assertJsonCount(0, 'features');
+
+    $this->actingAs($admin)
+        ->get(route('analitik.export.pdf', ['kecamatan_id' => $kecamatanCentral->id, 'buffer_km' => 1.5, 'tahun' => 2026]))
+        ->assertOk()
+        ->assertHeader('content-type', 'application/pdf');
+
+    $this->actingAs($dinkes)->getJson(route('api.v1.analisis.coverage', ['buffer_km' => 1.5]))->assertOk();
+    $this->actingAs($dinkes)->getJson(route('api.v1.analisis.road-access'))->assertOk();
+    expect(Cache::has('sdss:coverage:1.5'))->toBeTrue()
+        ->and(Cache::has('sdss:road_access:all'))->toBeTrue();
+
+    $this->actingAs($admin)->put(route('admin.operasional.update', $facilityA), [
+        'status_igd_24jam' => '1',
+        'jam_buka' => '07:30:00',
+        'jam_tutup' => '14:00:00',
+        'kontak_darurat' => '0251-8111222',
+    ])->assertRedirect(route('admin.operasional.edit', $facilityA));
+
+    expect(Cache::has('sdss:coverage:1.5'))->toBeFalse()
+        ->and(Cache::has('sdss:road_access:all'))->toBeFalse();
 });

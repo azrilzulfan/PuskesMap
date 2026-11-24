@@ -1,6 +1,17 @@
 @php
-    $activeUsersCount = $users->getCollection()->where('is_active', true)->count();
-    $adminUsersCount = $users->getCollection()->filter(fn ($u) => $u->isAdmin())->count();
+    $activeUsersCount = $activeUsersTotal ?? $users->getCollection()->where('is_active', true)->count();
+    $adminUsersCount = $adminUsersTotal ?? $users->getCollection()->filter(fn ($u) => $u->isAdmin())->count();
+    $isCreateOld = old('_form_context') === 'create';
+    $isEditOld = old('_form_context') === 'edit';
+    $initialEditUser = [
+        'id' => $isEditOld ? (old('_edit_user_id') ? (int) old('_edit_user_id') : null) : null,
+        'name' => $isEditOld ? (string) old('name', '') : '',
+        'email' => $isEditOld ? (string) old('email', '') : '',
+        'role' => $isEditOld ? (string) old('role', 'pemerintah') : 'pemerintah',
+        'is_active' => $isEditOld ? (string) old('is_active', '1') : '1',
+        'update_url' => $isEditOld ? (string) old('_edit_update_url', '#') : '#',
+        'is_self' => $isEditOld && ((int) old('_edit_user_id') === (int) auth()->id()),
+    ];
 @endphp
 
 <x-dashboard-shell
@@ -9,16 +20,8 @@
     subtitle="Kelola akun internal Dinas Kesehatan dan Administrator (soft-deactivation menjaga audit_log)"
 >
     <div x-data="{
-            isEditOpen: false,
-            editingUser: {
-                id: null,
-                name: '',
-                email: '',
-                role: 'pemerintah',
-                is_active: '1',
-                update_url: '#',
-                is_self: false
-            },
+            isEditOpen: {{ $isEditOld ? 'true' : 'false' }},
+            editingUser: {{ \Illuminate\Support\Js::from($initialEditUser) }},
             openEdit(user) {
                 this.editingUser = {
                     ...user,
@@ -37,17 +40,18 @@
             <form method="POST" action="{{ route('admin.users.store') }}"
                   class="lg:col-span-8 rounded-[24px] bg-white p-6 shadow-[0_8px_24px_rgba(0,121,121,0.05)]">
                 @csrf
+                <input type="hidden" name="_form_context" value="create">
                 <h2 class="text-base font-extrabold text-ink">Tambah Akun Internal Baru</h2>
 
                 <div class="mt-4 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
                     <div>
                         <label for="name" class="block text-xs font-bold text-ink">Nama Lengkap</label>
-                        <input id="name" name="name" type="text" required value="{{ old('name') }}"
+                        <input id="name" name="name" type="text" required value="{{ $isCreateOld ? old('name') : '' }}"
                                class="mt-1.5 min-h-11 w-full rounded-xl border border-[#7B8A97] bg-input px-3.5 py-2 text-sm text-ink focus:bg-white focus:border-primary">
                     </div>
                     <div>
                         <label for="email" class="block text-xs font-bold text-ink">Email</label>
-                        <input id="email" name="email" type="email" required value="{{ old('email') }}"
+                        <input id="email" name="email" type="email" required value="{{ $isCreateOld ? old('email') : '' }}"
                                class="mt-1.5 min-h-11 w-full rounded-xl border border-[#7B8A97] bg-input px-3.5 py-2 text-sm text-ink focus:bg-white focus:border-primary">
                     </div>
                     <div>
@@ -55,7 +59,7 @@
                         <select id="role" name="role" required
                                 class="mt-1.5 min-h-11 w-full rounded-xl border border-[#7B8A97] bg-input px-3.5 py-2 text-sm text-ink focus:bg-white focus:border-primary">
                             @foreach ($roles as $role)
-                                <option value="{{ $role->value }}" @selected(old('role') === $role->value)>{{ $role->label() }}</option>
+                                <option value="{{ $role->value }}" @selected($isCreateOld && old('role') === $role->value)>{{ $role->label() }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -85,7 +89,7 @@
                 </div>
                 <div class="mt-5 grid grid-cols-2 gap-3 border-t border-white/15 pt-3 text-xs">
                     <div>
-                        <p class="text-white/75">Aktif (Hal. Ini)</p>
+                        <p class="text-white/75">Akun Aktif</p>
                         <p class="font-extrabold text-card-peach tabular-nums">{{ $activeUsersCount }}</p>
                     </div>
                     <div>
@@ -105,7 +109,7 @@
             </div>
         @endif
 
-        @if ($errors->any())
+        @if ($errors->any() && ! $isEditOld)
             <div role="alert" class="rounded-[20px] border-l-4 border-[#B42318] bg-white px-5 py-3.5 text-xs text-[#B42318] shadow-[0_6px_20px_rgba(0,121,121,0.06)]">
                 <ul class="list-disc space-y-1 pl-4 font-semibold">
                     @foreach ($errors->all() as $error)
@@ -201,6 +205,19 @@
                 <form method="POST" :action="editingUser.update_url" class="mt-5 space-y-4">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" name="_form_context" value="edit">
+                    <input type="hidden" name="_edit_user_id" :value="editingUser.id">
+                    <input type="hidden" name="_edit_update_url" :value="editingUser.update_url">
+
+                    @if ($errors->any() && $isEditOld)
+                        <div role="alert" class="rounded-xl border border-[#B42318]/30 bg-[#FDECEC] px-3.5 py-2.5 text-xs text-[#B42318]">
+                            <ul class="list-disc space-y-0.5 pl-4 font-semibold">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
                     <div>
                         <label for="edit_name" class="block text-xs font-bold text-ink">Nama Lengkap</label>

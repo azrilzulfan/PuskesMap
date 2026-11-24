@@ -80,6 +80,26 @@ test('public geojson api lists and filters puskesmas with related records', func
 
     $this->getJson(route('api.v1.puskesmas.show', ['puskesmas' => 999999]))
         ->assertNotFound();
+
+    $this->getJson(route('api.v1.puskesmas.index', [
+        'kecamatan_id' => $kecA->id,
+        'jam_operasional' => 'buka_sekarang',
+    ]))->assertOk()
+        ->assertJsonPath('count', 1)
+        ->assertJsonPath('features.0.properties.nama_puskesmas', 'Puskesmas Bogor Tengah');
+
+    $this->getJson(route('api.v1.puskesmas.index', [
+        'jam_operasional' => 'pagi',
+    ]))->assertOk()
+        ->assertJsonPath('count', 2);
+
+    $this->getJson(route('api.v1.puskesmas.nearest', ['lat' => -6.595, 'lng' => 106.795, 'limit' => 99]))
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('limit');
+
+    $this->getJson(route('api.v1.puskesmas.radius', ['lat' => -6.595, 'lng' => 106.795, 'radius' => 50]))
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors('radius');
 });
 
 test('nearest and radius spatial endpoints use geodesic postgis distance and buffer geometry', function () {
@@ -206,7 +226,37 @@ test('recommendation endpoint enforces kota bogor polygon boundary and computes 
 
     $filteredResponse->assertOk()
         ->assertJsonPath('radius_meters', 1000)
-        ->assertJsonCount(2, 'recommendations');
+        ->assertJsonCount(2, 'recommendations')
+        ->assertJsonPath('recommendations.0.raw.crowd', 211.76);
+
+    $inactiveDinkes = User::factory()->pemerintah()->inactive()->create();
+    $this->actingAs($inactiveDinkes)
+        ->postJson(route('api.v1.rekomendasi'), [
+            'lat' => -6.5950,
+            'lng' => 106.7950,
+            'scenario' => 'pemda',
+        ])
+        ->assertForbidden();
+
+    // Remove the only IGD 24 Jam facility inside 1 km to test emergency fallback and empty-radius response.
+    $p1->operasional()->update(['status_igd_24jam' => false]);
+
+    $this->postJson(route('api.v1.rekomendasi'), [
+        'lat' => -6.5950,
+        'lng' => 106.7950,
+        'scenario' => 'darurat',
+        'radius' => 1000,
+    ])->assertOk()
+        ->assertJsonPath('recommendations.0.facility.nama_puskesmas', 'Puskesmas Reguler Terdekat');
+
+    $this->postJson(route('api.v1.rekomendasi'), [
+        'lat' => -6.6250,
+        'lng' => 106.8250,
+        'scenario' => 'reguler',
+        'radius' => 1000,
+    ])->assertOk()
+        ->assertJsonPath('total_evaluated', 0)
+        ->assertJsonCount(0, 'recommendations');
 });
 
 test('public facility detail endpoint returns latest 12 months visit history ordered chronologically', function () {

@@ -31,6 +31,8 @@ class UserController extends Controller
         return view('admin.users.index', [
             'users' => $users,
             'roles' => UserRole::cases(),
+            'activeUsersTotal' => User::query()->where('is_active', true)->count(),
+            'adminUsersTotal' => User::query()->where('role', UserRole::Admin)->count(),
         ]);
     }
 

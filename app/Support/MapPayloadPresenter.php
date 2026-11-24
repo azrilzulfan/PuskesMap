@@ -33,14 +33,17 @@ class MapPayloadPresenter
      */
     public static function presentFacilities(Collection $facilities): array
     {
-        return $facilities->values()->map(function (Puskesmas $facility, int $index): array {
+        $centerLat = (float) config('sdss.spatial.bogor_center.lat', self::DEFAULT_CENTER_LAT);
+        $centerLng = (float) config('sdss.spatial.bogor_center.lng', self::DEFAULT_CENTER_LNG);
+
+        return $facilities->values()->map(function (Puskesmas $facility, int $index) use ($centerLat, $centerLng): array {
             $operasional = $facility->operasional;
             $tenagaMedis = $facility->tenagaMedis;
             $kunjungan = $facility->latestKunjungan;
 
             $lat = (float) $facility->y_lat;
             $lng = (float) $facility->x_long;
-            $distKm = self::haversineKm(self::DEFAULT_CENTER_LAT, self::DEFAULT_CENTER_LNG, $lat, $lng);
+            $distKm = self::haversineKm($centerLat, $centerLng, $lat, $lng);
 
             $pswScore = round((float) ($facility->skor_psw ?? 0.0), 4);
             $crowdStatus = $kunjungan?->status_kepadatan ?? CrowdStatus::Sedang;
@@ -57,7 +60,7 @@ class MapPayloadPresenter
                 'lng' => $lng,
                 'hours' => $operasional?->formattedHoursLabel() ?? 'Buka 07.30 – 14.00',
                 'hours_duration' => $operasional?->durationHours() ?? 6.5,
-                'is_open' => $operasional?->isOpenAt() ?? true,
+                'is_open' => $operasional?->isOpenAt() ?? false,
                 'igd' => (bool) ($operasional?->status_igd_24jam ?? false),
                 'inap' => (bool) ($operasional?->rawat_inap ?? false),
                 'bpjs' => true,
