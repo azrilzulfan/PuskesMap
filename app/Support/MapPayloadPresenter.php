@@ -15,6 +15,39 @@ class MapPayloadPresenter
     private const DEFAULT_CENTER_LNG = 106.806039;
 
     /**
+     * Verified photo paths per facility code under public/images/puskesmas.
+     *
+     * @var array<string, string>
+     */
+    private const FACILITY_IMAGES = [
+        'P3271010101' => 'images/puskesmas/1_Bogor Selatan/1.jpg',
+        'P3271010205' => 'images/puskesmas/2_Mulyaharjo/2.jpg',
+        'P3271010102' => 'images/puskesmas/3_Cipaku/3.jpg',
+        'P3271010204' => 'images/puskesmas/4_Bondongan/4.jpg',
+        'P3271010203' => 'images/puskesmas/5_Lawang Gintung/5.jpg',
+        'P3271020101' => 'images/puskesmas/6_Bogor Timur/6.jpg',
+        'P3271020202' => 'images/puskesmas/7_Pulo armyn/7.jpg',
+        'P3271030202' => 'images/puskesmas/8_Bogor Utara/8.jpg',
+        'P3271030203' => 'images/puskesmas/9_Warung Jambu/9.jpg',
+        'P3271030101' => 'images/puskesmas/10_Tegal Gundil/10.jpg',
+        'P3271040101' => 'images/puskesmas/11_Bogor Tengah/11.jpg',
+        'P3271040205' => 'images/puskesmas/12_Merdeka/12.jpg',
+        'P3271040203' => 'images/puskesmas/13_Gang Aut/13.jpg',
+        'P3271040204' => 'images/puskesmas/14_Belong/14.jpg',
+        'P3271040202' => 'images/puskesmas/15_Sempur/15.jpg',
+        'P3271050204' => 'images/puskesmas/16_Pasir Mulya/16.jpg',
+        'P3271050102' => 'images/puskesmas/17_Semplak/17.jpg',
+        'P3271050203' => 'images/puskesmas/18_Pancasan/18.jpg',
+        'P3271050205' => 'images/puskesmas/19_Sindang Barang/19.jpg',
+        'P3271050201' => 'images/puskesmas/20_Gang kelor/20.jpg',
+        'P3271060101' => 'images/puskesmas/21_Tanah sereal/21.jpg',
+        'P3271060202' => 'images/puskesmas/22_Pondok rumput/22.jpg',
+        'P3271060104' => 'images/puskesmas/23_Kedung Badak/23.jpg',
+        'P3271060203' => 'images/puskesmas/24_Kayu Manis/24.jpg',
+        'P3271060205' => 'images/puskesmas/25_Mekar Wangi/25.jpg',
+    ];
+
+    /**
      * @var array<int, string>
      */
     private const PASTEL_COLORS = [
@@ -60,6 +93,8 @@ class MapPayloadPresenter
                 'lng' => $lng,
                 'hours' => $operasional?->formattedHoursLabel() ?? 'Buka 07.30 – 14.00',
                 'hours_duration' => $operasional?->durationHours() ?? 6.5,
+                'open_hour' => self::timeStringToDecimalHour($operasional?->jam_buka, 7.5),
+                'close_hour' => self::timeStringToDecimalHour($operasional?->jam_tutup, 14.0),
                 'is_open' => $operasional?->isOpenAt() ?? false,
                 'igd' => (bool) ($operasional?->status_igd_24jam ?? false),
                 'inap' => (bool) ($operasional?->rawat_inap ?? false),
@@ -77,6 +112,7 @@ class MapPayloadPresenter
                 'psw_index' => WorkloadSpectrum::fromScore($pswScore)->value,
                 'psw_score' => $pswScore,
                 'color' => self::PASTEL_COLORS[$index % count(self::PASTEL_COLORS)],
+                'image' => self::FACILITY_IMAGES[$facility->kode_puskesmas] ?? null,
                 'distance' => number_format($distKm, 1, ',', '.').' km',
                 'official_url' => $facility->website_url ?? 'https://dinkes.kotabogor.go.id',
                 'detail_url' => route('puskesmas.show', ['kode_puskesmas' => $facility->kode_puskesmas]),
@@ -137,5 +173,17 @@ class MapPayloadPresenter
             + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * (sin($dLng / 2) ** 2);
 
         return 2 * $earthRadiusKm * atan2(sqrt($a), sqrt(1 - $a));
+    }
+
+    /**
+     * Convert HH:MM[:SS] string into decimal hours for client-side schedule checks.
+     */
+    private static function timeStringToDecimalHour(?string $time, float $fallback): float
+    {
+        if ($time === null || ! preg_match('/^(\d{1,2}):(\d{2})/', $time, $matches)) {
+            return $fallback;
+        }
+
+        return round(((int) $matches[1]) + (((int) $matches[2]) / 60), 4);
     }
 }

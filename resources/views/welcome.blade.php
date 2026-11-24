@@ -83,318 +83,21 @@
         ],
     ];
 
-    $highlights = [
-        [
-            'title' => 'IGD 24 Jam',
-            'desc' => 'Puskesmas yang melayani kegawatdaruratan sepanjang hari.',
-            'img' => 'images/igd24jam.png',
-            'badge' => 'Siaga Darurat',
-        ],
-        [
-            'title' => 'SDM Lengkap',
-            'desc' => 'Pemetaan ketersediaan 9 profesi tenaga kesehatan Puskesmas.',
-            'img' => 'images/buka-sekarang.png',
-            'badge' => '9 Profesi Nakes',
-        ],
-        [
-            'title' => 'Buka Sekarang',
-            'desc' => 'Puskesmas yang sedang beroperasi melayani masyarakat hari ini.',
-            'img' => 'images/buka-sekarang.png',
-            'badge' => 'Operasional Aktif',
-        ],
-    ];
-
-    $boardNotices = [
-        ['tag' => 'IGD 24 Jam', 'title' => '6 Puskesmas Induk Siaga Gawat Darurat 24 Jam', 'meta' => 'Kota Bogor', 'highlight' => true],
-        ['tag' => 'Permenkes 43', 'title' => 'Evaluasi Kepatuhan 9 Profesi Tenaga Kesehatan Puskesmas', 'meta' => 'Standar Nasional', 'highlight' => false],
-        ['tag' => 'Rekomendasi Lokasi', 'title' => 'Rekomendasi Puskesmas Terdekat & Terbaik dari Lokasi Anda', 'meta' => 'Pilihan Cerdas', 'highlight' => false],
-        ['tag' => 'Radius Spasial', 'title' => 'Filter Jangkauan Geodetik 1 km, 3 km, hingga 5 km dari Lokasimu', 'meta' => 'WebGIS Interaktif', 'highlight' => false],
-        ['tag' => 'Analitik SDSS', 'title' => 'Pemetaan Indeks Beban Wilayah (PSW-Index) 6 Kecamatan', 'meta' => 'Dinas Kesehatan', 'highlight' => false],
-    ];
+    $puskesmas = $puskesmas ?? [];
+    $bogorCenter = $bogorCenter ?? config('sdss.spatial.bogor_center', [
+        'lat' => -6.597147,
+        'lng' => 106.806039,
+    ]);
 
     $cardColors = ['bg-card-mint', 'bg-card-peach', 'bg-card-green', 'bg-card-salmon', 'bg-card-blue'];
 
-    /**
-     * Data kartu puskesmas pada landing page (25 puskesmas Kota Bogor sesuai dataset resmi 2025–2026).
-     * Gambar masing-masing puskesmas tersimpan di: public/images/puskesmas/{folder_name}/
-     */
-    $puskesmas = [
-        [
-            'name' => 'Puskesmas Bogor Selatan',
-            'district' => 'Bogor Selatan',
-            'address' => 'Jl. Batu Tulis No.82, RT.02/RW.08, Kec. Bogor Selatan, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Rendah',
-            'image' => 'images/puskesmas/1_Bogor Selatan/1.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Mulyaharja',
-            'district' => 'Bogor Selatan',
-            'address' => 'Jl. Raya Cibeuruem No.14, RT.03/RW.03, Mulyaharja, Kec. Bogor Selatan, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/2_Mulyaharjo/2.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Cipaku',
-            'district' => 'Bogor Selatan',
-            'address' => 'Jl. Raya Cipaku No.1, Kec. Bogor Selatan, Kota Bogor',
-            'hours' => '08.00 – 14.00 WIB',
-            'igd' => true,
-            'inap' => false,
-            'nakes' => '89%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/3_Cipaku/3.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Bondongan',
-            'district' => 'Bogor Selatan',
-            'address' => 'Jl. Pahlawan No.106 68A, RT.02/RW.18, Kec. Bogor Selatan, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Rendah',
-            'image' => 'images/puskesmas/4_Bondongan/4.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Lawang Gintung',
-            'district' => 'Bogor Selatan',
-            'address' => 'Jl. Lawang Gintung No.12, RT.03/RW.05, Lawanggintung, Kec. Bogor Selatan, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/5_Lawang Gintung/5.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Bogor Timur',
-            'district' => 'Bogor Timur',
-            'address' => 'Jl. Ciheuleut No.6, RT.01/RW.11, Baranangsiang, Kec. Bogor Timur, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => true,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/6_Bogor Timur/6.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Pulo Armyn',
-            'district' => 'Bogor Timur',
-            'address' => 'Jl. Raya Tajur No.40, RT.02/RW.01, Kec. Bogor Timur, Kota Bogor',
-            'hours' => '08.00 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '89%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/7_Pulo armyn/7.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Bogor Utara',
-            'district' => 'Bogor Utara',
-            'address' => 'Jl. Raden Kan\'an No.81, RT.05/RW.04, Kec. Bogor Utara, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => true,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/8_Bogor Utara/8.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Warung Jambu',
-            'district' => 'Bogor Utara',
-            'address' => 'Komplek Perumahan Bumi Indraprasta, Jl. Gatotkaca Raya No.1, RT.04/RW.01, Kec. Bogor Utara, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Padat',
-            'image' => 'images/puskesmas/9_Warung Jambu/9.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Tegal Gundil',
-            'district' => 'Bogor Utara',
-            'address' => 'Jl. Palupuh Raya No.1, RT.01/RW.02, Kec. Bogor Utara, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '89%',
-            'crowd' => 'Rendah',
-            'image' => 'images/puskesmas/10_Tegal Gundil/10.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Bogor Tengah',
-            'district' => 'Bogor Tengah',
-            'address' => 'Jl. Telepon No.1, RT.002/RW.001, Pabaton, Kec. Bogor Tengah, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => true,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Rendah',
-            'image' => 'images/puskesmas/11_Bogor Tengah/11.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Merdeka',
-            'district' => 'Bogor Tengah',
-            'address' => 'Jl. Merdeka No.114, Ciwaringin, Kec. Bogor Tengah, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Rendah',
-            'image' => 'images/puskesmas/12_Merdeka/12.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Gang Aut',
-            'district' => 'Bogor Tengah',
-            'address' => 'Gg. Aut No.18, RT.02/RW.05, Kel. Gudang, Kec. Bogor Tengah, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Rendah',
-            'image' => 'images/puskesmas/13_Gang Aut/13.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Belong',
-            'district' => 'Bogor Tengah',
-            'address' => 'Jl. Roda No.25, Kel. Babakan Pasar, Kec. Bogor Tengah, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Rendah',
-            'image' => 'images/puskesmas/14_Belong/14.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Sempur',
-            'district' => 'Bogor Tengah',
-            'address' => 'Jl. Sempur Kaler No.100, RT.05/RW.02, Kec. Bogor Tengah, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Padat',
-            'image' => 'images/puskesmas/15_Sempur/15.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Pasir Mulya',
-            'district' => 'Bogor Barat',
-            'address' => 'Jl. Pasir Mulya 3 No.30, RT.01/RW.07, Kec. Bogor Barat, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => true,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/16_Pasir Mulya/16.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Semplak',
-            'district' => 'Bogor Barat',
-            'address' => 'Jl. KH. R. Abdullah Bin Nuh No.4, RT.05/RW.09, Kec. Bogor Barat, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Padat',
-            'image' => 'images/puskesmas/17_Semplak/17.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Pancasan',
-            'district' => 'Bogor Barat',
-            'address' => 'Jl. Aria Surialaga No.12, Kel. Pasir Jaya, Kec. Bogor Barat, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Rendah',
-            'image' => 'images/puskesmas/18_Pancasan/18.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Sindang Barang',
-            'district' => 'Bogor Barat',
-            'address' => 'Jl. Sirnasari IV No.3, RT.03/RW.09, Kec. Bogor Barat, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/19_Sindang Barang/19.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Gang Kelor',
-            'district' => 'Bogor Barat',
-            'address' => 'Jl. Dr. Semeru Gg. Kelor No.6, RT.01/RW.09, Menteng, Kec. Bogor Barat, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/20_Gang kelor/20.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Tanah Sareal',
-            'district' => 'Tanah Sareal',
-            'address' => 'Jalan RM Tirto Adhi Soerjo No 3, Kec. Tanah Sareal, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => true,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/21_Tanah sereal/21.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Pondok Rumput',
-            'district' => 'Tanah Sareal',
-            'address' => 'Jl. Pondok Rumput 4, Gg. Biawas No.19, RT.05/RW.11, Kec. Tanah Sareal, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '89%',
-            'crowd' => 'Rendah',
-            'image' => 'images/puskesmas/22_Pondok rumput/22.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Kedung Badak',
-            'district' => 'Tanah Sareal',
-            'address' => 'Cimanggu Permai 1, Jl. Panataran No.01, Kedungbadak, Kec. Tanah Sareal, Kota Bogor',
-            'hours' => '08.00 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '100%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/23_Kedung Badak/23.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Kayu Manis',
-            'district' => 'Tanah Sareal',
-            'address' => 'Jl. Raya Munjul Kayu Manis, RT.01/RW.005, Kec. Tanah Sareal, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '89%',
-            'crowd' => 'Padat',
-            'image' => 'images/puskesmas/24_Kayu Manis/24.jpg',
-        ],
-        [
-            'name' => 'Puskesmas Mekar Wangi',
-            'district' => 'Tanah Sareal',
-            'address' => 'Jl. Pabuaran Cimanggis No.46-111, RT.01/RW.01, Kec. Tanah Sareal, Kota Bogor',
-            'hours' => '07.30 – 14.00 WIB',
-            'igd' => false,
-            'inap' => false,
-            'nakes' => '89%',
-            'crowd' => 'Sedang',
-            'image' => 'images/puskesmas/25_Mekar Wangi/25.jpg',
-        ],
-    ];
+    $formatNakes = static fn (float|int|string|null $score): string => str_replace(
+        '.',
+        ',',
+        rtrim(rtrim(number_format((float) ($score ?? 0), 1, '.', ''), '0'), '.')
+    ).'%';
+
+    $spotlight = collect($puskesmas)->firstWhere('code', 'P3271060101') ?? ($puskesmas[0] ?? null);
 
     $hashtags = ['Semua', 'IGD 24 Jam', 'SDM Lengkap', 'Buka Sekarang'];
     $footerLinks = [
@@ -653,7 +356,7 @@
 
                 {{-- Peta Vektor Kota Bogor (Palet Mint-Teal-Sage) Menimpa Kartu --}}
                 <div data-reveal="right" data-reveal-delay="150" class="relative z-20 -mt-7 sm:-mt-10 lg:-mt-32 lg:-ml-8 flex flex-col items-center px-1 sm:px-0">
-                    <x-bogor-map class="mx-auto w-full max-w-[460px] sm:max-w-[510px]" />
+                    <x-bogor-map :puskesmas="$puskesmas" class="mx-auto w-full max-w-[460px] sm:max-w-[510px]" />
 
                     <span class="mt-1 lg:hidden inline-flex items-center gap-1.5 rounded-full bg-surface-mint px-3.5 py-1 text-[11px] font-bold text-primary-dark">
                         <span>👆</span>
@@ -773,115 +476,124 @@
         </div>
 
         {{-- Full-Width Edge-to-Edge Marquee Berjalan Perlahan ke Kiri & Bisa Digeser Tangan --}}
-        <div data-marquee class="marquee-wrap relative z-10 w-full overflow-hidden pt-2 sm:pt-3 pb-12 sm:pb-16 cursor-grab active:cursor-grabbing select-none">
-            <div data-marquee-track class="marquee-track">
-                @for ($copy = 0; $copy < 2; $copy++)
-                    <div class="marquee-group flex shrink-0 items-stretch gap-5 sm:gap-6 pr-5 sm:pr-6" @if ($copy === 1) aria-hidden="true" @endif>
-                        @foreach ($puskesmas as $item)
-                            @php
-                                $pastel = $cardColors[$loop->index % count($cardColors)];
-                                $hasImage = ! empty($item['image']) && file_exists(public_path($item['image']));
-                            @endphp
-                            <article class="marquee-card group/card w-[260px] sm:w-[280px] shrink-0 rounded-2xl bg-white overflow-hidden shadow-[0_12px_32px_rgba(7,52,52,0.18)] border border-slate-100 flex flex-col justify-between">
-                                <div>
-                                    {{-- Slot Foto Puskesmas (Framer Property Style) --}}
-                                    <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
-                                        @if ($hasImage)
-                                            <img src="{{ asset($item['image']) }}"
-                                                 alt="{{ $copy === 0 ? $item['name'] : '' }}"
-                                                 loading="lazy"
-                                                 draggable="false"
-                                                 class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-108">
-                                        @else
-                                            <div class="flex h-full w-full items-center justify-center {{ $pastel }}">
-                                                <svg class="size-10 text-primary/70" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M12 7v4m-2-2h4"/>
-                                                </svg>
-                                            </div>
-                                        @endif
-
-                                        {{-- Badge Kecamatan (Satu-satunya Keterangan di Atas Foto Sesuai Permintaan) --}}
-                                        <span class="absolute left-3 top-3 z-10 inline-flex items-center rounded-full bg-white/95 backdrop-blur-xs px-2.5 py-0.5 text-[11px] font-bold text-slate-800 shadow-sm border border-black/5">
-                                            Kec. {{ $item['district'] }}
-                                        </span>
-                                    </div>
-
-                                    {{-- Body Informasi Kartu --}}
-                                    <div class="p-3.5 sm:p-4 flex flex-col gap-2">
-                                        {{-- Baris Judul & Status Layanan --}}
-                                        <div class="flex items-start justify-between gap-1.5">
-                                            <h3 class="text-[14.5px] sm:text-[15px] font-bold text-slate-900 leading-snug line-clamp-1 group-hover/card:text-primary transition-colors" title="{{ $item['name'] }}">
-                                                {{ $item['name'] }}
-                                            </h3>
-                                            @if ($item['igd'])
-                                                <span class="inline-flex items-center gap-1 shrink-0 rounded-full bg-rose-50 px-2 py-0.5 text-[10.5px] font-bold text-rose-600 border border-rose-200/60">
-                                                    <span class="size-1.5 rounded-full bg-rose-500 animate-pulse"></span>
-                                                    IGD 24J
-                                                </span>
-                                            @elseif ($item['inap'])
-                                                <span class="inline-flex items-center shrink-0 rounded-full bg-teal-50 px-2 py-0.5 text-[10.5px] font-bold text-primary border border-primary/20">
-                                                    Rawat Inap
-                                                </span>
+        @if (count($puskesmas) > 0)
+            <div data-marquee class="marquee-wrap relative z-10 w-full overflow-hidden pt-2 sm:pt-3 pb-12 sm:pb-16 cursor-grab active:cursor-grabbing select-none">
+                <div data-marquee-track class="marquee-track">
+                    @for ($copy = 0; $copy < 2; $copy++)
+                        <div class="marquee-group flex shrink-0 items-stretch gap-5 sm:gap-6 pr-5 sm:pr-6" @if ($copy === 1) aria-hidden="true" @endif>
+                            @foreach ($puskesmas as $item)
+                                @php
+                                    $pastel = $cardColors[$loop->index % count($cardColors)];
+                                    $hasImage = ! empty($item['image']) && file_exists(public_path($item['image']));
+                                    $crowdStatus = $item['crowd_status'] ?? 'Sedang';
+                                @endphp
+                                <article class="marquee-card group/card w-[260px] sm:w-[280px] shrink-0 rounded-2xl bg-white overflow-hidden shadow-[0_12px_32px_rgba(7,52,52,0.18)] border border-slate-100 flex flex-col justify-between">
+                                    <div>
+                                        {{-- Slot Foto Puskesmas (Framer Property Style) --}}
+                                        <div class="relative w-full aspect-[16/10] overflow-hidden bg-slate-100">
+                                            @if ($hasImage)
+                                                <img src="{{ asset($item['image']) }}"
+                                                     alt="{{ $copy === 0 ? $item['name'] : '' }}"
+                                                     loading="lazy"
+                                                     draggable="false"
+                                                     class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover/card:scale-108">
                                             @else
-                                                <span class="inline-flex items-center shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-600">
-                                                    Rawat Jalan
-                                                </span>
+                                                <div class="flex h-full w-full items-center justify-center {{ $pastel }}">
+                                                    <svg class="size-10 text-primary/70" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M12 7v4m-2-2h4"/>
+                                                    </svg>
+                                                </div>
                                             @endif
+
+                                            {{-- Badge Kecamatan (Satu-satunya Keterangan di Atas Foto Sesuai Permintaan) --}}
+                                            <span class="absolute left-3 top-3 z-10 inline-flex items-center rounded-full bg-white/95 backdrop-blur-xs px-2.5 py-0.5 text-[11px] font-bold text-slate-800 shadow-sm border border-black/5">
+                                                Kec. {{ $item['district'] }}
+                                            </span>
                                         </div>
 
-                                        {{-- Baris Alamat dengan Icon Pin --}}
-                                        <div class="-mt-0.5 flex items-center gap-1 text-[11.5px] text-slate-500">
-                                            <svg class="size-3.5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
-                                            </svg>
-                                            <span class="truncate" title="{{ $item['address'] }}">{{ $item['address'] }}</span>
-                                        </div>
+                                        {{-- Body Informasi Kartu --}}
+                                        <div class="p-3.5 sm:p-4 flex flex-col gap-2">
+                                            {{-- Baris Judul & Status Layanan --}}
+                                            <div class="flex items-start justify-between gap-1.5">
+                                                <h3 class="text-[14.5px] sm:text-[15px] font-bold text-slate-900 leading-snug line-clamp-1 group-hover/card:text-primary transition-colors" title="{{ $item['name'] }}">
+                                                    {{ $item['name'] }}
+                                                </h3>
+                                                @if ($item['igd'])
+                                                    <span class="inline-flex items-center gap-1 shrink-0 rounded-full bg-rose-50 px-2 py-0.5 text-[10.5px] font-bold text-rose-600 border border-rose-200/60">
+                                                        <span class="size-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                                                        IGD 24J
+                                                    </span>
+                                                @elseif ($item['inap'])
+                                                    <span class="inline-flex items-center shrink-0 rounded-full bg-teal-50 px-2 py-0.5 text-[10.5px] font-bold text-primary border border-primary/20">
+                                                        Rawat Inap
+                                                    </span>
+                                                @else
+                                                    <span class="inline-flex items-center shrink-0 rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-600">
+                                                        Rawat Jalan
+                                                    </span>
+                                                @endif
+                                            </div>
 
-                                        {{-- Grid Spesifikasi 3 Kolom (Ala Bedrooms | Bathrooms | sq ft di Framer) --}}
-                                        <div class="grid grid-cols-3 divide-x divide-slate-100 border-t border-slate-100 pt-2.5 mt-0.5 text-center">
-                                            <div class="pr-1.5 text-left">
-                                                <div class="text-[13px] font-bold text-slate-900 leading-tight">{{ $item['nakes'] }}</div>
-                                                <div class="text-[10px] font-medium text-slate-400 mt-0.5">9 Nakes</div>
+                                            {{-- Baris Alamat dengan Icon Pin --}}
+                                            <div class="-mt-0.5 flex items-center gap-1 text-[11.5px] text-slate-500">
+                                                <svg class="size-3.5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+                                                </svg>
+                                                <span class="truncate" title="{{ $item['address'] }}">{{ $item['address'] }}</span>
                                             </div>
-                                            <div class="px-1.5 text-left">
-                                                <div class="text-[13px] font-bold text-slate-900 leading-tight truncate">{{ $item['inap'] ? 'Inap' : 'Jalan' }}</div>
-                                                <div class="text-[10px] font-medium text-slate-400 mt-0.5">Layanan</div>
-                                            </div>
-                                            <div class="pl-1.5 text-left">
-                                                <div class="text-[13px] font-bold {{ $item['crowd'] === 'Padat' ? 'text-amber-600' : 'text-slate-900' }} leading-tight truncate">{{ $item['crowd'] }}</div>
-                                                <div class="text-[10px] font-medium text-slate-400 mt-0.5">Kunjungan</div>
+
+                                            {{-- Grid Spesifikasi 3 Kolom (Ala Bedrooms | Bathrooms | sq ft di Framer) --}}
+                                            <div class="grid grid-cols-3 divide-x divide-slate-100 border-t border-slate-100 pt-2.5 mt-0.5 text-center">
+                                                <div class="pr-1.5 text-left">
+                                                    <div class="text-[13px] font-bold text-slate-900 leading-tight">{{ $formatNakes($item['nakes_score'] ?? 0) }}</div>
+                                                    <div class="text-[10px] font-medium text-slate-400 mt-0.5">9 Nakes</div>
+                                                </div>
+                                                <div class="px-1.5 text-left">
+                                                    <div class="text-[13px] font-bold text-slate-900 leading-tight truncate">{{ $item['inap'] ? 'Inap' : 'Jalan' }}</div>
+                                                    <div class="text-[10px] font-medium text-slate-400 mt-0.5">Layanan</div>
+                                                </div>
+                                                <div class="pl-1.5 text-left">
+                                                    <div class="text-[13px] font-bold {{ $crowdStatus === 'Padat' ? 'text-amber-600' : 'text-slate-900' }} leading-tight truncate">{{ $crowdStatus }}</div>
+                                                    <div class="text-[10px] font-medium text-slate-400 mt-0.5">Kunjungan</div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                {{-- Footer Baris Bawah (Jam Operasional & Link Lihat Peta) --}}
-                                <div class="px-3.5 pb-3.5 sm:px-4 sm:pb-4">
-                                    <div class="flex items-center justify-between border-t border-slate-100 pt-2.5 text-[11.5px]">
-                                        <span class="text-slate-500 font-medium flex items-center gap-1.5 truncate pr-2">
-                                            <svg class="size-3.5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                            </svg>
-                                            <span class="truncate">{{ $item['hours'] }}</span>
-                                        </span>
-                                        <a href="{{ route('peta') }}"
-                                           draggable="false"
-                                           @if ($copy === 1) tabindex="-1" @endif
-                                           class="inline-flex items-center gap-1 font-bold text-primary hover:text-accent transition-colors shrink-0">
-                                            <span>Lihat di Peta</span>
-                                            <svg class="size-3.5 transition-transform duration-200 group-hover/card:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
-                                            </svg>
-                                        </a>
+                                    {{-- Footer Baris Bawah (Jam Operasional & Link Detail Fasilitas) --}}
+                                    <div class="px-3.5 pb-3.5 sm:px-4 sm:pb-4">
+                                        <div class="flex items-center justify-between border-t border-slate-100 pt-2.5 text-[11.5px]">
+                                            <span class="text-slate-500 font-medium flex items-center gap-1.5 truncate pr-2">
+                                                <svg class="size-3.5 shrink-0 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                                </svg>
+                                                <span class="truncate">{{ $item['hours'] }}</span>
+                                            </span>
+                                            <a href="{{ $item['detail_url'] }}"
+                                               draggable="false"
+                                               @if ($copy === 1) tabindex="-1" @endif
+                                               class="inline-flex items-center gap-1 font-bold text-primary hover:text-accent transition-colors shrink-0">
+                                                <span>Lihat Detail</span>
+                                                <svg class="size-3.5 transition-transform duration-200 group-hover/card:translate-x-1" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                                                </svg>
+                                            </a>
+                                        </div>
                                     </div>
-                                </div>
-                            </article>
-                        @endforeach
-                    </div>
-                @endfor
+                                </article>
+                            @endforeach
+                        </div>
+                    @endfor
+                </div>
             </div>
-        </div>
+        @else
+            <div class="relative z-10 mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8 pb-12 sm:pb-16 text-center">
+                <div class="mx-auto max-w-md rounded-2xl border border-white/20 bg-white/10 px-6 py-5 text-sm font-semibold text-white/90">
+                    Belum ada data puskesmas terdata saat ini.
+                </div>
+            </div>
+        @endif
 
         {{-- Bottom Organic Wave Divider Menuju Sekilas di Peta --}}
         <div class="relative z-10 w-full overflow-hidden leading-none" aria-hidden="true">
@@ -919,17 +631,24 @@
                         </span>
                         <span id="info-card-score" class="inline-flex items-center gap-1 text-xs font-extrabold text-primary">
                             <svg class="size-3.5 text-primary fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                            <span>Nakes 100%</span>
+                            <span id="info-card-score-text">{{ $spotlight ? 'Nakes '.$formatNakes($spotlight['nakes_score'] ?? 0) : 'Nakes -' }}</span>
                         </span>
                     </div>
-                    <h3 id="info-card-name" class="text-sm sm:text-[15px] font-extrabold text-ink">Puskesmas Tanah Sareal</h3>
-                    <p id="info-card-distance" class="text-[11px] sm:text-xs text-muted">Kec. Tanah Sareal · Jarak 1,1 km</p>
+                    <h3 id="info-card-name" class="text-sm sm:text-[15px] font-extrabold text-ink">{{ $spotlight['name'] ?? 'Puskesmas Kota Bogor' }}</h3>
+                    <p id="info-card-distance" class="text-[11px] sm:text-xs text-muted">{{ $spotlight ? 'Kec. '.$spotlight['district'].' · Jarak '.$spotlight['distance'] : 'Belum ada data puskesmas' }}</p>
                     <div id="info-card-tags" class="mt-2 flex flex-wrap gap-1.5">
-                        <x-tag>1,1 km</x-tag><x-tag>Buka</x-tag><x-tag>IGD 24 jam</x-tag><x-tag>Beban Sedang</x-tag>
+                        @if ($spotlight)
+                            <x-tag>{{ $spotlight['distance'] }}</x-tag>
+                            <x-tag>{{ $spotlight['is_open'] ? 'Buka' : 'Tutup' }}</x-tag>
+                            @if ($spotlight['igd'])
+                                <x-tag>IGD 24 jam</x-tag>
+                            @endif
+                            <x-tag>Beban {{ $spotlight['crowd_status'] }}</x-tag>
+                        @endif
                     </div>
                     <div class="mt-3.5 grid grid-cols-2 sm:grid-cols-1 gap-2">
-                        <x-button :href="route('peta')" variant="primary" class="w-full font-bold text-[11px] sm:text-xs h-9 sm:h-10">Buka di Peta GIS</x-button>
-                        <x-button href="https://dinkes.kotabogor.go.id" target="_blank" variant="outline" class="w-full font-bold text-[11px] sm:text-xs h-9 sm:h-10">Portal resmi</x-button>
+                        <x-button id="info-card-peta-link" :href="route('peta')" variant="primary" class="w-full font-bold text-[11px] sm:text-xs h-9 sm:h-10">Buka di Peta GIS</x-button>
+                        <x-button id="info-card-official-link" :href="$spotlight['official_url'] ?? 'https://dinkes.kotabogor.go.id'" target="_blank" rel="noopener noreferrer" variant="outline" class="w-full font-bold text-[11px] sm:text-xs h-9 sm:h-10">Portal resmi</x-button>
                     </div>
                 </div>
 
@@ -1033,4 +752,6 @@
             </div>
         </div>
     </footer>
+
+    <script id="landing-puskesmas-data" type="application/json">@json(['facilities' => $puskesmas, 'center' => $bogorCenter])</script>
 </x-layout>

@@ -8,9 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MapController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('home');
+Route::get('/', [MapController::class, 'landing'])->name('home');
 
 Route::get('/peta', [MapController::class, 'index'])->name('peta');
 Route::get('/puskesmas/{kode_puskesmas}', [MapController::class, 'show'])->name('puskesmas.show');

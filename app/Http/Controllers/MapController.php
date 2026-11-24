@@ -17,6 +17,20 @@ class MapController extends Controller
         private readonly SpatialAnalysisService $spatialAnalysis,
     ) {}
 
+    public function landing(): View
+    {
+        $facilities = $this->spatialAnalysis->getFilteredFacilities();
+        $puskesmas = MapPayloadPresenter::presentFacilities($facilities);
+
+        return view('welcome', [
+            'puskesmas' => $puskesmas,
+            'bogorCenter' => config('sdss.spatial.bogor_center', [
+                'lat' => -6.597147,
+                'lng' => 106.806039,
+            ]),
+        ]);
+    }
+
     public function index(Request $request): View
     {
         $facilities = $this->spatialAnalysis->getFilteredFacilities();

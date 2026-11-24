@@ -786,10 +786,18 @@ export function initLandingPage() {
         map.querySelectorAll('.puskesmas-pin').forEach((pin) => {
             pin.addEventListener('click', (e) => {
                 e.stopPropagation();
-                const nameEl = document.getElementById('info-card-name');
-                const distEl = document.getElementById('info-card-distance');
-                if (nameEl && pin.dataset.pinName) nameEl.textContent = pin.dataset.pinName;
-                if (distEl && pin.dataset.pinDistance) distEl.textContent = `Kec. ${pin.dataset.pinDistrict} · Jarak ${pin.dataset.pinDistance}`;
+                const code = pin.dataset.pinCode;
+                const { facilities } = readLandingPayload();
+                const matched = facilities.find((item) => item.code === code);
+                if (matched) {
+                    updateLandingInfoCard(matched, true);
+                    window.dispatchEvent(new CustomEvent('puskesmap:spotlight', { detail: { code } }));
+                } else {
+                    const nameEl = document.getElementById('info-card-name');
+                    const distEl = document.getElementById('info-card-distance');
+                    if (nameEl && pin.dataset.pinName) nameEl.textContent = pin.dataset.pinName;
+                    if (distEl && pin.dataset.pinDistance) distEl.textContent = `Kec. ${pin.dataset.pinDistrict} · Jarak ${pin.dataset.pinDistance}`;
+                }
 
                 if (pin.dataset.pinDistrict) {
                     const slug = pin.dataset.pinDistrict.toLowerCase().replace(/\s+/g, '-');
@@ -807,10 +815,111 @@ export function initLandingPage() {
 }
 
 /**
+ * Baca payload fasilitas Puskesmas & koordinat pusat Kota Bogor dari JSON Blade.
+ */
+function readLandingPayload() {
+    const fallbackCenter = [-6.597147, 106.806039];
+    const dataEl = document.getElementById('landing-puskesmas-data');
+    if (!dataEl) {
+        return { center: fallbackCenter, facilities: [] };
+    }
+
+    try {
+        const parsed = JSON.parse(dataEl.textContent || '{}');
+        const lat = Number(parsed.center?.lat ?? fallbackCenter[0]);
+        const lng = Number(parsed.center?.lng ?? fallbackCenter[1]);
+        return {
+            center: [
+                Number.isFinite(lat) ? lat : fallbackCenter[0],
+                Number.isFinite(lng) ? lng : fallbackCenter[1],
+            ],
+            facilities: Array.isArray(parsed.facilities) ? parsed.facilities : [],
+        };
+    } catch {
+        return { center: fallbackCenter, facilities: [] };
+    }
+}
+
+function formatNakesPercent(score) {
+    const num = Number(score ?? 0);
+    if (!Number.isFinite(num)) return '-';
+    const rounded = Number(num.toFixed(1));
+    return `${String(rounded).replace('.', ',')}%`;
+}
+
+/**
+ * Selaraskan cek operasional WIB dengan Operasional::isOpenAt() di backend.
+ */
+function isFacilityOpenNow(item) {
+    if (item?.igd) return true;
+
+    const wibNow = new Date(Date.now() + 7 * 3600 * 1000);
+    const dayWib = wibNow.getUTCDay();
+    if (dayWib === 0) return false;
+
+    const hourWib = wibNow.getUTCHours() + (wibNow.getUTCMinutes() / 60);
+    let openHour = Number(item?.open_hour ?? 7.5);
+    let closeHour = Number(item?.close_hour ?? 14.0);
+
+    if (dayWib === 5) {
+        openHour = 7.5;
+        closeHour = 14.5;
+    } else if (dayWib === 6) {
+        openHour = 7.5;
+        closeHour = 12.0;
+    }
+
+    return hourWib >= openHour && hourWib <= closeHour;
+}
+
+function createInfoTag(text, highlight = false) {
+    const span = document.createElement('span');
+    span.className = highlight
+        ? 'inline-flex h-5 items-center rounded-full bg-accent/15 px-2.5 text-[11px] font-semibold text-accent-strong'
+        : 'inline-flex h-5 items-center rounded-full bg-surface-mint px-2.5 text-[11px] font-semibold text-primary-dark';
+    span.textContent = text;
+    return span;
+}
+
+function updateLandingInfoCard(item, animate = true) {
+    if (!item) return;
+
+    const cardEl = document.getElementById('map-info-card');
+    const nameEl = document.getElementById('info-card-name');
+    const distEl = document.getElementById('info-card-distance');
+    const scoreTextEl = document.getElementById('info-card-score-text');
+    const tagsEl = document.getElementById('info-card-tags');
+    const officialLinkEl = document.getElementById('info-card-official-link');
+
+    if (nameEl) nameEl.textContent = item.name;
+    if (distEl) distEl.textContent = `Kec. ${item.district} · Jarak ${item.distance}`;
+    if (scoreTextEl) scoreTextEl.textContent = `Nakes ${formatNakesPercent(item.nakes_score)}`;
+    if (officialLinkEl) officialLinkEl.href = item.official_url || 'https://dinkes.kotabogor.go.id';
+
+    if (tagsEl) {
+        const nodes = [
+            createInfoTag(item.distance),
+            createInfoTag(isFacilityOpenNow(item) ? 'Buka' : 'Tutup'),
+        ];
+        if (item.igd) {
+            nodes.push(createInfoTag('IGD 24 jam', true));
+        }
+        nodes.push(createInfoTag(`Beban ${item.crowd_status ?? 'Sedang'}`));
+        tagsEl.replaceChildren(...nodes);
+    }
+
+    if (animate && cardEl) {
+        cardEl.classList.remove('landing-card-swap');
+        void cardEl.offsetWidth;
+        cardEl.classList.add('landing-card-swap');
+    }
+}
+
+/**
  * Inisialisasi Peta Jalan Interaktif (Real Street Map) pada Section "Sekilas di Peta" Landing Page
  */
 function initLandingPreviewMap() {
-    const BOGOR_CENTER = [-6.5885, 106.7980];
+    const { center: BOGOR_CENTER, facilities: previewItems } = readLandingPayload();
     const map = L.map('landing-leaflet-map', {
         zoomControl: false,
         attributionControl: false,
@@ -841,21 +950,6 @@ function initLandingPreviewMap() {
         fillOpacity: 0.22,
     }).addTo(map);
 
-    const previewItems = [
-        { name: 'Puskesmas Tanah Sareal', district: 'Tanah Sareal', lat: -6.575667, lng: 106.798869, distance: '1,4 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 7.5 },
-        { name: 'Puskesmas Sempur', district: 'Bogor Tengah', lat: -6.584019, lng: 106.798334, distance: '0,5 km', igd: false, inap: false, nakes: '100%', crowd: 'Padat', openHour: 7.5 },
-        { name: 'Puskesmas Kedung Badak', district: 'Tanah Sareal', lat: -6.564168, lng: 106.792838, distance: '2,8 km', igd: false, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 8.0 },
-        { name: 'Puskesmas Mekar Wangi', district: 'Tanah Sareal', lat: -6.542422, lng: 106.783958, distance: '5,4 km', igd: false, inap: false, nakes: '89%', crowd: 'Sedang', openHour: 7.5 },
-        { name: 'Puskesmas Pasir Mulya', district: 'Bogor Barat', lat: -6.597330, lng: 106.777989, distance: '2,4 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 7.5 },
-        { name: 'Puskesmas Semplak', district: 'Bogor Barat', lat: -6.561560, lng: 106.765582, distance: '4,7 km', igd: false, inap: false, nakes: '100%', crowd: 'Padat', openHour: 7.5 },
-        { name: 'Puskesmas Bogor Tengah', district: 'Bogor Tengah', lat: -6.592859, lng: 106.794501, distance: '0,6 km', igd: true, inap: false, nakes: '100%', crowd: 'Rendah', openHour: 7.5 },
-        { name: 'Puskesmas Bogor Timur', district: 'Bogor Timur', lat: -6.606886, lng: 106.811111, distance: '2,5 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 7.5 },
-        { name: 'Puskesmas Bogor Utara', district: 'Bogor Utara', lat: -6.583178, lng: 106.819652, distance: '2,5 km', igd: true, inap: false, nakes: '100%', crowd: 'Sedang', openHour: 7.5 },
-        { name: 'Puskesmas Tegal Gundil', district: 'Bogor Utara', lat: -6.580886, lng: 106.813277, distance: '1,9 km', igd: false, inap: false, nakes: '89%', crowd: 'Rendah', openHour: 7.5 },
-        { name: 'Puskesmas Bogor Selatan', district: 'Bogor Selatan', lat: -6.621810, lng: 106.808308, distance: '3,9 km', igd: false, inap: false, nakes: '100%', crowd: 'Rendah', openHour: 7.5 },
-        { name: 'Puskesmas Cipaku', district: 'Bogor Selatan', lat: -6.630467, lng: 106.810835, distance: '4,9 km', igd: true, inap: false, nakes: '89%', crowd: 'Sedang', openHour: 8.0 },
-    ];
-
     const makeLandingPin = (isActive = false, isIgd = true, animateEnter = false) => {
         const bg = isActive ? '#e37434' : (isIgd ? '#0b5c5c' : '#007979');
         const halo = isActive ? 'rgba(227,116,52,0.28)' : 'rgba(0,121,121,0.20)';
@@ -880,37 +974,16 @@ function initLandingPreviewMap() {
         });
     };
 
-    const updateLandingCard = (item, animate = true) => {
-        const bodyEl = document.getElementById('map-info-card-body');
-        const nameEl = document.getElementById('info-card-name');
-        const distEl = document.getElementById('info-card-distance');
-        const scoreEl = document.getElementById('info-card-score');
-        const tagsEl = document.getElementById('info-card-tags');
-        if (nameEl) nameEl.textContent = item.name;
-        if (distEl) distEl.textContent = `Kec. ${item.district} · Jarak ${item.distance}`;
-        if (scoreEl) scoreEl.innerHTML = `<span class="text-primary inline-flex items-center"><svg class="size-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg></span> <span>Nakes ${item.nakes}</span>`;
-        if (tagsEl) {
-            tagsEl.innerHTML = `
-                <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">${item.distance}</span>
-                <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">Beban ${item.crowd}</span>
-                ${item.igd ? '<span class="inline-block rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] font-semibold text-accent-strong">IGD 24 jam</span>' : ''}
-            `;
-        }
-        if (animate && bodyEl) {
-            bodyEl.classList.remove('landing-card-swap');
-            void bodyEl.offsetWidth;
-            bodyEl.classList.add('landing-card-swap');
-        }
-    };
-
     const markerEntries = [];
-    let activeEntryIndex = 0;
+    const defaultIdx = previewItems.findIndex((item) => item.code === 'P3271060101');
+    let activeEntryIndex = defaultIdx >= 0 ? defaultIdx : 0;
     let userInteracted = false;
     let isHovered = false;
     let isSectionVisible = false;
     let autoSpotlightTimer = null;
 
     const highlightMarkerEntry = (targetEntry, panMap = true, animateCard = true) => {
+        if (!targetEntry) return;
         markerEntries.forEach((entry, index) => {
             const isActive = entry === targetEntry;
             entry.marker.setIcon(makeLandingPin(isActive, entry.item.igd, false));
@@ -921,7 +994,7 @@ function initLandingPreviewMap() {
                 entry.marker.setZIndexOffset(0);
             }
         });
-        updateLandingCard(targetEntry.item, animateCard);
+        updateLandingInfoCard(targetEntry.item, animateCard);
         if (panMap) {
             map.panTo([targetEntry.item.lat, targetEntry.item.lng], { animate: true, duration: 0.75 });
         }
@@ -936,10 +1009,11 @@ function initLandingPreviewMap() {
     };
 
     previewItems.forEach((item, idx) => {
+        const isInitialActive = idx === activeEntryIndex;
         const marker = L.marker([item.lat, item.lng], {
-            icon: makeLandingPin(idx === 0, item.igd, true),
+            icon: makeLandingPin(isInitialActive, item.igd, true),
             title: item.name,
-            zIndexOffset: idx === 0 ? 250 : 0,
+            zIndexOffset: isInitialActive ? 250 : 0,
         }).addTo(map);
 
         const entry = { marker, item };
@@ -949,6 +1023,16 @@ function initLandingPreviewMap() {
         });
 
         markerEntries.push(entry);
+    });
+
+    window.addEventListener('puskesmap:spotlight', (event) => {
+        const targetCode = event?.detail?.code;
+        if (!targetCode) return;
+        const matchedEntry = markerEntries.find(({ item }) => item.code === targetCode);
+        if (matchedEntry) {
+            stopAutoSpotlight();
+            highlightMarkerEntry(matchedEntry, true, false);
+        }
     });
 
     // Rotasi sorotan pin halus & otomatis saat section terlihat (berhenti begitu user berinteraksi)
@@ -965,7 +1049,7 @@ function initLandingPreviewMap() {
     document.getElementById('landing-leaflet-map')?.addEventListener('pointerdown', stopAutoSpotlight, { passive: true });
 
     const startAutoSpotlight = () => {
-        if (prefersReducedMotion || userInteracted || autoSpotlightTimer || !petaSection) return;
+        if (prefersReducedMotion || userInteracted || autoSpotlightTimer || !petaSection || markerEntries.length <= 1) return;
         autoSpotlightTimer = setInterval(() => {
             if (!isSectionVisible || isHovered || userInteracted) return;
             const visibleEntries = markerEntries.filter(({ marker }) => map.hasLayer(marker));
@@ -1003,15 +1087,11 @@ function initLandingPreviewMap() {
                 const { marker, item } = entry;
                 let show = true;
                 if (tag.includes('igd')) {
-                    show = item.igd;
+                    show = Boolean(item.igd);
                 } else if (tag.includes('sdm') || tag.includes('lengkap')) {
-                    show = item.nakes === '100%';
+                    show = Number(item.nakes_score ?? 0) >= 100;
                 } else if (tag.includes('buka')) {
-                    const wibNow = new Date(Date.now() + 7 * 3600 * 1000);
-                    const hourWib = wibNow.getUTCHours() + (wibNow.getUTCMinutes() / 60);
-                    const dayWib = wibNow.getUTCDay();
-                    const poliOpen = dayWib >= 1 && dayWib <= 5 && hourWib >= (item.openHour ?? 7.5) && hourWib <= 14.0;
-                    show = item.igd || poliOpen;
+                    show = isFacilityOpenNow(item);
                 }
 
                 if (show) {
