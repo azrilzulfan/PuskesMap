@@ -86,13 +86,8 @@
                                         </div>
                                         <div>
                                             <span class="inline-block rounded-md bg-white/80 px-2 py-0.5 text-[10px] font-extrabold text-primary-dark">
-                                                {{ $item['igd'] ? 'IGD 24 Jam' : 'Rawat Jalan' }}
+                                                {{ $item['igd'] ? 'IGD 24 Jam' : 'Poli Reguler' }}
                                             </span>
-                                            @if ($item['inap'])
-                                                <span class="inline-block rounded-md bg-primary-dark/85 px-2 py-0.5 text-[10px] font-bold text-white ml-1">
-                                                    Rawat Inap
-                                                </span>
-                                            @endif
                                         </div>
                                     </div>
 
@@ -122,10 +117,16 @@
                                         <span>{{ $item['hours'] }}</span>
                                     </div>
 
-                                    <button type="button" data-detail-modal-btn="{{ $item['id'] }}"
-                                            class="text-[11px] font-extrabold text-primary hover:underline shrink-0 cursor-pointer">
-                                        Detail &rarr;
-                                    </button>
+                                    <div class="flex items-center gap-3 shrink-0">
+                                        <a href="{{ $item['detail_url'] }}"
+                                           class="text-[11px] font-bold text-ink hover:text-primary hover:underline">
+                                            Profil
+                                        </a>
+                                        <button type="button" data-detail-modal-btn="{{ $item['id'] }}"
+                                                class="text-[11px] font-extrabold text-primary hover:underline shrink-0 cursor-pointer">
+                                            Detail &rarr;
+                                        </button>
+                                    </div>
                                 </div>
                             </article>
                         @endforeach
@@ -177,13 +178,15 @@
                                 </div>
                             </label>
 
-                            <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white hover:bg-surface-mint/40 cursor-pointer border border-gray-200 transition-colors">
-                                <input type="radio" name="maut-scenario" value="pemda" class="text-accent focus:ring-accent">
-                                <div>
-                                    <span class="font-extrabold text-ink block">Evaluasi Pemda</span>
-                                    <span class="text-[10px] text-muted block">Nakes 30% &middot; Jarak 20% &middot; Antrean 20%</span>
-                                </div>
-                            </label>
+                            @if ($canUsePemda)
+                                <label class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white hover:bg-surface-mint/40 cursor-pointer border border-gray-200 transition-colors">
+                                    <input type="radio" name="maut-scenario" value="pemda" class="text-accent focus:ring-accent">
+                                    <div>
+                                        <span class="font-extrabold text-ink block">Evaluasi Pemda</span>
+                                        <span class="text-[10px] text-muted block">Nakes 30% &middot; Jarak 20% &middot; Antrean 20%</span>
+                                    </div>
+                                </label>
+                            @endif
                         </div>
 
                         <button type="button" id="btn-run-maut"

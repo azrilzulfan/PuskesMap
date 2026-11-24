@@ -52,10 +52,14 @@
                 </div>
             </div>
 
-            <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-2 sm:flex sm:items-center sm:justify-between gap-2.5 shrink-0">
-                <a id="modal-official-link" href="https://kotabogor.go.id" target="_blank" rel="noopener noreferrer"
+            <div class="p-4 bg-gray-50 border-t border-gray-100 grid grid-cols-3 sm:flex sm:items-center sm:justify-between gap-2 shrink-0">
+                <a id="modal-full-profile-link" href="#"
+                   class="h-10 px-3 sm:px-4 rounded-full border border-primary/30 bg-white text-primary-dark hover:bg-surface-mint text-[11px] sm:text-xs font-extrabold transition-colors inline-flex items-center justify-center gap-1.5">
+                    <span>Profil &amp; Grafik</span>
+                </a>
+                <a id="modal-official-link" href="https://dinkes.kotabogor.go.id" target="_blank" rel="noopener noreferrer"
                    class="h-10 px-3 sm:px-4 rounded-full border border-gray-300 text-ink hover:bg-white text-[11px] sm:text-xs font-extrabold transition-colors inline-flex items-center justify-center gap-1.5">
-                    <span>Portal</span>
+                    <span>Portal Dinkes</span>
                 </a>
                 <a id="modal-route-link" href="#" target="_blank" rel="noopener noreferrer"
                    class="h-10 px-3 sm:px-5 rounded-full bg-primary text-white hover:bg-primary-dark text-[11px] sm:text-xs font-extrabold transition-colors inline-flex items-center justify-center gap-1.5 shadow-sm">

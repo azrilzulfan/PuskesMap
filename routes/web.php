@@ -13,6 +13,7 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/peta', [MapController::class, 'index'])->name('peta');
+Route::get('/puskesmas/{kode_puskesmas}', [MapController::class, 'show'])->name('puskesmas.show');
 Route::get('/map', function () {
     return redirect()->route('peta');
 });

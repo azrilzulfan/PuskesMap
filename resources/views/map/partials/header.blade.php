@@ -100,10 +100,6 @@
                 class="map-hashtag-chip shrink-0 rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-gray-100 transition-colors aria-pressed:bg-primary aria-pressed:text-white cursor-pointer">
             #IGD24Jam
         </button>
-        <button type="button" data-map-chip="inap" aria-pressed="false"
-                class="map-hashtag-chip shrink-0 rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-gray-100 transition-colors aria-pressed:bg-primary aria-pressed:text-white cursor-pointer">
-            #RawatInap
-        </button>
         <button type="button" data-map-chip="nakes" aria-pressed="false"
                 class="map-hashtag-chip shrink-0 rounded-full px-3 py-1 text-[11px] font-bold text-ink bg-gray-100 transition-colors aria-pressed:bg-primary aria-pressed:text-white cursor-pointer">
             #Nakes100%

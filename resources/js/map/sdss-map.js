@@ -13,8 +13,37 @@ export function initPuskesMapSDSS() {
         return;
     }
 
-    const BOGOR_CENTER = [-6.586372, 106.7706];
+    let mapConfig = {
+        bogorCenter: { lat: -6.597147, lng: 106.806039 },
+        canUsePemda: false,
+        rekomendasiUrl: "/api/v1/rekomendasi",
+    };
+    const mapConfigEl = document.getElementById("map-config");
+    if (mapConfigEl) {
+        try {
+            mapConfig = { ...mapConfig, ...JSON.parse(mapConfigEl.textContent) };
+        } catch (e) {
+            console.warn("Gagal membaca map-config, memakai fallback:", e);
+        }
+    }
+
+    const BOGOR_CENTER = [
+        Number(mapConfig.bogorCenter?.lat ?? -6.597147),
+        Number(mapConfig.bogorCenter?.lng ?? 106.806039),
+    ];
     const DEFAULT_ZOOM = 13;
+    const csrfToken =
+        document
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute("content") || "";
+
+    const escapeHtml = (value) =>
+        String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
 
     // Inisialisasi Map Leaflet
     const map = L.map("leaflet-map", {
@@ -29,11 +58,47 @@ export function initPuskesMapSDSS() {
         )
         .addTo(map);
 
-    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        maxZoom: 19,
-        attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &bull; PuskesMap',
-    }).addTo(map);
+    const osmLayer = L.tileLayer(
+        "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        {
+            maxZoom: 19,
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &bull; PuskesMap',
+        },
+    ).addTo(map);
+
+    const greyLayer = L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        {
+            maxZoom: 19,
+            subdomains: "abcd",
+            attribution:
+                '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions" target="_blank" rel="noopener">CARTO</a>',
+        },
+    );
+
+    const basemapOsmBtn = document.getElementById("btn-basemap-osm");
+    const basemapGreyBtn = document.getElementById("btn-basemap-grey");
+    const setBasemap = (mode) => {
+        const useGrey = mode === "grey";
+        if (useGrey) {
+            if (map.hasLayer(osmLayer)) map.removeLayer(osmLayer);
+            if (!map.hasLayer(greyLayer)) greyLayer.addTo(map);
+        } else {
+            if (map.hasLayer(greyLayer)) map.removeLayer(greyLayer);
+            if (!map.hasLayer(osmLayer)) osmLayer.addTo(map);
+        }
+        if (basemapOsmBtn && basemapGreyBtn) {
+            basemapOsmBtn.classList.toggle("bg-ink", !useGrey);
+            basemapOsmBtn.classList.toggle("text-white", !useGrey);
+            basemapOsmBtn.classList.toggle("text-ink", useGrey);
+            basemapGreyBtn.classList.toggle("bg-ink", useGrey);
+            basemapGreyBtn.classList.toggle("text-white", useGrey);
+            basemapGreyBtn.classList.toggle("text-ink", !useGrey);
+        }
+    };
+    basemapOsmBtn?.addEventListener("click", () => setBasemap("osm"));
+    basemapGreyBtn?.addEventListener("click", () => setBasemap("grey"));
 
     map.whenReady(() => {
         map.invalidateSize();
@@ -146,6 +211,7 @@ export function initPuskesMapSDSS() {
         const crowdTextEl = document.getElementById("float-card-crowd-text");
         const crowdBarEl = document.getElementById("float-card-crowd-bar");
         const detailBtn = document.getElementById("float-card-detail-btn");
+        const profileLink = document.getElementById("float-card-profile-link");
         const routeBtn = document.getElementById("float-card-route-btn");
 
         if (badgeEl) badgeEl.textContent = badgeText;
@@ -155,25 +221,31 @@ export function initPuskesMapSDSS() {
 
         if (tagsEl) {
             tagsEl.innerHTML = `
-                <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">${item.hours}</span>
+                <span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">${escapeHtml(item.hours)}</span>
+                <span class="inline-block rounded-full ${item.is_open ? "bg-emerald-100 text-emerald-800" : "bg-gray-100 text-gray-700"} px-2.5 py-0.5 text-[11px] font-semibold">${item.is_open ? "Buka" : "Tutup"}</span>
                 ${item.igd ? '<span class="inline-block rounded-full bg-accent/15 px-2.5 py-0.5 text-[11px] font-semibold text-accent-strong">IGD 24 Jam</span>' : ""}
-                ${item.inap ? '<span class="inline-block rounded-full bg-surface-mint px-2.5 py-0.5 text-[11px] font-semibold text-primary-dark">Rawat Inap</span>' : ""}
             `;
         }
 
-        if (crowdTextEl) crowdTextEl.textContent = item.crowd;
+        if (crowdTextEl) crowdTextEl.textContent = item.crowd_status || item.crowd;
         if (crowdBarEl) {
+            const isLow = item.crowd === "Sepi" || item.crowd_status === "Rendah";
+            const isHigh = item.crowd === "Ramai" || item.crowd_status === "Padat";
             crowdBarEl.className =
                 "h-full rounded-full transition-all duration-300 " +
-                (item.crowd === "Sepi"
+                (isLow
                     ? "bg-crowd-low w-1/3"
-                    : item.crowd === "Ramai"
+                    : isHigh
                       ? "bg-accent w-11/12"
                       : "bg-primary w-2/3");
         }
 
         if (detailBtn) {
             detailBtn.onclick = () => window.openDetailModal(item.id);
+        }
+        if (profileLink) {
+            profileLink.href =
+                item.detail_url || `/puskesmas/${encodeURIComponent(item.code)}`;
         }
         if (routeBtn) {
             routeBtn.href = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`;
@@ -321,7 +393,6 @@ export function initPuskesMapSDSS() {
             const district = card.dataset.district;
             const address = card.dataset.address.toLowerCase();
             const hasIgd = card.dataset.igd === "1";
-            const hasInap = card.dataset.inap === "1";
             const nakesScore = parseFloat(card.dataset.nakes) || 0;
             const lat = parseFloat(card.dataset.lat);
             const lng = parseFloat(card.dataset.lng);
@@ -340,7 +411,6 @@ export function initPuskesMapSDSS() {
             const matchChip =
                 activeFilters.size === 0 ||
                 ((!activeFilters.has("igd") || hasIgd) &&
-                    (!activeFilters.has("inap") || hasInap) &&
                     (!activeFilters.has("nakes") || nakesScore >= 99));
 
             let matchRadius = true;
@@ -412,6 +482,13 @@ export function initPuskesMapSDSS() {
         } else if (userRadiusCircle) {
             map.removeLayer(userRadiusCircle);
         }
+
+        if (
+            subtabContentMaut &&
+            !subtabContentMaut.classList.contains("hidden")
+        ) {
+            runMautEngine(false);
+        }
     });
 
     // Pengurutan Kartu Puskesmas di Kolom Kanan (Terdekat, Nakes Lengkap, IGD 24 Jam)
@@ -469,122 +546,136 @@ export function initPuskesMapSDSS() {
     });
 
     // ==========================================
-    // MESIN REKOMENDASI MULTIKRITERIA MAUT (FR-07 & FR-08)
+    // MESIN REKOMENDASI MULTIKRITERIA MAUT VIA POSTGIS API (FR-07 & FR-08)
     // ==========================================
-    const runMautEngine = (closeMobileDrawer = true) => {
+    let mautRequestCounter = 0;
+
+    const runMautEngine = async (closeMobileDrawer = true) => {
         const scenarioRadio = document.querySelector(
             'input[name="maut-scenario"]:checked',
         );
-        const scenario = scenarioRadio ? scenarioRadio.value : "darurat";
+        let scenario = scenarioRadio ? scenarioRadio.value : "darurat";
+        if (scenario === "pemda" && !mapConfig.canUsePemda) {
+            scenario = "darurat";
+        }
 
-        // Bobot Kriteria Sesuai Tabel 3.3 SRS
-        const weights = {
-            darurat: {
-                distance: 0.4,
-                igd: 0.3,
-                hours: 0.15,
-                nakes: 0.15,
-                crowd: 0.0,
-            },
-            reguler: {
-                hours: 0.3,
-                distance: 0.2,
-                nakes: 0.2,
-                crowd: 0.2,
-                igd: 0.1,
-            },
-            pemda: {
-                nakes: 0.3,
-                distance: 0.2,
-                crowd: 0.2,
-                igd: 0.15,
-                hours: 0.15,
-            },
-        }[scenario];
+        const selectedRadiusVal = radiusSelect?.value || "3000";
+        const allowedApiRadii = ["1000", "3000", "5000"];
+        const radiusMeters = allowedApiRadii.includes(selectedRadiusVal)
+            ? Number(selectedRadiusVal)
+            : null;
 
-        // 1. Ekstrak data mentah & hitung jarak geodetik
-        const crowdNumeric = { Sepi: 1, Sedang: 2, Ramai: 3 };
-
-        const itemsWithRaw = puskesmasList.map((item) => {
-            const dist = getDistanceKm(
-                currentUserCoords[0],
-                currentUserCoords[1],
-                item.lat,
-                item.lng,
-            );
-            return {
-                ...item,
-                raw_dist: dist,
-                raw_igd: item.igd ? 1 : 0,
-                raw_hours: item.hours_duration || 6,
-                raw_nakes: item.nakes_score || 70,
-                raw_crowd: crowdNumeric[item.crowd] || 2,
-            };
-        });
-
-        // 2. Tentukan Min-Max untuk Normalisasi
-        const minMax = {
-            dist: {
-                min: Math.min(...itemsWithRaw.map((i) => i.raw_dist)),
-                max: Math.max(...itemsWithRaw.map((i) => i.raw_dist)),
-            },
-            hours: {
-                min: Math.min(...itemsWithRaw.map((i) => i.raw_hours)),
-                max: Math.max(...itemsWithRaw.map((i) => i.raw_hours)),
-            },
-            nakes: {
-                min: Math.min(...itemsWithRaw.map((i) => i.raw_nakes)),
-                max: Math.max(...itemsWithRaw.map((i) => i.raw_nakes)),
-            },
-            crowd: { min: 1, max: 3 },
-        };
-
-        // 3. Normalisasi Min-Max & Hitung Skor Utilitas Linier Si = Sum(wk * Nik)
-        const scored = itemsWithRaw.map((item) => {
-            // Cost attributes: (max - x) / (max - min)
-            const nDist =
-                minMax.dist.max === minMax.dist.min
-                    ? 1
-                    : (minMax.dist.max - item.raw_dist) /
-                      (minMax.dist.max - minMax.dist.min);
-            const nCrowd =
-                (minMax.crowd.max - item.raw_crowd) /
-                (minMax.crowd.max - minMax.crowd.min);
-
-            // Benefit attributes: (x - min) / (max - min)
-            const nIgd = item.raw_igd; // 1 atau 0
-            const nHours =
-                minMax.hours.max === minMax.hours.min
-                    ? 1
-                    : (item.raw_hours - minMax.hours.min) /
-                      (minMax.hours.max - minMax.hours.min);
-            const nNakes =
-                minMax.nakes.max === minMax.nakes.min
-                    ? 1
-                    : (item.raw_nakes - minMax.nakes.min) /
-                      (minMax.nakes.max - minMax.nakes.min);
-
-            const utilityScore =
-                weights.distance * nDist +
-                weights.igd * nIgd +
-                weights.hours * nHours +
-                weights.nakes * nNakes +
-                weights.crowd * nCrowd;
-
-            return {
-                ...item,
-                utilityScore: utilityScore,
-                percentScore: (utilityScore * 100).toFixed(1),
-            };
-        });
-
-        // 4. Urutkan Nilai Tertinggi & Ambil Top 3
-        scored.sort((a, b) => b.utilityScore - a.utilityScore);
-        const top3 = scored.slice(0, 3);
-
-        // 5. Render Hasil Kartu Rekomendasi
         const container = document.getElementById("maut-cards-container");
+        const runBtn = document.getElementById("btn-run-maut");
+        const requestId = ++mautRequestCounter;
+
+        if (runBtn) {
+            runBtn.disabled = true;
+            const labelSpan = runBtn.querySelector("span");
+            if (labelSpan) labelSpan.textContent = "Menghitung...";
+        }
         if (container) {
+            container.innerHTML =
+                '<div class="rounded-xl border border-gray-100 bg-white p-4 text-xs font-semibold text-muted">Menghitung rekomendasi geodetik dari PostGIS...</div>';
+        }
+
+        try {
+            const payload = {
+                lat: Number(currentUserCoords[0]),
+                lng: Number(currentUserCoords[1]),
+                scenario,
+            };
+            if (radiusMeters !== null) {
+                payload.radius = radiusMeters;
+            }
+
+            const response = await fetch(
+                mapConfig.rekomendasiUrl || "/api/v1/rekomendasi",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        "X-CSRF-TOKEN": csrfToken,
+                    },
+                    body: JSON.stringify(payload),
+                },
+            );
+
+            if (requestId !== mautRequestCounter) {
+                return;
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                const errMsg =
+                    data.errors?.lat?.[0] ||
+                    data.errors?.scenario?.[0] ||
+                    data.message ||
+                    "Gagal menghitung rekomendasi MAUT.";
+                if (container) {
+                    container.innerHTML = `
+                        <div role="alert" class="rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-red-800 space-y-2">
+                            <p class="font-bold">${escapeHtml(errMsg)}</p>
+                            <button type="button" id="btn-maut-reset-center" class="text-[11px] font-extrabold text-primary underline cursor-pointer">
+                                Kembalikan ke Pusat Kota Bogor
+                            </button>
+                        </div>
+                    `;
+                    document
+                        .getElementById("btn-maut-reset-center")
+                        ?.addEventListener("click", () => {
+                            document.getElementById("gis-reset-view")?.click();
+                        });
+                }
+                return;
+            }
+
+            const recommendations = Array.isArray(data.recommendations)
+                ? data.recommendations
+                : [];
+
+            if (recommendations.length === 0) {
+                if (container) {
+                    const radiusLabel = radiusMeters
+                        ? `${radiusMeters / 1000} km`
+                        : "wilayah aktif";
+                    container.innerHTML = `
+                        <div class="rounded-xl border border-gray-200 bg-white p-4 text-center text-xs space-y-2.5">
+                            <p class="font-bold text-ink">Tidak ditemukan Puskesmas dalam radius ${escapeHtml(radiusLabel)} dari titik Anda.</p>
+                            <div class="flex flex-wrap items-center justify-center gap-2">
+                                ${
+                                    radiusMeters && radiusMeters < 5000
+                                        ? '<button type="button" id="btn-expand-radius-5k" class="rounded-lg bg-primary px-3 py-1.5 text-[11px] font-bold text-white cursor-pointer">Perluas ke 5 km</button>'
+                                        : ""
+                                }
+                                <button type="button" id="btn-expand-radius-all" class="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-[11px] font-bold text-ink cursor-pointer">Semua Radius</button>
+                            </div>
+                        </div>
+                    `;
+                    document
+                        .getElementById("btn-expand-radius-5k")
+                        ?.addEventListener("click", () => {
+                            if (radiusSelect) {
+                                radiusSelect.value = "5000";
+                                radiusSelect.dispatchEvent(new Event("change"));
+                            }
+                            runMautEngine(closeMobileDrawer);
+                        });
+                    document
+                        .getElementById("btn-expand-radius-all")
+                        ?.addEventListener("click", () => {
+                            if (radiusSelect) {
+                                radiusSelect.value = "all";
+                                radiusSelect.dispatchEvent(new Event("change"));
+                            }
+                            runMautEngine(closeMobileDrawer);
+                        });
+                }
+                return;
+            }
+
             const medals = [
                 {
                     badge: "#1",
@@ -600,48 +691,94 @@ export function initPuskesMapSDSS() {
                 },
             ];
 
-            container.innerHTML = top3
-                .map(
-                    (item, idx) => `
-                <article class="rounded-xl bg-white p-3.5 shadow-card border-2 ${idx === 0 ? "border-accent ring-2 ring-accent/20" : "border-gray-100"} transition-all">
-                    <div class="flex items-center justify-between pb-2 border-b border-gray-100">
-                        <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${medals[idx].color}">
-                            ${medals[idx].badge}
-                        </span>
-                        <span class="text-sm font-extrabold text-primary-dark">
-                            Skor ${item.percentScore}%
-                        </span>
-                    </div>
+            if (container) {
+                container.innerHTML = recommendations
+                    .map((rec, idx) => {
+                        const f = rec.facility || {};
+                        const op = f.operasional || {};
+                        const nakes = f.tenaga_medis || {};
+                        const medal = medals[idx] || medals[2];
+                        const percentScore = (Number(rec.score || 0) * 100).toFixed(1);
+                        const distText = Number(rec.distance_km || 0)
+                            .toFixed(2)
+                            .replace(".", ",");
+                        const districtName = f.kecamatan?.nama_kecamatan || "-";
+                        const hoursLabel = op.jam_label || "07.30 – 14.00";
+                        const nakesPct = Number(nakes.persentase_kelengkapan ?? 0).toFixed(0);
+                        const detailUrl = `/puskesmas/${encodeURIComponent(f.kode_puskesmas || "")}`;
 
-                    <h4 class="text-sm font-bold text-ink mt-2">${item.name}</h4>
-                    <p class="text-[11px] text-muted">Kec. ${item.district} &middot; <strong>${item.raw_dist.toFixed(1).replace(".", ",")} km</strong></p>
+                        return `
+                            <article class="rounded-xl bg-white p-3.5 shadow-card border-2 ${idx === 0 ? "border-accent ring-2 ring-accent/20" : "border-gray-100"} transition-all">
+                                <div class="flex items-center justify-between pb-2 border-b border-gray-100">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-extrabold ${medal.color}">
+                                        ${medal.badge}
+                                    </span>
+                                    <span class="text-sm font-extrabold text-primary-dark tabular-nums">
+                                        Skor ${percentScore}%
+                                    </span>
+                                </div>
 
-                    <div class="mt-2.5 flex flex-wrap gap-1">
-                        <span class="rounded-full bg-surface-mint px-2 py-0.5 text-[10px] font-semibold text-primary-dark">${item.hours}</span>
-                        ${item.igd ? '<span class="rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-semibold text-accent-strong">IGD 24 Jam</span>' : ""}
-                        <span class="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700">Nakes ${item.nakes_score}%</span>
-                    </div>
+                                <h4 class="text-sm font-bold text-ink mt-2">${escapeHtml(f.nama_puskesmas)}</h4>
+                                <p class="text-[11px] text-muted">Kec. ${escapeHtml(districtName)} &middot; <strong>${distText} km</strong></p>
 
-                    <div class="mt-3 grid grid-cols-2 gap-2">
-                        <button type="button" onclick="window.spotlightPuskesmas(${item.id})"
-                                class="h-8 rounded-full bg-primary text-white text-[11px] font-bold hover:bg-primary-dark transition-colors flex items-center justify-center gap-1 shadow-xs">
-                            <svg class="size-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path stroke-linecap="round" d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>
-                            <span>Sorot</span>
-                        </button>
-                        <button type="button" onclick="window.openDetailModal(${item.id})"
-                                class="h-8 rounded-full border border-primary text-primary hover:bg-surface-mint text-[11px] font-bold transition-colors">
-                            <span>Detail</span>
-                        </button>
-                    </div>
-                </article>
-            `,
-                )
-                .join("");
-        }
+                                <div class="mt-2.5 flex flex-wrap gap-1">
+                                    <span class="rounded-full bg-surface-mint px-2 py-0.5 text-[10px] font-semibold text-primary-dark">${escapeHtml(hoursLabel)}</span>
+                                    ${op.status_igd_24jam ? '<span class="rounded-full bg-accent/20 px-2 py-0.5 text-[10px] font-semibold text-accent-strong">IGD 24 Jam</span>' : ""}
+                                    <span class="rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700">Nakes ${nakesPct}%</span>
+                                </div>
 
-        // UC-08: Otomatis Sorot Lokasi Puskesmas Peringkat 1 di Peta
-        if (top3.length > 0 && closeMobileDrawer) {
-            window.spotlightPuskesmas(top3[0].id);
+                                <div class="mt-3 grid grid-cols-3 gap-1.5">
+                                    <button type="button" data-maut-spotlight="${Number(f.id)}"
+                                            class="h-8 rounded-full bg-primary text-white text-[11px] font-bold hover:bg-primary-dark transition-colors flex items-center justify-center gap-1 shadow-xs cursor-pointer">
+                                        <span>Sorot</span>
+                                    </button>
+                                    <button type="button" data-maut-detail="${Number(f.id)}"
+                                            class="h-8 rounded-full border border-primary text-primary hover:bg-surface-mint text-[11px] font-bold transition-colors cursor-pointer">
+                                        Ringkas
+                                    </button>
+                                    <a href="${detailUrl}"
+                                       class="h-8 rounded-full border border-gray-200 text-ink hover:bg-gray-50 text-[11px] font-bold transition-colors flex items-center justify-center">
+                                        Profil
+                                    </a>
+                                </div>
+                            </article>
+                        `;
+                    })
+                    .join("");
+
+                container
+                    .querySelectorAll("[data-maut-spotlight]")
+                    .forEach((btn) => {
+                        btn.addEventListener("click", () => {
+                            window.spotlightPuskesmas(
+                                Number(btn.dataset.mautSpotlight),
+                            );
+                        });
+                    });
+                container
+                    .querySelectorAll("[data-maut-detail]")
+                    .forEach((btn) => {
+                        btn.addEventListener("click", () => {
+                            window.openDetailModal(Number(btn.dataset.mautDetail));
+                        });
+                    });
+            }
+
+            // UC-08: Otomatis Sorot Lokasi Puskesmas Peringkat 1 di Peta
+            if (recommendations.length > 0 && closeMobileDrawer) {
+                window.spotlightPuskesmas(Number(recommendations[0].facility?.id));
+            }
+        } catch (err) {
+            if (container) {
+                container.innerHTML =
+                    '<div role="alert" class="rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs font-semibold text-red-800">Gagal terhubung ke layanan rekomendasi PostGIS.</div>';
+            }
+        } finally {
+            if (runBtn) {
+                runBtn.disabled = false;
+                const labelSpan = runBtn.querySelector("span");
+                if (labelSpan) labelSpan.textContent = "Cari Terbaik";
+            }
         }
     };
 
@@ -686,6 +823,21 @@ export function initPuskesMapSDSS() {
             item.posyandu_count;
         document.getElementById("modal-school").textContent = item.school_count;
 
+        const officialLink = document.getElementById("modal-official-link");
+        if (officialLink) {
+            officialLink.href =
+                item.official_url || "https://dinkes.kotabogor.go.id";
+        }
+
+        const fullProfileLink = document.getElementById(
+            "modal-full-profile-link",
+        );
+        if (fullProfileLink) {
+            fullProfileLink.href =
+                item.detail_url ||
+                `/puskesmas/${encodeURIComponent(item.code || "")}`;
+        }
+
         const routeLink = document.getElementById("modal-route-link");
         if (routeLink)
             routeLink.href = `https://www.google.com/maps/dir/?api=1&destination=${item.lat},${item.lng}`;
@@ -700,11 +852,14 @@ export function initPuskesMapSDSS() {
 
         const tagsContainer = document.getElementById("modal-tags");
         if (tagsContainer) {
+            const statusClass = item.is_open
+                ? "bg-emerald-100 text-emerald-800"
+                : "bg-gray-100 text-gray-700";
+            const statusLabel = item.is_open ? "Sedang Buka" : "Tutup";
             tagsContainer.innerHTML = `
                 <span class="rounded-full bg-surface-mint px-2.5 py-1 text-xs font-semibold text-primary-dark">${distFormatted}</span>
-                <span class="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">Buka</span>
+                <span class="rounded-full px-2.5 py-1 text-xs font-semibold ${statusClass}">${statusLabel}</span>
                 ${item.igd ? '<span class="rounded-full bg-accent/20 px-2.5 py-1 text-xs font-semibold text-accent-strong">IGD 24 Jam</span>' : ""}
-                ${item.inap ? '<span class="rounded-full bg-sky-100 px-2.5 py-1 text-xs font-semibold text-sky-800">Rawat Inap</span>' : ""}
                 <span class="rounded-full bg-purple-100 px-2.5 py-1 text-xs font-semibold text-purple-800">BPJS</span>
             `;
         }

@@ -65,21 +65,37 @@
                     </div>
 
                     <div id="float-card-tags" class="mt-2 flex flex-wrap gap-1">
-                        <x-tag>Buka 08.00 – 16.00</x-tag>
-                        <x-tag>IGD 24 jam</x-tag>
+                        <x-tag>Buka 07.30 – 14.00</x-tag>
+                        <x-tag>IGD 24 Jam</x-tag>
                     </div>
 
-                    <div class="mt-2.5 sm:mt-3 grid grid-cols-2 gap-2">
+                    <div class="mt-2.5 sm:mt-3 grid grid-cols-3 gap-1.5">
                         <button type="button" id="float-card-detail-btn"
                                 class="h-8.5 rounded-xl bg-gray-100 hover:bg-ink hover:text-white text-ink text-[11px] font-extrabold transition-colors flex items-center justify-center cursor-pointer">
-                            Detail
+                            Ringkas
                         </button>
+                        <a id="float-card-profile-link" href="#"
+                           class="h-8.5 rounded-xl border border-primary/30 text-primary-dark hover:bg-surface-mint text-[11px] font-extrabold transition-colors flex items-center justify-center">
+                            Profil
+                        </a>
                         <a id="float-card-route-btn" href="https://www.google.com/maps/dir/?api=1&destination=-6.5612,106.7915" target="_blank" rel="noopener noreferrer"
                            class="h-8.5 rounded-xl bg-primary text-white hover:bg-primary-dark text-[11px] font-extrabold transition-colors flex items-center justify-center">
                             Rute
                         </a>
                     </div>
                 </aside>
+
+                {{-- Pemilih Basemap (OSM Standar vs Grey Lite) --}}
+                <div class="absolute left-3 top-3 sm:left-4 sm:top-4 z-20 inline-flex items-center gap-1 rounded-xl bg-white/95 backdrop-blur-md p-1 shadow-float border border-gray-100">
+                    <button type="button" id="btn-basemap-osm"
+                            class="h-8 rounded-lg bg-ink px-2.5 text-[11px] font-extrabold text-white transition-colors cursor-pointer">
+                        OSM Standar
+                    </button>
+                    <button type="button" id="btn-basemap-grey"
+                            class="h-8 rounded-lg px-2.5 text-[11px] font-bold text-ink hover:bg-gray-100 transition-colors cursor-pointer">
+                        Grey Lite
+                    </button>
+                </div>
 
                 {{-- Kontrol Zoom & Lokasi --}}
                 <div class="absolute right-3 top-3 sm:right-auto sm:top-auto sm:left-4 sm:bottom-4 z-20 flex flex-col gap-1.5 sm:gap-2">

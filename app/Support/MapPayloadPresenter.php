@@ -10,9 +10,9 @@ use Illuminate\Support\Collection;
 
 class MapPayloadPresenter
 {
-    private const DEFAULT_CENTER_LAT = -6.586372;
+    private const DEFAULT_CENTER_LAT = -6.597147;
 
-    private const DEFAULT_CENTER_LNG = 106.7706;
+    private const DEFAULT_CENTER_LNG = 106.806039;
 
     /**
      * @var array<int, string>
@@ -69,11 +69,14 @@ class MapPayloadPresenter
                 'monthly_visits' => (int) ($kunjungan?->total_pasien_bulanan ?? 0),
                 'capacity' => (int) ($kunjungan?->kapasitas_maksimal_bulanan ?? config('sdss.capacity.default_monthly', 850)),
                 'crowd' => $crowdStatus->toMapLabel(),
+                'crowd_status' => $crowdStatus->value,
+                'crowd_percentage' => round((float) ($kunjungan?->persentase_keramaian ?? 0.0), 1),
                 'psw_index' => WorkloadSpectrum::fromScore($pswScore)->value,
                 'psw_score' => $pswScore,
                 'color' => self::PASTEL_COLORS[$index % count(self::PASTEL_COLORS)],
                 'distance' => number_format($distKm, 1, ',', '.').' km',
-                'official_url' => $facility->website_url ?? 'https://kotabogor.go.id',
+                'official_url' => $facility->website_url ?? 'https://dinkes.kotabogor.go.id',
+                'detail_url' => route('puskesmas.show', ['kode_puskesmas' => $facility->kode_puskesmas]),
             ];
         })->all();
     }

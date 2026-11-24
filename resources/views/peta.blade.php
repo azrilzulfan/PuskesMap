@@ -20,8 +20,15 @@
     {{-- Modal Detail Puskesmas & Kelengkapan 9 Nakes --}}
     @include('map.partials.detail-modal')
 
-    {{-- Payload JSON Data Puskesmas untuk Modul JS Peta --}}
+    {{-- Payload JSON Data Puskesmas & Konfigurasi API untuk Modul JS Peta --}}
     <script id="puskesmas-data" type="application/json">
         {!! json_encode($puskesmas) !!}
+    </script>
+    <script id="map-config" type="application/json">
+        {!! json_encode([
+            'bogorCenter' => $bogorCenter,
+            'canUsePemda' => $canUsePemda,
+            'rekomendasiUrl' => route('api.v1.rekomendasi'),
+        ]) !!}
     </script>
 </x-layout>

@@ -6,6 +6,7 @@ use App\Models\KunjunganPasien;
 use App\Models\Operasional;
 use App\Models\Puskesmas;
 use App\Models\TenagaMedis;
+use App\Models\User;
 
 test('map page returns successful response for public users', function () {
     $response = $this->get(route('peta'));
@@ -70,4 +71,74 @@ test('map page loads database facilities and translates crowd status labels for 
         ->assertSee('"Dokter":3', false)
         ->assertSee('"Farmasi":2', false)
         ->assertSee('"crowd":"Sepi"', false);
+});
+
+test('public map page hides pemda scenario and rawat inap filter while authenticated dinkes sees pemda', function () {
+    $kecamatan = Kecamatan::factory()->create(['nama_kecamatan' => 'Bogor Tengah']);
+
+    $igdFacility = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatan->id,
+        'kode_puskesmas' => 'P3271040101',
+    ]);
+    Operasional::factory()->igd24Jam()->create(['puskesmas_id' => $igdFacility->id]);
+    TenagaMedis::factory()->create(['puskesmas_id' => $igdFacility->id]);
+
+    $guestResponse = $this->get(route('peta'));
+    $guestResponse->assertOk()
+        ->assertSee('IGD 24 Jam (1)')
+        ->assertSee('id="btn-basemap-osm"', false)
+        ->assertSee('id="btn-basemap-grey"', false)
+        ->assertDontSee('Rawat Inap')
+        ->assertDontSee('value="pemda"', false)
+        ->assertDontSee('data-quick-scenario="pemda"', false);
+
+    $dinkesUser = User::factory()->pemerintah()->create();
+    $this->actingAs($dinkesUser)
+        ->get(route('peta'))
+        ->assertOk()
+        ->assertSee('value="pemda"', false)
+        ->assertSee('data-quick-scenario="pemda"', false);
+});
+
+test('puskesmas detail page displays complete profile, 9 nakes, ukm metrics, and 12-month visit trend', function () {
+    $kecamatan = Kecamatan::factory()->create(['nama_kecamatan' => 'Tanah Sareal']);
+
+    $facility = Puskesmas::factory()->create([
+        'kecamatan_id' => $kecamatan->id,
+        'kode_puskesmas' => 'P3271060101',
+        'nama_puskesmas' => 'Puskesmas Tanah Sareal',
+        'website_url' => 'https://dinkes.kotabogor.go.id/puskesmas-tanah-sareal',
+        'jumlah_posyandu' => 30,
+        'jumlah_sekolah' => 18,
+        'skor_psw' => 0.31,
+    ]);
+    Operasional::factory()->igd24Jam()->create([
+        'puskesmas_id' => $facility->id,
+        'kontak_darurat' => '0251-8312345',
+    ]);
+    TenagaMedis::factory()->create(['puskesmas_id' => $facility->id]);
+
+    for ($month = 1; $month <= 12; $month++) {
+        KunjunganPasien::factory()->create([
+            'puskesmas_id' => $facility->id,
+            'tahun' => 2025,
+            'bulan' => $month,
+            'total_pasien_bulanan' => 500 + $month,
+        ]);
+    }
+
+    $response = $this->get(route('puskesmas.show', ['kode_puskesmas' => 'P3271060101']));
+
+    $response->assertOk()
+        ->assertSee('Puskesmas Tanah Sareal')
+        ->assertSee('P3271060101')
+        ->assertSee('Kec. Tanah Sareal')
+        ->assertSee('0251-8312345')
+        ->assertSee('https://dinkes.kotabogor.go.id/puskesmas-tanah-sareal', false)
+        ->assertSee('30')
+        ->assertSee('18')
+        ->assertSee('id="visitTrendChart"', false)
+        ->assertSee('id="visit-trend-data"', false);
+
+    $this->get('/puskesmas/TIDAK_ADA')->assertNotFound();
 });
