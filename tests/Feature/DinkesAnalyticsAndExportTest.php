@@ -76,6 +76,12 @@ test('dinkes dashboard and analysis apis return postgis coverage, equity, worklo
         ]);
 
     $this->actingAs($dinkes)
+        ->getJson('/api/v1/analisis/coverage?buffer_km=3.0')
+        ->assertOk()
+        ->assertJsonPath('type', 'FeatureCollection')
+        ->assertJsonPath('buffer_km', 3);
+
+    $this->actingAs($dinkes)
         ->getJson(route('api.v1.analisis.coverage', ['buffer_km' => 5.0]))
         ->assertUnprocessable()
         ->assertJsonValidationErrors('buffer_km');
